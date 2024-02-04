@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="${encoding}">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/a00_com/bootstrap.min.css" >
+<link rel="stylesheet" href="/a00_com/jquery-ui.css" >
+<script src="/a00_com/jquery.min.js"></script>
+<script src="/a00_com/popper.min.js"></script>
+<script src="/a00_com/bootstrap.min.js"></script>
+<script src="/a00_com/jquery-ui.js"></script>
+<script type="text/javascript">
+	$$(document).ready(function(){
+
+	});
+</script>
+</head>
+
+<body>
+<div class="jumbotron text-center">
+  <h2 data-toggle="modal" data-target="#exampleModalCenter">타이틀</h2>
+
+</div>
+<div class="container">
+	<form id="frm01" class="form-inline"  method="post">
+  	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+	    <input class="form-control mr-sm-2" placeholder="제목" />
+	    <input class="form-control mr-sm-2" placeholder="내용" />
+	    <button class="btn btn-info" type="submit">Search</button>
+ 	</nav>
+	</form>
+   <table class="table table-hover table-striped">
+   	<col width="10%">
+   	<col width="50%">
+   	<col width="15%">
+   	<col width="15%">
+   	<col width="10%">
+    <thead>
+    
+      <tr class="table-success text-center">
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>조회</th>
+      </tr>
+    </thead>	
+    <tbody>
+    	<tr><td></td><td></td><td></td><td></td><td></td></tr>
+    	<tr><td></td><td></td><td></td><td></td><td></td></tr>
+    	<tr><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+	</table>    
+    
+</div>
+</body>
+</html>

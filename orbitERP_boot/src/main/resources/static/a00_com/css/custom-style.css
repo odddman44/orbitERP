@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+* { 
+    font-family: 'Noto Sans KR', sans-serif; 
+}
+
+.navbar-nav.bg-gradient-primary.sidebar {
+    background-color: #4a5ba3;
+    background-image: none; /* 그라데이션 배경 제거 */
+}
+.btn-primary {
+    background-color: #4a5ba3; /* 배경색 변경 */
+    border-color: #4a5ba3;
+    /* color: #fff;  텍스트 색상 변경 (필요한 경우) */
+}
+
+/* 로그인창 */
+.bg-gradient-primary {
+    background-color: #d5e5ff;
+    background-image: none; /* 그라데이션 제거 */
+}
+.bg-login-image {
+    background: url('/a00_com/images/login_image.png');
+    background-position: center;
+    background-size: cover;
+}
+
+/*계정과목 등록 모달*/
+
+.form-control.underlined-input {
+    border: none;
+    border-bottom: 2px solid rgb(39, 226, 180) !important;
+    border-radius: 0;
+}
+
+.form-control.underlined-input:focus {
+    outline: none;
+    border-bottom-color: rgb(3, 158, 158) !important;
+}
+
+/*전표 조회 모달*/

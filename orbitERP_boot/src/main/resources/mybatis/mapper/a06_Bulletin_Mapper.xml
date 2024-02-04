@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.orbitERP.dao.A05_BulletinDao">
+	
+	<select id="totBulletin" resultType="int" parameterType="bulletinSch">
+		select count(*)
+		from BULLETIN 
+		where 1=1
+		and title like '%'||#{title}||'%'	
+	</select> 
+	
+	<select id="bulList" resultType="bulletin" parameterType="bulletinSch">
+		SELECT *
+		FROM(
+		    SELECT ROWNUM cnt, a.*
+		    FROM (
+		        SELECT *
+		        FROM BULLETIN b 
+		        WHERE 1=1
+		           AND TITLE LIKE '%'||#{title}||'%' 
+		        ORDER BY no ASC
+		    ) a
+		)
+		WHERE cnt between #{start} AND #{end}
+	</select>
+	
+	<update id="updateBulletin" parameterType="bulletin">
+		UPDATE bulletin
+		SET title = #{title},
+		 	content = #{content},
+		 	uptdte = sysdate 
+		WHERE NO = #{no}
+	</update>
+	
+	<delete id="deleteBulletin" parameterType="int">
+		delete from bulletin where no=#{no}
+	</delete>
+</mapper>	

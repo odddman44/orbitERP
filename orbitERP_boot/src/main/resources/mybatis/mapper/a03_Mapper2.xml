@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.orbitERP.dao.A02_HRDao">
+	<select id="getDeptList" resultType="dept" parameterType="dept">
+		SELECT
+		* FROM dept
+		WHERE dname LIKE '%'||#{dname}||'%' order by deptno
+	</select>
+
+	<update id="updateDep" parameterType="dept">
+		UPDATE dept
+		SET
+		dname=#{dname}, dcode = #{dcode}, etc = #{etc}
+		WHERE deptno = #{deptno}
+	</update>
+	<select id="getStudentList" parameterType="studentSch"
+		resultType="student">
+		SELECT *
+		FROM (
+		SELECT sno, name, TO_CHAR(birth,
+		'YYYY-MM-DD') AS birth,
+		final_degree, phone, address, account,
+		TO_CHAR(reg_date, 'YYYY-MM-DD') AS reg_date,
+		ROW_NUMBER() OVER (ORDER
+		BY sno ASC) AS row_num
+		FROM STUDENT s
+		WHERE 1=1
+		AND name LIKE
+		'%'||#{name}||'%'
+		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
+		)
+		WHERE row_num BETWEEN #{start} AND #{end}
+	</select>
+	<select id="studentDetail" parameterType="int"
+		resultType="student">
+		SELECT sno, name, TO_CHAR(birth, 'YYYY-MM-DD') AS birth,
+		final_degree, phone, address, account, TO_CHAR(reg_date, 'YYYY-MM-DD')
+		AS reg_date FROM STUDENT
+		WHERE sno = #{sno}
+	</select>
+	<select id="totStudent" parameterType="studentSch"
+		resultType="int">
+		SELECT count(*)
+		FROM STUDENT
+		WHERE 1=1
+		AND name LIKE
+		'%'||#{name}||'%'
+		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
+	</select>
+	<insert id="insertStudent" parameterType="student">
+		INSERT INTO
+		STUDENT
+		values(stuno_seq.nextval, #{name}, to_date(#{birth},
+		'YYYY-MM-DD'),
+		#{final_degree}, #{phone}, #{address}, #{account},
+		to_date(#{reg_date}, 'YYYY-MM-DD'))
+	</insert>
+	<update id="updateStudent" parameterType="student">
+		UPDATE STUDENT SET
+		name
+		= #{name},
+		birth = to_date(#{birth}, 'YYYY-MM-DD'),
+		reg_date =
+		to_date(#{reg_date}, 'YYYY-MM-DD'),
+		FINAL_DEGREE = #{final_degree},
+		PHONE = #{phone},
+		ADDRESS = #{address},
+		ACCOUNT = #{account}
+		WHERE SNO =
+		#{sno}
+	</update>
+	<insert id="insertStuProfile" parameterType="stuProfile">
+		INSERT INTO
+		STUPROFILE s values(stuno_seq.currval, #{fname}, #{path})
+	</insert>
+	<insert id="insertStuProfileRE" parameterType="stuProfile">
+		INSERT INTO
+		STUPROFILE s values(#{sno}, #{fname}, #{path})
+	</insert>
+
+
+	<update id="updateStuProfile" parameterType="stuProfile">
+		UPDATE STUPROFILE
+		SET
+		fname = #{fname}, PATH = #{path}
+		WHERE sno = #{sno}
+	</update>
+
+	<select id="getEmpList" parameterType="empSch"
+		resultType="empSch">
+		SELECT *
+		FROM (
+		SELECT ROWNUM cnt, e.empno, e.ename, e.job, d.dname
+		FROM
+		EMPLOYEE e, DEPT d
+		WHERE 1=1
+		AND e.DEPTNO = d.DEPTNO
+		<if test="ename != null and ename != ''">
+			AND e.ename LIKE '%'||#{ename}||'%'
+		</if>
+		<if test="deptno != null and deptno != 0">
+			AND e.deptno = #{deptno}
+		</if>
+		ORDER BY empno
+		) WHERE cnt BETWEEN #{start} AND #{end}
+	</select>
+	<select id="totEmp" parameterType="empSch" resultType="int">
+		SELECT COUNT(*)
+		FROM EMPLOYEE e
+		WHERE 1=1
+		<if test="ename != null and ename != ''">
+			AND e.ename LIKE '%'||#{ename}||'%'
+		</if>
+		<if test="deptno != null and deptno != 0">
+			AND e.DEPTNO = #{deptno}
+		</if>
+
+	</select>
+	<select id="empDetail" parameterType="string"
+		resultType="employee">
+		SELECT
+		empno, deptno, ename, job, to_char(hiredate,
+		'YYYY-MM-DD') AS
+		HIREDATE,
+		EMAIL, PHONE, ADDRESS, ACCOUNT, SSNUM,
+		SALARY, subject
+		FROM EMPLOYEE
+		WHERE EMPNO = #{empno}
+	</select>
+
+	<update id="empUpdate" parameterType="employee">
+		UPDATE EMPLOYEE
+		SET
+		ename =
+		#{ename},
+		job = #{job},
+		SALARY = #{salary},
+		ssnum = #{ssnum},
+		deptno =
+		#{deptno},
+		phone = #{phone},
+		hiredate =
+		to_date(#{hiredate},
+		'YYYY-MM-DD'),
+		ADDRESS = #{address},
+		ACCOUNT =
+		#{account},
+		EMAIL =
+		#{email}
+		<if test="subject != null">
+			, subject = #{subject}
+		</if>
+		WHERE empno = #{empno}
+	</update>
+
+	<insert id="empInsert" parameterType="employee">
+		INSERT INTO EMPLOYEE
+		VALUES(
+		#{empno}, #{deptno}, #{ename}, #{job}, to_date(#{hiredate},
+		'YYYY-MM-DD'),
+		#{email}, #{phone}, #{address},
+		#{account}, #{ssnum},
+		#{salary}, #{subject}
+		)
+	</insert>
+
+	<insert id="empPrfrofileInsert" parameterType="empProfile">
+		INSERT INTO
+		EMPPROFILE values(#{empno}, #{fname}, #{path})
+	</insert>
+
+	<select id="getEmpProfie" parameterType="string"
+		resultType="empProfile">
+		SELECT * FROM EMPPROFILE WHERE EMPNO = #{empno}
+	</select>
+
+	<delete id="deleteEmp" parameterType="string">
+		DELETE FROM EMPLOYEE WHERE
+		empno = #{empno}
+	</delete>
+
+	<delete id="deleteEmpProfile" parameterType="string">
+		DELETE FROM
+		EMPPROFILE e WHERE empno = #{empno}
+	</delete>
+
+	<update id="empProfileUpdate" parameterType="empProfile">
+		UPDATE EMPPROFILE
+		SET
+		fname = #{fname},
+		PATH = #{path}
+		WHERE empno = #{empno}
+	</update>
+
+	<select id="getAttenList" parameterType="attendanceSch"
+		resultType="attendanceSch">
+		SELECT a.EMPNO, to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE ,
+		a.ARR_TIME , a.DEP_TIME, late, EARLY_LEAVE, TOT_WORKHOURS,
+		d.DNAME
+		FROM ATTENDANCE a
+		INNER JOIN EMPLOYEE e ON a.EMPNO = e.EMPNO
+		INNER JOIN
+		DEPT d ON e.DEPTNO = d.DEPTNO
+		where 1 = 1
+		<if test="empno != null and empno!=''">
+			AND a.EMPNO = #{empno}
+		</if>
+		<if test="deptno != 0">
+			AND d.DEPTNO = #{deptno}
+		</if>
+		<if
+			test="start_date != null and end_date != null and start_date != '' and end_date != ''">
+			AND a.WORK_DATE BETWEEN #{start_date} AND #{end_date}
+		</if>
+	</select>
+
+
+
+
+
+
+
+
+
+</mapper>	

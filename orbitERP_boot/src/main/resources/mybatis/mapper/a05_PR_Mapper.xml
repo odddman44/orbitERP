@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.orbitERP.dao.A03_PRDao">
+	<select id="lectureList" resultType="lecture">
+		SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
+		 to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher
+		FROM LECTURE
+		<!--WHERE lec_num = #{lec_num}
+			AND lecno LIKE '%'||#{lecno}||'%'
+			AND lec_teacher LIKE '%'||#{lec_teacher}||'%'
+			ORDER BY start_date  -->
+	</select>
+	<select id="getLecture" resultType="lecture" parameterType="int">
+		SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
+		 to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher 
+		FROM LECTURE WHERE lecno = #{lecno}
+	</select>
+	<insert id="insertLecture" parameterType="lecture">
+		INSERT INTO LECTURE VALUES (
+		 lecno_seq.NEXTVAL, #{lec_code}, #{lec_name}, to_date(#{start_date},'YYYY-MM-DD'), to_date(#{end_date},'YYYY-MM-DD'),
+		  #{lec_snum}, #{lec_num}, #{tuition_fee}, #{textbook_fee}, #{lec_content}, #{lec_teacher}) 
+	</insert>
+	<update id="updateLecture" parameterType="lecture">
+		UPDATE LECTURE SET lec_name=#{lec_name},
+		start_date=to_date(#{start_date},'YYYY-MM-DD'),
+		end_date=to_date(#{end_date},'YYYY-MM-DD'),
+		lec_snum=#{lec_snum},
+		lec_num=#{lec_num},
+		tuition_fee=#{tuition_fee},
+		textbook_fee=#{textbook_fee},
+		lec_content=#{lec_content},
+		lec_teacher=#{lec_teacher}
+		WHERE lecno=#{lecno}
+	</update>
+	<delete id="deleteLecture" parameterType="int">
+		DELETE FROM LECTURE WHERE LECNO = #{lecno}
+	</delete>
+	
+	
+	<!-- 학생 데이터 조회 -->
+	<select id="getStus" resultType="lectureStu" parameterType="lectureStu">
+		SELECT sno,name,to_char(birth,'yyyy-mm-dd') birth,final_degree,phone,address
+		FROM STUDENT
+		WHERE 1=1
+		AND name LIKE
+		'%'||#{name}||'%'
+		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
+	</select>
+	<!-- 총 수 -->
+	<select id="totStudent" parameterType="lectureStu"
+		resultType="int">
+		SELECT count(*)
+		FROM STUDENT
+		WHERE 1=1
+		AND name LIKE
+		'%'||#{name}||'%'
+		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
+	</select>
+	
+	<!-- 강사 데이터 조회 -->
+	<select id="schTch" resultType="lectureTch" parameterType="lectureTch">
+		SELECT * FROM EMPLOYEE
+		WHERE JOB LIKE '강사'
+		AND (ENAME LIKE '%'||#{ename}||'%' AND SUBJECT LIKE '%'||#{subject}||'%')
+	</select>
+	
+	
+	
+	
+	<!-- 캘린더 mapper -->
+	<resultMap type="calendar" id="calRst">
+		<result column="start1" property="start"/>
+		<result column="end1" property="end"/>
+		<result column="url" property="urlLink"/>
+	</resultMap>
+	<select id="getCalList" resultMap="calRst" >
+		SELECT id, title, writer,
+			to_char(start1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') start1, 
+			to_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') end1,
+			content, backgroundcolor, textcolor, allday, url 
+		FROM calendar
+	</select>
+	<insert id="insertCalendar" parameterType="calendar">
+		INSERT INTO calendar values(
+			cal_seq.nextval,#{title},
+			to_date(#{start},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'), 
+			to_date(#{end},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'), 
+			#{writer},#{content}, #{backgroundColor},
+			#{textColor},#{allDay},#{urlLink})
+	</insert>
+	<update id="updateCalendar" parameterType="calendar">
+		UPDATE CALENDAR SET TITLE =#{title},
+		START1 = to_date(#{start},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'),
+		end1 = to_date(#{end},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'),
+		CONTENT =#{content},
+		WRITER =#{writer},
+		BACKGROUNDCOLOR =#{backgroundColor},
+		TEXTCOLOR =#{textColor},
+		ALLDAY =#{allDay},
+		URL =#{urlLink}
+		WHERE ID =#{id}
+	</update>
+</mapper>

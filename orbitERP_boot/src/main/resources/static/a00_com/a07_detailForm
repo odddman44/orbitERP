@@ -1,0 +1,31 @@
+<style type="text/css">
+	.input-group-text{width:100%;background-color:linen;
+		color:black;font-weight:bolder;}
+	.input-group-prepend{width:20%;}
+	#chatArea{
+		width:80%;height:200px;overflow-y:auto;text-align:left;
+		border:1px solid green;
+	}
+</style>
+	<form method="post">
+	<div class="input-group mb-3">	
+		<div class="input-group-prepend ">
+			<span class="input-group-text  justify-content-center">사원번호</span>
+		</div>
+		<input name="empno" class="form-control" value="" />	
+	</div>	
+	<div class="input-group mb-3">	
+		<div class="input-group-prepend ">
+			<span class="input-group-text  justify-content-center">사원번호</span>
+		</div>
+		<input name="empno" class="form-control" value="" />	
+		<div class="input-group-append">
+			<div id=""></div>
+		</div>
+	</div>	
+	<div style="text-align:right;">
+		<input type="button" class="btn btn-info" value="수정" id="uptBtn"/>
+		<input type="button" class="btn btn-danger" value="삭제" id="delBtn"/>
+		<input type="button" class="btn btn-success" value="조회리스트" id="mainBtn"/>
+	</div>	
+	</form>		

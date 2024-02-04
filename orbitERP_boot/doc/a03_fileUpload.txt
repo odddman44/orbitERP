@@ -1,0 +1,13 @@
+# 파일 업로드 다운로드 처리
+1. lib및 container 설정 처리
+	1) pom.xml
+	
+	2) application.properties
+		다운로드 경로 설정
+2. 그 외는 springweb과 동일
+	1) 초기화면 로딩 controller 선언
+		요청처리 MultipartFile
+	2) 화면
+		form 속성 encType설정
+		type=file multiple="multiple"
+	3) 

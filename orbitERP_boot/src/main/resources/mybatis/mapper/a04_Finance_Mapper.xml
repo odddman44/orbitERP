@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.orbitERP.dao.A04_FinanceDao">
+	<select id="totAccsub" resultType="int" parameterType="accsubSch">
+		SELECT count(*)
+		FROM ACCSUB
+		WHERE 1=1
+		AND (#{acc_code} = 0 OR acc_code = #{acc_code})
+		AND acc_name LIKE '%'||#{acc_name}||'%'
+		AND acc_type LIKE '%'||#{acc_type}||'%'
+		AND base_acc LIKE '%'||#{base_acc}||'%'
+	</select>
+	<select id="accsubList" resultType="accsub" parameterType="accsubSch">
+		SELECT *
+		FROM(
+		    SELECT ROWNUM cnt, a.*
+		    FROM (
+		        SELECT *
+		        FROM accsub
+		        WHERE 1=1
+		           AND (#{acc_code} = 0 OR acc_code = #{acc_code})
+		           AND acc_name LIKE '%'||#{acc_name}||'%' 
+		           AND acc_type LIKE '%'||#{acc_type}||'%'
+		           AND base_acc LIKE '%'||#{base_acc}||'%'
+		        ORDER BY acc_code ASC
+		    ) a
+		)
+		WHERE cnt between #{start} AND #{end}
+	</select>
+	<insert id="insertAccsub" parameterType="accsub">
+		INSERT INTO accsub VALUES(
+			#{acc_code}, #{acc_name}, #{debit_credit}, #{acc_type},
+			#{active_status}, #{remarks}, '추가')
+	</insert>
+	<select id="getAccsub" resultType="accsub" parameterType="int">
+		SELECT * FROM accsub WHERE acc_code = #{acc_code}
+	</select>
+	<update id="updateAccsub" parameterType="accsub">
+		UPDATE accsub
+	    SET acc_name = #{acc_name},
+	        debit_credit = #{debit_credit},
+	        acc_type = #{acc_type},
+	        active_status = #{active_status},
+	        remarks = #{remarks}
+	    WHERE acc_code = #{acc_code}
+	</update>
+	<delete id="deleteAccsub" parameterType="int">
+		DELETE FROM accsub where acc_code = #{acc_code}
+	</delete>
+	
+	<select id="countAccCode" parameterType="int" resultType="int">
+		SELECT COUNT(*) FROM ACCSUB WHERE acc_code = #{accCode}
+	</select>
+	
+	<!-- 전표조회 -->
+	<select id="voucherList" resultType="voucher">
+		SELECT V.voucher_id,
+			   V.voucher_date,
+               V.voucher_no,
+               V.voucher_type,
+               V.total_amount,
+               V.trans_cname,
+               V.remarks,
+               D.dname
+        FROM VOUCHER V
+        LEFT JOIN DEPT D ON V.deptno = D.deptno
+        WHERE TRUNC(V.voucher_date) 
+        	BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') 
+        	AND TO_DATE(#{endDate}, 'yyyy-MM-dd')
+	</select>
+	<!-- 전표 상세 조회 -->
+	<resultMap id="voucherDetailMap" type="voucherDetail">
+        <id property="voucher_id" column="voucher_id" />
+        <result property="voucher_date" column="voucher_date" />
+        <result property="voucher_dateStr" column="voucher_dateStr" />
+        <result property="voucher_no" column="voucher_no" />
+        <result property="voucher_type" column="voucher_type" />
+        <result property="total_amount" column="total_amount" />
+        <result property="trans_cname" column="trans_cname" />
+        <result property="deptno" column="deptno" />
+        <result property="remarks" column="remarks" />
+        <result property="dname" column="dname" />
+        <collection property="journalizings" ofType="journalizing">
+            <id property="journal_id" column="journal_id" />
+            <result property="voucher_id" column="voucher_id" />
+            <result property="acc_code" column="acc_code" />
+        	<result property="acc_name" column="acc_name" />
+            <result property="debit_amount" column="debit_amount" />
+            <result property="credit_amount" column="credit_amount" />
+            <result property="trans_name" column="trans_name" />
+            <result property="j_remark" column="j_remark" />
+        </collection>
+    </resultMap>
+	<select id="getVoucherDetail" parameterType="int" resultMap="voucherDetailMap">
+        SELECT V.*, D.dname, J.journal_id, J.voucher_id, J.acc_code, J.debit_amount, J.credit_amount, J.trans_name, J.j_remark, A.acc_name
+		FROM VOUCHER V
+		JOIN JOURNALIZING J ON V.voucher_id = J.voucher_id
+		JOIN ACCSUB A ON J.acc_code = A.acc_code
+		JOIN DEPT D ON V.deptno = D.deptno
+		WHERE V.voucher_id = #{voucher_id}
+    </select>
+    <!-- 전표 및 분개 데이터 등록 -->
+    <!-- 전표 데이터 삽입 -->
+	<insert id="insertVoucher" parameterType="voucherDetail">
+	    INSERT INTO VOUCHER (voucher_id, voucher_date, voucher_no, voucher_type, total_amount, trans_cname, remarks, deptno)
+	    VALUES (voc_seq.NEXTVAL, TO_DATE(#{voucher_dateStr}, 'yyyy-MM-dd'),
+	     #{voucher_no}, #{voucher_type}, #{total_amount}, #{trans_cname}, #{remarks}, #{deptno})
+	    <selectKey keyProperty="voucher_id" resultType="int" order="AFTER">
+	        SELECT voc_seq.CURRVAL FROM dual
+	    </selectKey>
+    </insert>
+	<!-- 분개 데이터 삽입 -->
+    <insert id="insertJournalizing" parameterType="journalizing">
+	    INSERT INTO JOURNALIZING (journal_id, voucher_id, acc_code, debit_amount, credit_amount, trans_name, j_remark)
+	    VALUES (jor_seq.NEXTVAL, #{voucher_id}, #{acc_code}, #{debit_amount}, #{credit_amount}, #{trans_name}, #{j_remark})
+	</insert>
+	
+	<!-- 전표 및 분개 데이터 수정 -->
+	<!--  전표 데이터 수정 -->
+	<update id="updateVoucher" parameterType="voucherDetail">
+	    UPDATE VOUCHER
+	    SET voucher_date = TO_DATE(#{voucher_dateStr}, 'yyyy-MM-dd'),
+	        voucher_no = #{voucher_no},
+	        total_amount = #{total_amount},
+	        trans_cname = #{trans_cname},
+	        remarks = #{remarks},
+	        deptno = #{deptno},
+	        voucher_type = #{voucher_type}
+	    WHERE voucher_id = #{voucher_id}
+	</update>
+	<!-- 분개 데이터 수정 -->
+	<update id="updateJournalizing" parameterType="journalizing">
+	    UPDATE JOURNALIZING
+	    SET acc_code = #{acc_code},
+	        debit_amount = #{debit_amount},
+	        credit_amount = #{credit_amount},
+	        trans_name = #{trans_name},
+	        j_remark = #{j_remark}
+	    WHERE journal_id = #{journal_id}
+	</update>
+	<!-- 전표 다중삭제 처리 -->
+	<!-- 분개 데이터 삭제 -->
+	<delete id="deleteJournalizings" parameterType="list">
+		    DELETE FROM JOURNALIZING
+		    WHERE voucher_id IN
+	    <foreach item="id" collection="list" open="(" separator="," close=")">
+	        	#{id}
+	    </foreach>
+	</delete>
+	<!-- 전표 데이터 삭제 -->
+	<delete id="deleteVouchers" parameterType="list">
+		    DELETE FROM VOUCHER
+		    WHERE voucher_id IN
+	    <foreach item="id" collection="list" open="(" separator="," close=")">
+	        	#{id}
+	    </foreach>
+	</delete>
+</mapper>	

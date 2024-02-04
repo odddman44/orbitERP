@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/springweb/a00_com/jquery.min.js"></script>
+<script type="text/javascript">
+	$$(document).ready(function(){
+		$$("h2").text("안녕하세요")
+	});
+</script>
+</head>
+<body>
+  <h2 ></h2>
+
+</body>
+</html>

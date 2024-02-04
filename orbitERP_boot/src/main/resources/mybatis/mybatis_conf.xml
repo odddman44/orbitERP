@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="employee" type="com.web.orbitERP.vo.Employee"/>
+		<typeAlias alias="empSch" type="com.web.orbitERP.vo.EmpSch"/>
+		<typeAlias alias="empProfile" type="com.web.orbitERP.vo.EmpProfile"/>
+		<typeAlias alias="dept" type="com.web.orbitERP.vo.Dept"/>
+		<typeAlias alias="attendance" type="com.web.orbitERP.vo.Attendance"/>
+		<typeAlias alias="attendanceSch" type="com.web.orbitERP.vo.AttendanceSch"/>
+		<typeAlias alias="accsub" type="com.web.orbitERP.vo.Accsub"/>
+		<typeAlias alias="accsubSch" type="com.web.orbitERP.vo.AccsubSch"/>
+		<typeAlias alias="lecture" type="com.web.orbitERP.vo.Lecture"/>
+		<typeAlias alias="studentSch" type="com.web.orbitERP.vo.StudentSch"/>
+		<typeAlias alias="student" type="com.web.orbitERP.vo.Student"/>
+		<typeAlias alias="stuProfile" type="com.web.orbitERP.vo.StuProfile"/>
+		<typeAlias alias="calendar" type="com.web.orbitERP.vo.Calendar"/>
+		<typeAlias alias="voucher" type="com.web.orbitERP.vo.Voucher"/>
+		<typeAlias alias="journalizing" type="com.web.orbitERP.vo.Journalizing"/>
+		<typeAlias alias="voucherDetail" type="com.web.orbitERP.vo.VoucherDetail"/>
+		<typeAlias alias="lectureStu" type="com.web.orbitERP.vo.LectureStu"/>
+		<typeAlias alias="bulletin" type="com.web.orbitERP.vo.Bulletin"/>
+		<typeAlias alias="bulletinSch" type="com.web.orbitERP.vo.BulletinSch"/>
+		<typeAlias alias="bulletinFile" type="com.web.orbitERP.vo.BulletinFile"/>
+		<typeAlias alias="lectureTch" type="com.web.orbitERP.vo.LectureTch"/>
+	</typeAliases>
+</configuration>
