@@ -26,7 +26,7 @@ public class A01_MainController {
 	
 	/* 1. 로그인 창 */
 	//  http://localhost:4444/login
-	//  http://211.63.89.67:4444/orbitERP/login.do
+	//  http://211.63.89.67:4444/login
 	@GetMapping("login")
 	public String login1() {
 		return "a01_main\\a83_login";
