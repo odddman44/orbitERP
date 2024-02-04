@@ -155,32 +155,6 @@ public class A04_FinanceController {
             		(Map.of("status", "error", "message", e.getMessage()));
         }
     }
-    /*
-    @PostMapping("deleteVouchers")
-    public ModelAndView deleteVouchers(@RequestBody List<Integer> voucherIds) {
-    	ModelAndView mav = new ModelAndView();
-    	mav.setView(new MappingJackson2JsonView());
-        try {
-            service.deleteVouchers(voucherIds);
-            mav.addObject("status", "success");
-            mav.addObject("message", "선택한 행 삭제 완료");
-        } catch (Exception e) {
-            e.printStackTrace();
-            mav.addObject("status", "error");
-            mav.addObject("message", "삭제 중 오류 발생: " + e.getMessage());
-        }
-        return mav;
-    }
-    */
-    /*
-    @RequestMapping("somePath")
-    public ModelAndView someMethod() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new MappingJackson2JsonView());
 
-        modelAndView.addObject("key", "value");
-        return modelAndView;
-    }   
-    */
 
 }
