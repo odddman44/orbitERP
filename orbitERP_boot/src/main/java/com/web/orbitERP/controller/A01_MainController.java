@@ -48,7 +48,7 @@ public class A01_MainController {
 	
 	/* 2. 메인 홈페이지 이동*/
 	// http://localhost:4444/main
-	// http://211.63.89.67:4444/orbitERP/main.do
+	// http://211.63.89.67:4444/main
 	@RequestMapping("main")
 	public String mainIndex() {
 		return "a01_main\\a01_index";
