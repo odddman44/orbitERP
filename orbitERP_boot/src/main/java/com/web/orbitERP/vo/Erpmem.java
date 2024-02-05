@@ -6,6 +6,9 @@ public class Erpmem {
 	private String ename;
 	private String pwd;
 	private String email;
+	private String deptno;
+	private String dname;
+	
 	public Erpmem() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -17,6 +20,19 @@ public class Erpmem {
 		this.ename = ename;
 		this.pwd = pwd;
 		this.email = email;
+	}
+	
+	public String getDname() {
+		return dname;
+	}
+	public void setDname(String dname) {
+		this.dname = dname;
+	}
+	public String getDeptno() {
+		return deptno;
+	}
+	public void setDeptno(String deptno) {
+		this.deptno = deptno;
 	}
 	public String getEmpno() {
 		return empno;
