@@ -146,6 +146,7 @@ $(document).ready(function() {
 					  'JS': 'Javascript',
 					  'C++': 'C++',
 					  'PY': 'Python',
+					  'C': 'C'
 					  // 계속 추가 예정
 					};
 			$("#schTch").click(function(){
@@ -153,13 +154,13 @@ $(document).ready(function() {
 				//등록페이지에서 받아온 강의코드를 mapping
 				$("[name=subject]").val(selectedSubject);
 				//form에 넣고
-				if($("[name=subject]").val()==""){
+			    searchTch() 
+				if($("[name=subject]").val()=="" || $("#tch tr").length === 0){
 					if(confirm("해당과목 담당강사가 없습니다.\n강사등록을 하시겠습니까?")){
 						location.href="empList";
 						return;
 					}
 				}
-			    searchTch() 
 				//검색
 			});
 		
@@ -172,7 +173,7 @@ function searchStu() {
         data: $("#frm02").serialize(),
         dataType: "json",
         success: function (studentList) {
-        	$("#totStu").text('총 학생 수 : 명'+studentList.length)
+        	$("#totStu").text('총 학생 수 : '+studentList.length+'명')
             var stuhtml = "";
             $.each(studentList, function (idx, stu) {
             	stuhtml += "<tr ondblclick=\"location.href='detailStudent?sno=" + stu.sno + "'\">";
@@ -511,7 +512,7 @@ function deleteStu(button) {
 									<button class="btn btn-info" type="button" id="schBtn">Search</button>
 								</nav>
 								<div class="input-group mt-3 mb-0">
-									<span class="input-group-text" id="totStu">총 학생 수 : 명</span>
+									<span class="input-group-text" id="totStu"></span>
 								</div>
 							</form>
 						</div>

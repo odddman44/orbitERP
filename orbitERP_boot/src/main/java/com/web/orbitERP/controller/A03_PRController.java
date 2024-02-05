@@ -24,9 +24,6 @@ public class A03_PRController {
 
 	@Autowired(required = false)
 	private A03_PRService service;
-	@Autowired(required = false)
-	private A02_HRService service2;
-	
 	//http://localhost:4444/lectureList
 	//http://211.63.89.67:4444/lectureList
 	// 강의조회
