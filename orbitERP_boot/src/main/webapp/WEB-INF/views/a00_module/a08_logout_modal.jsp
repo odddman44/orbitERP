@@ -9,7 +9,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#lgBtn").click(function() {
-        alert("로그아웃 성공");
+        alert("${emem.ename}님, 로그아웃되었습니다!");
         window.location.href = "${path}/logout";
     });
 });
