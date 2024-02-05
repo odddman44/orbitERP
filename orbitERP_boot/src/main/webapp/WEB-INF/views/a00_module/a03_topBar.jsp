@@ -9,7 +9,7 @@
 	$(document).ready(function() {
 		var auth = "${emem.auth}";
 	    if(auth==null || auth =="") {
-	    	alert("로그인이 필요한 페이지입니다.")
+	    	alert("로그인이 필요한 페이지입니다.\n 로그인 화면으로 이동합니다.")
 	        window.location.href = "${path}/login";
 	    }
 	});
