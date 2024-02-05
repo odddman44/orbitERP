@@ -163,7 +163,7 @@
 			<!-- Heading -->
 			<div class="sidebar-heading">공지사항 및 게시판</div>	
 			<!-- Nav Item - Charts -->
-			<li class="nav-item"><a class="nav-link" href="bulList">
+			<li class="nav-item"><a class="nav-link" href="bulList.do">
 					<i class="fas fa-fw fa-chart-area"></i> <span>공지사항</span>
 			</a></li>
 

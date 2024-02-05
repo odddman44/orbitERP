@@ -482,11 +482,10 @@
 
 <!-- Custom scripts for all pages-->
 <script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
-
 <!-- 추가 plugins:js -->
-<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>	
 <script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 <script src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
 <script src="${path}/a00_com/js/dataTables.select.min.js"></script>
+
 </body>
 </html>

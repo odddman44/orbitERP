@@ -19,13 +19,7 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-	    var auth = "${emem.auth}";
-	    if(auth==null || auth =="") {
-	    	alert("로그인이 필요한 페이지입니다.")
-	        window.location.href = "${path}/login";
-	    }
-	});
+
 </script>
      <!-- Custom fonts for this template-->
     <link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -67,18 +61,18 @@
 					</div>
 					<!-- Content Row -->
 					<div class="row">
-						<%--@ include file="/WEB-INF/views/a00_module/a04_main_row01.jsp" --%>
+						<%@ include file="/WEB-INF/views/a00_module/a04_main_row01.jsp" %>
 					</div>
 
 					<!-- Content Row -->
 
 					<div class="row">
-						<%--@ include file="/WEB-INF/views/a00_module/a05_main_row02.jsp" --%>
+						<%@ include file="/WEB-INF/views/a00_module/a05_main_row02.jsp" %>
 					</div>
 
 					<!-- Content Row -->
 					<div class="row">
-						<%--@ include file="/WEB-INF/views/a00_module/a06_main_row03.jsp" --%>
+						<%@ include file="/WEB-INF/views/a00_module/a06_main_row03.jsp"%>
 					</div>
 
 				</div>
@@ -111,7 +105,7 @@
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp" %>
 	
 <!-- Bootstrap core JavaScript-->
-    <script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
+<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
 <script src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
 <script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
