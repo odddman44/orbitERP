@@ -26,7 +26,7 @@ import com.web.orbitERP.vo.StudentSch;
 public class A02_HRController {
 	@Autowired(required = false)
 	private A02_HRService service;
-	// 부서 정보 조회
+	// 부서 정보 조회 ㅎㅎ
 
 	// http://localhost:4444/deptList
 	// http://211.63.89.67:4444/deptList.do
