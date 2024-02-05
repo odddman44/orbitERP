@@ -26,7 +26,7 @@
 
 			<!-- Nav Item - Dashboard -->
 			<li class="nav-item active"><a class="nav-link"
-				href="${path}/main"> <i class="fa fa-user-circle" style="font-size:15px"></i> <span style="font-size:15px">My Page</span></a>
+				href="${path}/mypage"> <i class="fa fa-user-circle" style="font-size:15px"></i> <span style="font-size:15px">My Page</span></a>
 			</li>
 
 			<!-- Divider -->
