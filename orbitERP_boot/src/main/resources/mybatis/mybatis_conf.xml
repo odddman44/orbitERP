@@ -24,5 +24,6 @@
 		<typeAlias alias="bulletinSch" type="com.web.orbitERP.vo.BulletinSch"/>
 		<typeAlias alias="bulletinFile" type="com.web.orbitERP.vo.BulletinFile"/>
 		<typeAlias alias="lectureTch" type="com.web.orbitERP.vo.LectureTch"/>
+		<typeAlias alias="enrollment" type="com.web.orbitERP.vo.Enrollment"/>
 	</typeAliases>
 </configuration>
