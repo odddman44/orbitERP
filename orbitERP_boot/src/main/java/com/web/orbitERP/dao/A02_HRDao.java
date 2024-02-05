@@ -103,6 +103,12 @@ public interface A02_HRDao {
 	
 	int insertErpmem(Erpmem ins);
 	
+	Erpmem getErpmem(@Param("empno") String empno);
+	
+	int deleteErpmem(@Param("empno") String empno);
+	
+	
+	
 	
 	
 	
