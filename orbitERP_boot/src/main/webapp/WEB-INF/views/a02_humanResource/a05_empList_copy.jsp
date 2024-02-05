@@ -131,6 +131,15 @@
 				$('#frm02 [name=ssnum]').val(ssum)
 				console.log("주민번호: " + ssum)
 				
+				var phone1 = $('#phone1').val();
+				var phone2 = $('#phone2').val();
+				var phone3 = $('#phone2').val();
+				// 3개 합친값
+				var phone = phone1 + "-" + phone2 + "-" + phone3;
+				$('#frm02 [name=phone]').val(phone)
+				console.log("주민번호: " + ssum)
+				
+				
 				 $('#frm02').submit();
 				
 			    
@@ -387,7 +396,7 @@
 							<div class="col-sm-9">
 								
 								<input type="text" class="form-control form-control-user"
-									name="empno">
+									name="empno" maxlength="6">
 								<p id="empCk">Enter 누르면 사원번호 중복 체크</p>
 							</div>
 						</div>
@@ -460,22 +469,22 @@
 									name="phone" />
 							
 								<div class="col-sm-2">
-								<input type="number" class="form-control form-control-user"
-									id="phone1" pattern="\d*" maxlength="3" />
+								<input type="text" class="form-control form-control-user"
+									id="phone1" pattern="[0-9]*" maxlength="3" />
 							</div>
 								<div class="col-sm-1">
 							-
 							</div>
 								<div class="col-sm-2">
-								<input type="number" class="form-control form-control-user"
-									id="phone2" pattern="\d*" maxlength="4" />
+								<input type="text" class="form-control form-control-user"
+									id="phone2" pattern="[0-9]*" maxlength="4" />
 							</div>
 								<div class="col-sm-1">
 								-
 							</div>
 								<div class="col-sm-2">
-								<input type="number" class="form-control form-control-user"
-									id="phone3" pattern="\d*" maxlength="4" />
+								<input type="text" class="form-control form-control-user"
+									id="phone3" name="pwd" pattern="[0-9]*" maxlength="4" />
 							</div>
 							
 						</div>
@@ -557,7 +566,7 @@
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
+
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
