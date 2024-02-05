@@ -23,7 +23,7 @@
 		var msg = "${msg}"
 		if (msg != "") {
 			if (!confirm(msg + "\n계속 등록하시겠습니까?")) {
-				location.href = "${path}/bulList.do"
+				location.href = "${path}/bulList"
 			}			
 		}
 		$("#regBtn").click(function() {
@@ -41,7 +41,7 @@
 		})
 		$("#mainBtn").click(function() {
 			//alert("초기 리스트 화면 이동")
-			location.href = "${path}/boardList.do"
+			location.href = "${path}/boardList"
 		})
 	})
 </script>
@@ -98,17 +98,8 @@ button {
 					<!-- Page Heading -->
 					<h1 class="h3 mb-4 text-gray-800">게시글</h1>
 					<br> <br>
-					<form method="post" enctype="multipart/form-data" action="${path}/insertBulletin.do">
-						<div class="row">
-							<div class="col-md-1">
-								<label>번호</label>
-							</div>
-							<div class="col-md-11">
-								<input class="form-control form-control-user" name="no"
-									value="${bulletin.no}" readonly />
-							</div>
-						</div>
-						<br>
+					<form method="post" enctype="multipart/form-data" action="${path}/insertBulletin">
+						
 						<div class="row">
 							<div class="col-md-1">
 								<label>제목</label>
@@ -129,7 +120,7 @@ button {
 							</div>
 						</div>
 						<br>
-						<!--  
+						
 						<div class="row">
 							<div class="col-md-1">
 								<label>첨부파일</label>
@@ -140,7 +131,7 @@ button {
 							</div>
 						</div>
 						<br>
-						-->
+						
 						<div class="row">
 							<div class="col-md-1">
 								<label>내용</label>
