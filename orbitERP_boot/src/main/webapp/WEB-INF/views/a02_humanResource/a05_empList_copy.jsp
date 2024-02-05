@@ -18,6 +18,21 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+	    // 숫자에 콤마를 추가하는 함수
+	       function addCommas(nStr) {
+	           nStr += '';
+	           var x = nStr.split('.');
+	           var x1 = x[0];
+	           var x2 = x.length > 1 ? '.' + x[1] : '';
+	           var rgx = /(\d+)(\d{3})/;
+	           while (rgx.test(x1)) {
+	               x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	           }
+	           return x1 + x2;
+	       }
+	    
+
 		var msg = "${msg}"
 		if (msg != "") {
 			alert(msg)
@@ -25,20 +40,38 @@
 		}
 		
 		$($("#frm02 [name=deptno]")).change(function(){
-			var selectValue = $(this).val()
-			console.log("선택된 부서: "+selectValue)
-			if(selectValue == "50"){
-				$("#msg").css("color", "red")
-			}else{
-				$("#msg").css("color", "black")
-			}
-		})
+		    var selectValue = $(this).val();
+		    console.log("선택된 부서: " + selectValue);
+		    if(selectValue == "50") {
+		        $("#msg").css("color", "red");
+		        $("#subject").prop("readonly", false); // "subject" 입력 필드를 읽기/쓰기 가능하도록 변경
+		        $("#job").val("강사"); // "job" 입력 필드의 값을 "강사"로 설정
+		        $("#job").prop("readonly", true); // 직급 강사로 하고 readonly로 변경
+		        $("#job option[value='강사']").prop("disabled", false); // 강사 옵션 활성화
+		    } else {
+		        $("#msg").css("color", "black");
+		        $("#subject").prop("readonly", true); // 교육팀 아니면 과목명 입력 불가
+		        $("#subject").val('');
+		        $("#job").prop("readonly", false); // 다른 부서면 직급 수정 가능
+		        $("#job option[value='강사']").prop("disabled", true); // 강사 옵션 비활성화
+		    }
+		});
 		
 		$("#frm02 [name=empno]").keyup(function(){
 			if(event.keyCode==13){
 				ckEmpno()
 			}
 		})
+		
+		$('#frm02').submit(function(event) {
+			           // 콤마가 포함된 입력 필드의 ID를 가져옵니다.
+			           var inputField = $('#sal');
+			           var valueWithCommas = inputField.val();
+			           // 콤마를 제거합니다.
+			           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+			           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+			           inputField.val(valueWithoutCommas);
+			       }); 
 
 		$("#regFrmBtn").click(function() {
 		
@@ -97,8 +130,21 @@
 				var ssum = jumin1 + "-" + jumin2;
 				$('#frm02 [name=ssnum]').val(ssum)
 				console.log("주민번호: " + ssum)
+				
+				var phone1 = $('#phone1').val();
+				var phone2 = $('#phone2').val();
+				var phone3 = $('#phone2').val();
+				// 3개 합친값
+				var phone = phone1 + "-" + phone2 + "-" + phone3;
+				$('#frm02 [name=phone]').val(phone)
+				console.log("주민번호: " + ssum)
+				
+				
+				 $('#frm02').submit();
+				
+			    
 
-				$("#frm02").submit()
+				
 			}
 		})
 		$('input[name="profile"]').on('change', function() {
@@ -118,6 +164,15 @@
 				previewElement.src = "";
 			}
 		});
+		
+		// 연봉 입력창에 자동으로 , 넣기
+		  $('#sal').on('input', function() {
+	           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+	           if (!isNaN(input)) { // 입력 값이 숫자인 경우
+	               $(this).val(addCommas(input)); // 콤마 추가
+	           }
+	       });
+
 
 	});
 	function goDetail(empno) {
@@ -341,7 +396,7 @@
 							<div class="col-sm-9">
 								
 								<input type="text" class="form-control form-control-user"
-									name="empno">
+									name="empno" maxlength="6">
 								<p id="empCk">Enter 누르면 사원번호 중복 체크</p>
 							</div>
 						</div>
@@ -362,7 +417,7 @@
 							<label for="name" class="col-sm-3 col-form-label">과목</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control form-control-user"
-									name="subject">
+									id="subject" name="subject" readonly>
 								<p id="msg">부서가 교육팀인 경우 과목 항목을 입력하십시오.</p>
 							</div>
 						</div>
@@ -378,7 +433,7 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="birth" class="col-sm-3 col-form-label">직급(*)</label>
 							<div class="col-sm-9">
-								<select class="form-control form-control-user" name="job">
+								<select class="form-control form-control-user" id="job" name="job">
 									<option value="">직급 선택</option>
 									<option>인턴</option>
 									<option>사원</option>
@@ -409,10 +464,29 @@
 						<br>
 						<div class="row justify-content-left align-items-left">
 							<label for="reg_date" class="col-sm-3 col-form-label">H.P</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control form-control-user"
+							
+								<input type="hidden" class="form-control form-control-user"
 									name="phone" />
+							
+								<div class="col-sm-2">
+								<input type="text" class="form-control form-control-user"
+									id="phone1" pattern="[0-9]*" maxlength="3" />
 							</div>
+								<div class="col-sm-1">
+							-
+							</div>
+								<div class="col-sm-2">
+								<input type="text" class="form-control form-control-user"
+									id="phone2" pattern="[0-9]*" maxlength="4" />
+							</div>
+								<div class="col-sm-1">
+								-
+							</div>
+								<div class="col-sm-2">
+								<input type="text" class="form-control form-control-user"
+									id="phone3" name="pwd" pattern="[0-9]*" maxlength="4" />
+							</div>
+							
 						</div>
 						<br>
 						<div class="row justify-content-left align-items-left">
@@ -454,7 +528,7 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="salary" class="col-sm-3 col-form-label">연봉</label>
 							<div class="col-sm-9">
-								<input type="number" class="form-control form-control-user"
+								<input type="text" id="sal" class="form-control form-control-user"
 									name="salary">
 							</div>
 						</div>
@@ -492,7 +566,7 @@
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
+
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>

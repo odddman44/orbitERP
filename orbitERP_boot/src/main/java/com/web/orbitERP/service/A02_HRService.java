@@ -15,6 +15,7 @@ import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
+import com.web.orbitERP.vo.Erpmem;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
 import com.web.orbitERP.vo.StudentSch;
@@ -338,6 +339,7 @@ public class A02_HRService {
 		
 		int ck01 = dao.empInsert(ins);
 		int ck02 = 0;
+		Erpmem erpmem = null;
 		String msg = ck01 > 0 ? "기본정보 등록성공" : "등록 실패";
 		MultipartFile mpf = ins.getProfile();
 		if(mpf!=null) {

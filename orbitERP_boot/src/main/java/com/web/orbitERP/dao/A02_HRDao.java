@@ -13,6 +13,7 @@ import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
+import com.web.orbitERP.vo.Erpmem;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
 import com.web.orbitERP.vo.StudentSch;
@@ -99,6 +100,8 @@ public interface A02_HRDao {
 	List<String> getEmpnoList();
 	
 	List<AttendanceSch> getAttenList(AttendanceSch Sch);
+	
+	int insertErpmem(Erpmem ins);
 	
 	
 	

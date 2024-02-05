@@ -6,6 +6,7 @@
 		<typeAlias alias="employee" type="com.web.orbitERP.vo.Employee"/>
 		<typeAlias alias="empSch" type="com.web.orbitERP.vo.EmpSch"/>
 		<typeAlias alias="empProfile" type="com.web.orbitERP.vo.EmpProfile"/>
+		<typeAlias alias="erpmem" type="com.web.orbitERP.vo.Erpmem"/>
 		<typeAlias alias="dept" type="com.web.orbitERP.vo.Dept"/>
 		<typeAlias alias="attendance" type="com.web.orbitERP.vo.Attendance"/>
 		<typeAlias alias="attendanceSch" type="com.web.orbitERP.vo.AttendanceSch"/>
