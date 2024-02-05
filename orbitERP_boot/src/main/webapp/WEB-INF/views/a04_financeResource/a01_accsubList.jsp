@@ -18,6 +18,7 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		var auth = "${emem.auth}";
 		var msg = "${msg}"
 		if(msg!=""){
 			alert(msg)
@@ -37,22 +38,26 @@
 		
 		// 계정과목 등록 버튼 클릭시의 모달창
 		$("#regBtn").click(function() {
-			$("#frm02")[0].reset();
-			// acc_code 필드의 readonly 속성 제거
-			$("#frm02 #accCode").prop('readonly', false);
-			// readonly 및 비활성화 해제
-            $("#frm02 #accName").prop('readonly', false);
-            $("#frm02 input[name='debit_credit']").prop('disabled', false);
-            $("#frm02 #accType").prop('disabled', false);
-         	
-		    // 모달창 보여주기
-		    $('#registerModalLabel').text('계정과목 등록').parent().css
-		    		({'background-color': '#59eb85', 'color': '#ffffff'});
-		    $('#regFrmBtn').show();  // 등록 버튼 보여주기
-		    $("#checkDupBtn").show(); // 중복확인 버튼 보여주기
-    		$('#uptBtn').hide();     // 수정 버튼 숨기기
-   			$('#delBtn').hide();     // 삭제 버튼 숨기기
-		    $("#registerModal").modal('show');
+			if (auth !== "총괄관리자" && auth !== "재무관리자") {
+                alert("권한이 없는 이용자입니다.");
+            } else {
+				$("#frm02")[0].reset();
+				// acc_code 필드의 readonly 속성 제거
+				$("#frm02 #accCode").prop('readonly', false);
+				// readonly 및 비활성화 해제
+	            $("#frm02 #accName").prop('readonly', false);
+	            $("#frm02 input[name='debit_credit']").prop('disabled', false);
+	            $("#frm02 #accType").prop('disabled', false);
+	         	
+			    // 모달창 보여주기
+			    $('#registerModalLabel').text('계정과목 등록').parent().css
+			    		({'background-color': '#59eb85', 'color': '#ffffff'});
+			    $('#regFrmBtn').show();  // 등록 버튼 보여주기
+			    $("#checkDupBtn").show(); // 중복확인 버튼 보여주기
+	    		$('#uptBtn').hide();     // 수정 버튼 숨기기
+	   			$('#delBtn').hide();     // 삭제 버튼 숨기기
+			    $("#registerModal").modal('show');
+            }
 		});
 		
 		var isAccCodeChecked = false;  // 중복확인 상태를 추적하는 변수
@@ -118,59 +123,71 @@
 		
 		// 수정버튼 클릭시 
 		$("#uptBtn").click(function(){
-			var accCode = $("#frm02 #accCode").val();
-			var formData = $("#frm02").serialize();
-			
-			console.log(formData)
-			// '기준' 계정과목의 경우, 비활성화된 필드 값 추가
-		    if (window.currentAccBaseAcc === '기준') {
-		        formData += '&debit_credit=' + $("#frm02 input[name='debit_credit']:checked").val();
-		        formData += '&acc_type=' + $("#frm02 #accType").val();
-		    }
-			
-			$.ajax({
-				url: "${path}/updateAccsub",
-				type: "post",
-				data: formData,
-				dataType: "json",
-				success: function(response){
-					var updatedData = response.accsub;
-					alert(response.msg); // 성공메세지
-					location.reload(); // 페이지 새로고침
-				},
-				error: function(err){
-					console.log(err)
-					console.log(err.status)
-					alert("수정실패")
-				}
-			})
+			if (auth !== "총괄관리자" && auth !== "재무관리자") {
+                alert("권한이 없는 이용자입니다.");
+            } else {
+				var accCode = $("#frm02 #accCode").val();
+				var formData = $("#frm02").serialize();
+				
+				console.log(formData)
+				// '기준' 계정과목의 경우, 비활성화된 필드 값 추가
+			    if (window.currentAccBaseAcc === '기준') {
+			        formData += '&debit_credit=' + $("#frm02 input[name='debit_credit']:checked").val();
+			        formData += '&acc_type=' + $("#frm02 #accType").val();
+			    }
+				
+				$.ajax({
+					url: "${path}/updateAccsub",
+					type: "post",
+					data: formData,
+					dataType: "json",
+					success: function(response){
+						var updatedData = response.accsub;
+						alert(response.msg); // 성공메세지
+						location.reload(); // 페이지 새로고침
+					},
+					error: function(err){
+						console.log(err)
+						console.log(err.status)
+						alert("수정실패")
+					}
+				})
+            }
 		})
 		
 		// 삭제버튼 클릭시
 		$("#delBtn").click(function() {
-			if (window.currentAccBaseAcc === '기준') {
-		        alert("기준 계정과목은 삭제할 수 없습니다.");
-		        return;
-		    }
-		    var accCode = $("#frm02 #accCode").val();
-		    if(confirm('정말 삭제하시겠습니까?')) {
-		        $.ajax({
-		            url: '${path}/deleteAccsub',
-		            type: 'post',
-		            data: {'acc_code': accCode},
-		            dataType: "json",
-		            success: function(response) {
-		                alert(response.msg); // 성공 메시지
-		                location.reload(); // 페이지 새로고침
-		            },
-		            error: function() {
-		                alert('삭제 실패');
-		            }
-		        });
-		    }
+			if (auth !== "총괄관리자" && auth !== "재무관리자") {
+                alert("권한이 없는 이용자입니다.");
+            } else {
+				if (window.currentAccBaseAcc === '기준') {
+			        alert("기준 계정과목은 삭제할 수 없습니다.");
+			        return;
+			    }
+			    var accCode = $("#frm02 #accCode").val();
+			    if(confirm('정말 삭제하시겠습니까?')) {
+			        $.ajax({
+			            url: '${path}/deleteAccsub',
+			            type: 'post',
+			            data: {'acc_code': accCode},
+			            dataType: "json",
+			            success: function(response) {
+			                alert(response.msg); // 성공 메시지
+			                location.reload(); // 페이지 새로고침
+			            },
+			            error: function() {
+			                alert('삭제 실패');
+			            }
+			        });
+			    }
+            	
+            }
+			
 		});
 		
-	});
+		
+	}); // document(ready) 끝
+	
 	// 상세정보 불러오는 함수 
 	function detailAcc(accCode){
 	
@@ -282,7 +299,7 @@
 						 	</nav>
 						 	<div class="input-group mt-3 mb-0">	
 								<span class="input-group-text">총 : ${sch.count}건</span>
-								<button type="button" id="regBtn" class="btn btn-success" data-toggle="modal" data-target="#registerModal">
+								<button type="button" id="regBtn" class="btn btn-success">
 								계정과목등록
 								</button>
 								<input type="text" class="form-control" style="width:50%;" readonly>

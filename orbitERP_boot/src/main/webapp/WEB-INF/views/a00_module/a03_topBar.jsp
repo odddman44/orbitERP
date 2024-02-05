@@ -7,7 +7,7 @@
 <%@ page import="jakarta.servlet.http.HttpSession"%>
 <script type="text/javascript">
 	$(document).ready(function() {
-	    var auth = "${emem.auth}";
+		var auth = "${emem.auth}";
 	    if(auth==null || auth =="") {
 	    	alert("로그인이 필요한 페이지입니다.")
 	        window.location.href = "${path}/login";
