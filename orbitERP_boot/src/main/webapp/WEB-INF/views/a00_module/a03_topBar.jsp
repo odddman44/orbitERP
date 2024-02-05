@@ -4,6 +4,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
+<%@ page import="jakarta.servlet.http.HttpSession"%>
+<script type="text/javascript">
+	$(document).ready(function() {
+	    var auth = "${emem.auth}";
+	    if(auth==null || auth =="") {
+	    	alert("로그인이 필요한 페이지입니다.")
+	        window.location.href = "${path}/login";
+	    }
+	});
+</script>
+
 <nav
 	class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -161,15 +172,13 @@
 					More Messages</a>
 			</div></li>
 
-		<div class="topbar-divider d-none d-sm-block">
-		</div>
 
 		<!-- Nav Item - User Information -->
 		<li class="nav-item dropdown no-arrow"><a
 			class="nav-link dropdown-toggle" href="#" id="userDropdown"
 			role="button" data-toggle="dropdown" aria-haspopup="true"
 			aria-expanded="false"> <span
-				class="mr-2 d-none d-lg-inline text-gray-600 small">${emem.auth} 님 접속중</span> <img class="img-profile rounded-circle"
+				class="mr-2 d-none d-lg-inline text-gray-600 small">[${emem.auth}] ${emem.ename}님 접속중</span> <img class="img-profile rounded-circle"
 				src="${path}/a00_com/img/undraw_profile.svg">
 		</a> <!-- Dropdown - User Information -->
 			<div
