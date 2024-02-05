@@ -28,7 +28,7 @@ public class A03_PRController {
 	private A02_HRService service2;
 	
 	//http://localhost:4444/lectureList
-	//http://211.63.89.67:4444/orbitERP/lectureList.do
+	//http://211.63.89.67:4444/lectureList
 	// 강의조회
 	@RequestMapping("lectureList")
 	public String lectureList(Lecture sch,Model d) {
