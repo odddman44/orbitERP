@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.web.orbitERP.vo.Calendar;
+import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
@@ -33,6 +34,8 @@ public interface A03_PRDao {
 			+ "ORDER BY subject")
 	List<String> getSubjects();
 	
+	//수강테이블 등록
+	int insertEnroll(Enrollment ins);
 	
 	
 	/*--캘린더 dao-------------------------------------------------------------*/

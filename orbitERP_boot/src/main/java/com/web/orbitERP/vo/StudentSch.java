@@ -1,12 +1,9 @@
 package com.web.orbitERP.vo;
 
-import java.util.Date;
 
 public class StudentSch {
-	private int sno;
 	private String name;
 	private String final_degree;
-	private Date reg_date;
 	
 	private int count; // 전체 데이터 건수
 	private int pageSize; // 한페이지에 보여줄 데이터 건수
@@ -21,13 +18,12 @@ public class StudentSch {
 	public StudentSch() {
 	
 	}
-	public StudentSch(int sno, String name, String final_degree, Date reg_date, int count, int pageSize, int pageCount,
-			int curPage, int start, int end, int blockSize, int startBlock, int endBlock) {
-		
-		this.sno = sno;
+	
+	public StudentSch(String name, String final_degree, int count, int pageSize, int pageCount, int curPage, int start,
+			int end, int blockSize, int startBlock, int endBlock) {
+		super();
 		this.name = name;
 		this.final_degree = final_degree;
-		this.reg_date = reg_date;
 		this.count = count;
 		this.pageSize = pageSize;
 		this.pageCount = pageCount;
@@ -38,12 +34,7 @@ public class StudentSch {
 		this.startBlock = startBlock;
 		this.endBlock = endBlock;
 	}
-	public int getSno() {
-		return sno;
-	}
-	public void setSno(int sno) {
-		this.sno = sno;
-	}
+
 	public String getName() {
 		return name;
 	}
@@ -55,12 +46,6 @@ public class StudentSch {
 	}
 	public void setFinal_degree(String final_degree) {
 		this.final_degree = final_degree;
-	}
-	public Date getReg_date() {
-		return reg_date;
-	}
-	public void setReg_date(Date reg_date) {
-		this.reg_date = reg_date;
 	}
 	public int getCount() {
 		return count;

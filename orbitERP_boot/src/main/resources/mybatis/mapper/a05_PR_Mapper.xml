@@ -66,6 +66,13 @@
 		AND (ENAME LIKE '%'||#{ename}||'%' AND SUBJECT LIKE '%'||#{subject}||'%')
 	</select>
 	
+	<!-- 수강테이블 -->
+	<insert id="insertEnroll" parameterType="enrollment">
+		INSERT INTO ENROLLMENT (enno, sno, lecno, empno)
+		VALUES (enno_seq.nextval, #{sno}, lecno_seq.CURRVAL, #{empno})
+	</insert>
+	
+	
 	
 	
 	
