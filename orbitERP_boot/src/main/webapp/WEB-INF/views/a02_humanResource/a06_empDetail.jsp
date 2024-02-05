@@ -63,6 +63,19 @@
 		}
 	
 	}
+	
+	// 숫자에 콤마를 추가하는 함수
+    function addCommas(nStr) {
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
 	$(document).ready(function() {
 		
 		console.log("받아온 정보:" + "${employee}")
@@ -72,26 +85,39 @@
 		})
 
 		$("#uptBtn").click(function() {
-			var salary = $("[name=salary]").val()
-			// alert(salary)
-			if(isNaN(salary)){
-				alert("연봉은 숫자로 입력해주세요")
-				return;
-			}
+		
 			if($("[name=deptno]").val()==50 && $("[name=job]").val()!="강사"){
 				alert("교육팀 직급은 강사로 입력해주세요")
 				return;
 			}
 			else{
 				$("form").attr("action", "${path}/empUpdate")
-				$("form").submit();
+				$("#frm01").submit();
 			}
 		})
+		
+				$('#frm01').submit(function(event) {
+			           // 콤마가 포함된 입력 필드의 ID를 가져옵니다.
+			           var inputField = $('#sal');
+			           var valueWithCommas = inputField.val();
+			           // 콤마를 제거합니다.
+			           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+			           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+			           inputField.val(valueWithoutCommas);
+			       }); 
 		
 		$("#delBtn").click(function(){
 			var empno = $("[name=empno]").val()
 			location.href = "${path}/deleteEmp?empno=" + empno;
 		})
+		
+		// 연봉 입력창에 자동으로 , 넣기
+		  $('#sal').on('input', function() {
+	           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+	           if (!isNaN(input)) { // 입력 값이 숫자인 경우
+	               $(this).val(addCommas(input)); // 콤마 추가
+	           }
+	       });
 
 		// 사진 미리보기
 		$("#profileInput").on("change", function() {
@@ -208,7 +234,7 @@
 								
 								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
 								<input class="form-control form-control-user" name="salary"
-									 value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
+									 id="sal" value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
 							</div>
 
 						</div>
