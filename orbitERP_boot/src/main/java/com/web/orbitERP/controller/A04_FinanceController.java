@@ -36,7 +36,7 @@ public class A04_FinanceController {
 	/*계정과목 리스트 조회*/
 	// http://localhost:4444/accList
 	//  http://211.63.89.67:4444/accList
-	//  브랜치 테스트
+	//  브랜치 테스트 완료
 	@RequestMapping("accList")
 	public String accsubList(@ModelAttribute("sch") AccsubSch sch, Model d) {
 		d.addAttribute("accList", service.accsubList(sch));
