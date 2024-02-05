@@ -14,7 +14,19 @@
 	    }
 	});
 </script>
-
+<style>
+.custom-badge {
+    padding: 0.25em 0.6em;
+    font-size: 90%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    /* 추가적인 스타일링 */
+}
+</style>
 <nav
 	class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -178,7 +190,21 @@
 			class="nav-link dropdown-toggle" href="#" id="userDropdown"
 			role="button" data-toggle="dropdown" aria-haspopup="true"
 			aria-expanded="false"> <span
-				class="mr-2 d-none d-lg-inline text-gray-600 small">[${emem.auth}] ${emem.ename}님 접속중</span> <img class="img-profile rounded-circle"
+				class="mr-2 d-none d-lg-inline text-gray-600 small" data-toggle="tooltip" title="부서: ${emem.dname}">
+				<c:choose>
+				    <c:when test="${emem.auth == '총괄관리자'}">
+				        <span class="badge badge-primary custom-badge">${emem.auth}</span>
+				    </c:when>
+				    <c:when test="${emem.auth == '재무관리자' or emem.auth == '시스템관리자' 
+				    				or emem.auth == '계획관리자' or emem.auth == '인사관리자'}">
+				        <span class="badge badge-warning custom-badge">${emem.auth}</span>
+				    </c:when>
+				    <c:otherwise>
+				        <span class="badge badge-success custom-badge">${emem.auth}</span>
+				    </c:otherwise>
+				</c:choose>
+				${emem.ename}님 접속중..</span>
+				 <img class="img-profile rounded-circle"
 				src="${path}/a00_com/img/undraw_profile.svg">
 		</a> <!-- Dropdown - User Information -->
 			<div

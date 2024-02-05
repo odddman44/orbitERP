@@ -5,13 +5,18 @@ package com.web.orbitERP.controller;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.web.orbitERP.service.A01_MainService;
+import com.web.orbitERP.service.A02_HRService;
+import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.Erpmem;
 
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +28,9 @@ import jakarta.servlet.http.HttpSession;
 public class A01_MainController {
 	@Autowired(required = false)
 	private A01_MainService service;
+	
+	@Autowired(required = false)
+	private A02_HRService hrService;
 	
 	/* 1. 로그인 창 */
 	//  http://localhost:4444/login
