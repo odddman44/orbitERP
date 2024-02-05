@@ -25,23 +25,20 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#refBtn").click(function() {
-			location.href = "${path}/insertBulletinFrm.do";
-		});	
-		/*
+		
 		$("#refBtn").click(function() {
 			if ("${emem.auth}" === "총괄관리자") {
-				location.href = "${path}/insertBulletinFrm.do";
+				location.href = "${path}/insertBulletinFrm";
 			} else {
 				alert("총괄관리자만 등록할 수 있습니다");
 			}
 		});
-		*/
+		
 	});
 
 	// 상세 페이지
 	function goDetail(no) {
-		location.href = "bulletinDetail.do?no=" + no
+		location.href = "bulletinDetail?no=" + no
 	}
 </script>
 

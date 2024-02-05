@@ -24,16 +24,16 @@
 	if(msg!=""){
 		if(proc=="upt"){
 			if(confirm(msg+"\n게시판으로 이동하시겠습니까?")){
-				location.href="${path}/bulList.do"
+				location.href="${path}/bulList"
 			}	
 		}
 		if(proc=="del"){
 			alert(msg+"\n게시판으로 이동합니다.")
-				location.href="${path}/bulList.do"	
+				location.href="${path}/bulList"	
 		}
 	}
 	$(document).ready(function() {
-		/* 
+		
 		if ("${emem.auth}" === "총괄관리자") {
 		        $("#uptBtn").css("visibility", "visible");
 		    } else {
@@ -44,18 +44,18 @@
 		    } else {
 		        $("#delBtn").css("visibility", "hidden");
 		    }
-		*/
+		
 		$("#goListBtn").click(function(){
-			location.href="${path}/bulList.do";
+			location.href="${path}/bulList";
 		})
 		
 		$("#uptBtn").click(function(){
-			$("form").attr("action", "${path}/updateBulletin.do")
+			$("form").attr("action", "${path}/updateBulletin")
 			$("form").submit()
 		})
 		$("#delBtn").click(function(){
 			var no = $("[name=no]").val()
-			location.href="${path}/deleteBulletin.do?no="+no;
+			location.href="${path}/deleteBulletin?no="+no;
 		})
 	})	
 </script>
@@ -113,16 +113,7 @@ button {
 					<h1 class="h3 mb-4 text-gray-800">게시글</h1>
 					<br> <br>
 					<form id="frm01" method="post">
-						<div class="row">
-							<div class="col-md-1">
-								<label>번호</label>
-							</div>
-							<div class="col-md-11">
-								<input class="form-control form-control-user"
-									name="no" value="${bulletin.no}" readonly />
-							</div>
-						</div>
-						<br>
+						
 						<div class="row">
 							<div class="col-md-1">
 								<label>제목</label>
