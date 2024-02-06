@@ -10,26 +10,6 @@
 <meta charset="UTF-8">
 <title>:: Orbit ERP ::</title>
 <link href="${path}/a00_com/img/logo.svg" rel="icon" type="image/x-icon" />
-<!-- DB테이블 플러그인 추가 -->
-<link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
-<link rel="stylesheet"
-	href="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.css">
-<link rel="stylesheet" type="text/css"
-	href="${path}/a00_com/js/select.dataTables.min.css">
-<!-- Custom fonts for this template-->
-<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
-	rel="stylesheet" type="text/css">
-<!-- 
-    기존 font
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    -->
-<link
-	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
-	rel="stylesheet">
-
-<!-- Custom styles for this template-->
-<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
-<link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 <%--
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
@@ -65,6 +45,8 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+	
+	
 	var proc = "${proc}"
 	var msg = "${msg}"
 	if (msg != "") {
@@ -73,88 +55,102 @@
 				location.href = "${path}/empList";
 			}
 		}
-
+		
 		if (proc == "del") {
 			if (confirm(msg + "\n메인화면으로 이동하시겠습니까?")) {
 				location.href = "${path}/empList";
 			}
 		}
-
+	
 	}
-
+	
 	// 숫자에 콤마를 추가하는 함수
-	function addCommas(nStr) {
-		nStr += '';
-		var x = nStr.split('.');
-		var x1 = x[0];
-		var x2 = x.length > 1 ? '.' + x[1] : '';
-		var rgx = /(\d+)(\d{3})/;
-		while (rgx.test(x1)) {
-			x1 = x1.replace(rgx, '$1' + ',' + '$2');
-		}
-		return x1 + x2;
-	}
-	$(document).ready(
-			function() {
+    function addCommas(nStr) {
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+	$(document).ready(function() {
+		
+		console.log("받아온 정보:" + "${employee}")
+		// 사원 리스트로 이동
+		$("#goListBtn").click(function() {
+			location.href = "${path}/empList"
+		})
 
-				console.log("받아온 정보:" + "${employee}")
-				// 사원 리스트로 이동
-				$("#goListBtn").click(function() {
-					location.href = "${path}/empList"
-				})
-
-				$("#uptBtn").click(
-						function() {
-
-							if ($("[name=deptno]").val() == 50
-									&& $("[name=job]").val() != "강사") {
-								alert("교육팀 직급은 강사로 입력해주세요")
-								return;
-							} else {
-								$("form").attr("action", "${path}/empUpdate")
-								$("#frm01").submit();
-							}
-						})
-
+		$("#uptBtn").click(function() {
+		
+			if($("[name=deptno]").val()==50 && $("[name=job]").val()!="강사"){
+				alert("교육팀 직급은 강사로 입력해주세요")
+				return;
+			}
+			else{
+				$("form").attr("action", "${path}/empUpdate")
+				$("#frm01").submit();
+			}
+		})
+		
 				$('#frm01').submit(function(event) {
-					// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
-					var inputField = $('#sal');
-					var valueWithCommas = inputField.val();
-					// 콤마를 제거합니다.
-					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-					// 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
-					inputField.val(valueWithoutCommas);
-				});
+			           // 콤마가 포함된 입력 필드의 ID를 가져옵니다.
+			           var inputField = $('#sal');
+			           var valueWithCommas = inputField.val();
+			           // 콤마를 제거합니다.
+			           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+			           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+			           inputField.val(valueWithoutCommas);
+			       }); 
+		
+		$("#delBtn").click(function(){
+			var empno = $("[name=empno]").val()
+			location.href = "${path}/deleteEmp?empno=" + empno;
+		})
+		
+		// 연봉 입력창에 자동으로 , 넣기
+		  $('#sal').on('input', function() {
+	           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+	           if (!isNaN(input)) { // 입력 값이 숫자인 경우
+	               $(this).val(addCommas(input)); // 콤마 추가
+	           }
+	       });
 
-				$("#delBtn").click(function() {
-					var empno = $("[name=empno]").val()
-					location.href = "${path}/deleteEmp?empno=" + empno;
-				})
+		// 사진 미리보기
+		$("#profileInput").on("change", function() {
+			var input = this;
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$("#profileImage").attr("src", e.target.result);
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
+		});
+		
 
-				// 연봉 입력창에 자동으로 , 넣기
-				$('#sal').on('input', function() {
-					var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
-					if (!isNaN(input)) { // 입력 값이 숫자인 경우
-						$(this).val(addCommas(input)); // 콤마 추가
-					}
-				});
+	});
 
-				// 사진 미리보기
-				$("#profileInput").on("change", function() {
-					var input = this;
-					if (input.files && input.files[0]) {
-						var reader = new FileReader();
-						reader.onload = function(e) {
-							$("#profileImage").attr("src", e.target.result);
-						};
-						reader.readAsDataURL(input.files[0]);
-					}
-				});
 
-			});
 </script>
 
+<!-- Custom fonts for this template-->
+<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<!-- 
+    기존 font
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+	rel="stylesheet">
 
+<!-- Custom styles for this template-->
+<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 </head>
 <body id="page-top">
 
@@ -175,12 +171,13 @@
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">${employee.ename}사원상세정보</h1>
+					<h1 class="h3 mb-4 text-gray-800">${employee.ename} 사원 상세정보</h1>
 					<br> <br>
 					<div class="d-flex justify-content-left">
 						<!--  <img id="profile" src="${profile}" width="100px" height="100px" alt="사진" /> -->
 					</div>
-					<form id="frm01" method="post" enctype="multipart/form-data">
+					<form id="frm01" method="post" 
+						enctype="multipart/form-data">
 
 						<br>
 						<div class="row justify-content-left align-items-left">
@@ -196,8 +193,8 @@
 									<img id="profileImage" src="${path}/z02_empProfile/기본프사.png"
 										width="103px" height="132px">
 								</c:if>
-								<input id="profileInput" class="form-control form-control-user"
-									name="profile" type="file" accept="image/*">
+								<input id="profileInput" class="form-control form-control-user" name="profile"
+									type="file" accept="image/*">
 							</div>
 							<br>
 						</div>
@@ -234,11 +231,10 @@
 							</div>
 							<label for="salary" class="col-sm-1 col-form-label">연봉</label>
 							<div class="col-sm-3">
-
+								
 								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
 								<input class="form-control form-control-user" name="salary"
-									id="sal"
-									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
+									 id="sal" value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
 							</div>
 
 						</div>
@@ -254,26 +250,25 @@
 								<select name="deptno" class="form-control form-control-user">
 									<option value="${employee.deptno}">${dept.dname}(기존
 										소속팀)</option>
-									<c:forEach var="dept" items="${dlist}">
+										<c:forEach var="dept" items="${dlist}">
 										<option value="${dept.deptno}">${dept.dname}(${dept.dcode})</option>
 									</c:forEach>
-
+								
 								</select>
 							</div>
 						</div>
 						<br>
-						<c:if test="${employee.deptno == 50}">
+						<c:if test="${employee.deptno == 50}" >
 							<div class="row justify-content-left align-items-left">
-								<label for="subject" class="col-sm-1 col-form-label">담당과목</label>
-								<div class="col-sm-3">
-									<input type="text" class="form-control form-control-user"
-										name="subject"
-										value="${empty employee.subject ? '없음' : employee.subject}">
-								</div>
+							<label for="subject" class="col-sm-1 col-form-label">담당과목</label>
+							<div class="col-sm-3">
+								<input type="text" class="form-control form-control-user"
+									name="subject" value="${empty employee.subject ? '없음' : employee.subject}">
+							</div>
 							</div>
 							<br>
 						</c:if>
-
+						
 						<div class="row justify-content-left align-items-left">
 							<label for="phone" class="col-sm-1 col-form-label">H.P</label>
 							<div class="col-sm-3">
@@ -351,6 +346,9 @@
 	<!-- End of Footer -->
 
 	</div>
+	<!-- End of Content Wrapper -->
+
+
 	<!-- End of Page Wrapper -->
 
 	<!-- Scroll to Top Button-->
@@ -359,22 +357,14 @@
 	</a>
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp"%>
+
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
-	<script
-		src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	
 	<!-- Core plugin JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
-
-	<!-- 추가 plugins:js -->
-	
-	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
-	<script
-		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
-	<script src="${path}/a00_com/js/dataTables.select.min.js"></script>
-
 </body>
 </html>
