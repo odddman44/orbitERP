@@ -98,8 +98,11 @@ public class A03_PRController {
 	}
 	
 	
-	
-	
+	/*--강의 캘린더*------------------------------------------------------------------*/
+	@RequestMapping("lectureCalendar")
+	public String lectureCalendar() {
+		return"a03_planResource\\planCalendar";
+	}
 	
 	
 	
@@ -115,7 +118,7 @@ public class A03_PRController {
 	//캘린더조회
 	@RequestMapping("calendar")
 	public String calendar() {
-		return"a03_planResource\\fullcalendar";
+		return"a03_planResource\\lectureCalendar";
 	}
 	//일정리스트
 	//http://localhost:7080/orbitERP/calList.do
