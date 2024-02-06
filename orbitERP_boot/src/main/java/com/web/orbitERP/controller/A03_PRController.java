@@ -99,7 +99,9 @@ public class A03_PRController {
 	
 	
 	/*--강의 캘린더*------------------------------------------------------------------*/
-	@RequestMapping("lectureCalendar")
+	//http://localhost:4444/lectureCalendar
+	//강의캘린더조회
+	@GetMapping("lectureCalendar")
 	public String lectureCalendar() {
 		return"a03_planResource\\planCalendar";
 	}
