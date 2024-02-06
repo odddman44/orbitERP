@@ -250,6 +250,7 @@ function table(id){
         "info": true, // 표시 건수 및 현재 페이지 표시
         "autoWidth": false, // 컬럼 너비 자동 조절 해제
         "language" : {
+        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
         	 "paginate": {
         		  	"next": "다음",
         			"previous": "이전"
@@ -346,6 +347,7 @@ function addStu(sno, name, final_degree,phone) {
     row += "</tr>";
 
     $("#add").append(row);
+    $("#tot").text('수강학생('+snoList.length+')') //등록시 총 수 변경
 }
 
 function deleteStu(button) {
@@ -358,6 +360,7 @@ function deleteStu(button) {
     if (index !== -1) {
         snoList.splice(index, 1);
     }
+    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
 }
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -470,7 +473,7 @@ function deleteStu(button) {
 									        </span>
 									    </div>
 									    <div class="input_value">
-									        <input name="lec_snum" class="form-control" readonly type="number"/> 
+									        <input name="lec_snum" class="form-control" readonly/> 
 									        <input type="button" class="btn btn-dark" value="학생등록"
 									            data-toggle="modal" data-target="#stuModal" id="schStu" />
 									    </div>
@@ -531,18 +534,11 @@ function deleteStu(button) {
 									<input placeholder="강사명" name="ename" value="${schT.ename}"
 										class="form-control mr-sm-2" /> 
 									<select name="subject"  class="form-control mr-sm-2" >
-										<option value="">담당과목</option>
+										<option value="">전체조회</option>
 										<c:forEach var="subject" items="${subjects}">
 											<option>${subject}</option>
 										</c:forEach>
 									</select>
-								<!-- <select class="form-control mr-sm-2" name="subject">									
-										<option value="">담당과목</option>
-										<option >JAVA</option>
-										<option >국어</option>
-										<option >수학</option>
-										<option >영어</option>
-									</select> -->
 									<button class="btn btn-info" type="button" id="schTBtn">Search</button>
 								</nav>
 							</form>
@@ -628,7 +624,7 @@ function deleteStu(button) {
 							      <col width="9%">
 									<thead>
 										<tr>
-											<th>학생번호</th>
+											<th>학번</th>
 											<th>이름</th>
 											<th>생년월일</th>
 											<th>학년</th>
@@ -643,7 +639,7 @@ function deleteStu(button) {
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<h5>수강학생</h5>
+								<h5 id="tot">수강학생</h5>
 								<table class="table table-bordered">
 								<col width="15%">
 							    <col width="20%">

@@ -110,7 +110,7 @@
 								</table>
 								<script type="text/javascript">
 									function goDetail(lecno) {
-									    location.href = "${path}/lectureDetail2?lecno="+ lecno;
+									    location.href = "${path}/lectureDetail?lecno="+ lecno;
 									}
 								</script>
 
