@@ -24,6 +24,9 @@ public class A03_PRService {
 	public Lecture getLecture(int lecno) {
 		return dao.getLecture(lecno);
 	}
+	public LectureTch getTch(int lecno) {
+		return dao.getTch(lecno);
+	}
 	public int insertLecture(Lecture ins) {
 		return dao.insertLecture(ins);
 	}
@@ -44,8 +47,8 @@ public class A03_PRService {
 	public List<LectureStu> getStus(LectureStu sch){
 		if(sch.getName()==null) sch.setName("");
 		if(sch.getFinal_degree()==null) sch.setFinal_degree("");
-		int count=dao.totStudent(sch);
-		sch.setCount(count);
+		//int count=dao.totStudent(sch);
+		//sch.setCount(count);
 		return dao.getStus(sch);
 	}
 	//강사 불러오기

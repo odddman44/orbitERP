@@ -17,6 +17,7 @@ public interface A03_PRDao {
 
 	List<Lecture> lectureList(Lecture sch);
 	Lecture getLecture(@Param("lecno") int lecno);
+	LectureTch getTch(@Param("lecno") int lecno);
 	int insertLecture(Lecture ins);
 	int updateLecture(Lecture upt);
 	int deleteLecture(@Param("lecno") int lecno);
@@ -24,7 +25,7 @@ public interface A03_PRDao {
 	
 	//학생정보 불러오기	
 	List<LectureStu> getStus(LectureStu sch);
-	int totStudent(LectureStu sch);
+	//int totStudent(LectureStu sch);
 	//강사정보 불러오기	
 	List<LectureTch> schTch(LectureTch sch);
 	//강사 과목리스트

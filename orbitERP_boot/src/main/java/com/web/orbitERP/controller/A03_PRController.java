@@ -38,6 +38,8 @@ public class A03_PRController {
 	@RequestMapping("lectureDetail")
 	public String lectureDetail(@RequestParam("lecno") int lecno,Model d) {
 		d.addAttribute("lecture",service.getLecture(lecno));
+		d.addAttribute("tch",service.getTch(lecno));
+		System.out.println(service.getTch(lecno));
 		return"a03_planResource\\lectureDetail";
 	}
 	//강의수정

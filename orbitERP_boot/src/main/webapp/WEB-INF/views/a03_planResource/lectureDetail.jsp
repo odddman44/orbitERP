@@ -150,6 +150,7 @@ width:70%;
 			location.href="lectureList"
 		}
 	}
+	alert("${tch}")
 	
 	$("#schTBtn").click(function(){ //강사 모달창 검색
 		searchTch()
@@ -502,10 +503,10 @@ width:70%;
 									</thead>
 									<tbody id="color">
 										<tr>
-												<td>강사번호</td>
-												<td>양현수</td>
-												<td>담당과목</td>
-												<td>이메일</td>
+												<td>${getTch.empno }</td>
+												<td>${getTch.ename }</td>
+												<td>${getTch.subject }</td>
+												<td>${getTch.email }</td>
 												<td>기존등록</td>
 										</tr>
 									</tbody>
