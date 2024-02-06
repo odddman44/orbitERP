@@ -49,7 +49,7 @@
 		// 부서리스트로 화면으로 이동
 		// 부서리스트로 화면으로 이동
 		$("#goListBtn").click(function() {
-			if (confirm("부서리스트 화면으로 이동하시겠습니까?")) {
+			if (confirm("부서리스트 화면으로 이동하시겠습니까??")) {
 				location.href = "deptList";
 			}
 		});
