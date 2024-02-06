@@ -16,17 +16,32 @@
 	href="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.css">
 <link rel="stylesheet" type="text/css"
 	href="${path}/a00_com/js/select.dataTables.min.css">
+<!-- Custom fonts for this template-->
+<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<!-- 
+    기존 font
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+	rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 <%--
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
+
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-	console.log($("#frm01 [name=dname]").val())
-	
+		console.log($("#frm01 [name=dname]").val())
+
 		/*
 		$("#frm02 input[name=deptno]").on("change", function() {
 			var deptno = $(this).val();
@@ -106,19 +121,19 @@
 		})
 	}
 	// 부서등록 함수
-	function insertDept(){
+	function insertDept() {
 		$.ajax({
-			url:"${path}/insertDept",
-			data:$("#frm02").serialize(),
-			dataType:"json",
-			success:function(data){
-				if(data.isInsert>0){
-				alert("부서정보 등록 성공!")
-				location.href="${path}/deptList.do"
+			url : "${path}/insertDept",
+			data : $("#frm02").serialize(),
+			dataType : "json",
+			success : function(data) {
+				if (data.isInsert > 0) {
+					alert("부서정보 등록 성공!")
+					location.href = "${path}/deptList.do"
 				}
 			}
 		})
-		
+
 	}
 </script>
 <!-- Custom fonts for this template-->
@@ -143,7 +158,6 @@
 
 table {
 	text-align: center;
-
 }
 
 .input-group-text {
@@ -195,73 +209,73 @@ table {
 										<button class="btn btn-primary" type="submit">
 											<i class="fas fa-search fa-sm"></i>
 										</button>
-										</form>
+							</form>
 
-									</div>
-
-								</div>
 						</div>
-						
 
 					</div>
-					<!-- Content Row -->
-
-					<div class="row">
-						<table class="table table-hover" id="dataTable">
-							<col width="33%">
-							<col width="34%">
-							<col width="33%">
-							<thead class="thead-light">
-
-								<tr class="table-success text-center">
-									<th>부서번호</th>
-									<th>부서명</th>
-									<th>부서코드</th>
-						
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach var="depart" items="${deptList}">
-									<tr onclick="goPage('${depart.deptno}')">
-										<td>${depart.deptno}</td>
-										<td>${depart.dname}</td>
-										<td>${depart.dcode}</td>
-	
-									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
-					</div>
-
-
-					<!-- Content Row -->
-
-					<div style="text-align: right;">
-						<input data-toggle="modal" data-target="#exampleModalCenter"
-							type="button" class="btn btn-info" value="부서등록" id="refBtn" />
-					</div>
-
-					<!-- Content Row -->
-					<div class="row"></div>
-
 				</div>
-				<!-- /.container-fluid (페이지 내용 종료) -->
+
 
 			</div>
-			<!-- End of Main Content -->
+			<!-- Content Row -->
 
-			<!-- Footer -->
-			<footer class="sticky-footer bg-white">
-				<div class="container my-auto">
-					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
-					</div>
-				</div>
-			</footer>
-			<!-- End of Footer -->
+			<div class="row">
+				<table class="table table-hover" id="dataTable">
+					<col width="33%">
+					<col width="34%">
+					<col width="33%">
+					<thead class="thead-light">
+
+						<tr class="table-success text-center">
+							<th>부서번호</th>
+							<th>부서명</th>
+							<th>부서코드</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="depart" items="${deptList}">
+							<tr onclick="goPage('${depart.deptno}')">
+								<td>${depart.deptno}</td>
+								<td>${depart.dname}</td>
+								<td>${depart.dcode}</td>
+
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+
+
+			<!-- Content Row -->
+
+			<div style="text-align: right;">
+				<input data-toggle="modal" data-target="#exampleModalCenter"
+					type="button" class="btn btn-info" value="부서등록" id="refBtn" />
+			</div>
+
+			<!-- Content Row -->
+			<div class="row"></div>
 
 		</div>
-		<!-- End of Content Wrapper -->
+		<!-- /.container-fluid (페이지 내용 종료) -->
+
+	</div>
+	<!-- End of Main Content -->
+
+	<!-- Footer -->
+	<footer class="sticky-footer bg-white">
+		<div class="container my-auto">
+			<div class="copyright text-center my-auto">
+				<span>Copyright &copy; Your Website 2021</span>
+			</div>
+		</div>
+	</footer>
+	<!-- End of Footer -->
+
+	</div>
+	<!-- End of Content Wrapper -->
 
 	</div>
 	<div class="modal fade" id="exampleModalCenter" tabindex="-1"
@@ -329,24 +343,18 @@ table {
 	</a>
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp"%>
-
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
-	
+	<script
+		src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<!-- Core plugin JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
-	<!-- Page level plugins -->
-	<script src="${path}/a00_com/vendor/chart.js/Chart.min.js"></script>
+	<!-- 추가 plugins:js -->
 
-	<!-- Page level custom scripts -->
-	<script src="${path}/a00_com/js/demo/chart-area-demo.js"></script>
-	<script src="${path}/a00_com/js/demo/chart-pie-demo.js"></script>
-
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
