@@ -233,18 +233,42 @@
 
 	</select>
 
+	<select id="getAttMine" parameterType="string"
+		resultType="attendanceSch">
+		SELECT
+		a.empno,to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE,
+		a.ARR_TIME ,
+		a.DEP_TIME, late, EARLY_LEAVE, d.dname,
+		TO_CHAR(TRUNC((DEP_TIME -
+		ARR_TIME) * 24) - 1, 'FM00') || '시간 ' ||
+		TO_CHAR(ROUND(MOD((DEP_TIME -
+		ARR_TIME) * 24 * 60, 60)), 'FM00') ||
+		'분' AS tot_workhours
+		FROM
+		ATTENDANCE a
+		INNER JOIN EMPLOYEE e ON a.EMPNO =
+		e.EMPNO
+		INNER JOIN
+		DEPT d
+		ON e.DEPTNO = d.DEPTNO
+		WHERE a.empno = #{empno}
+	</select>
+
 	<insert id="insertErpmem" parameterType="erpmem">
-		INSERT INTO ERPMEM e values(
+		INSERT INTO ERPMEM e
+		values(
 		#{empno}, #{auth}, #{pwd}
 		)
 	</insert>
-	
-	<select id="getErpmem" parameterType="string" resultType="erpmem">
+
+	<select id="getErpmem" parameterType="string"
+		resultType="erpmem">
 		SELECT * FROM ERPMEM e WHERE empno = #{empno}
 	</select>
-	
+
 	<delete id="deleteErpmem" parameterType="string">
-		DELETE FROM ERPMEM e WHERE empno = #{empno}
+		DELETE FROM ERPMEM e
+		WHERE empno = #{empno}
 	</delete>
 
 

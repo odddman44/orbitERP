@@ -65,6 +65,23 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+
+var proc = "${proc}"
+	var msg = "${msg}"
+	if (msg != "") {
+		if (proc == "upt") {
+			if (confirm(msg + "\n메인화면으로 이동하시겠습니까?")) {
+				location.href = "${path}/empList";
+			}
+		}
+		
+		if (proc == "del") {
+			if (confirm(msg + "\n메인화면으로 이동하시겠습니까?")) {
+				location.href = "${path}/empList";
+			}
+		}
+	
+	
     // 숫자에 콤마를 추가하는 함수
     function addCommas(nStr) {
         nStr += '';
@@ -77,6 +94,8 @@
         }
         return x1 + x2;
     }
+    
+    
 
     $(document).ready(function() {
         console.log("받아온 정보:" + "${employee}");
@@ -346,7 +365,7 @@
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 	<!-- 추가 plugins:js -->
-	
+
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
