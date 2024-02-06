@@ -246,6 +246,17 @@ SELECT
     TO_CHAR(ROUND(MOD((DEP_TIME - ARR_TIME) * 24 * 60, 60)), 'FM00') || '분' AS tot_workhours
 FROM 
     ATTENDANCE a;
+   
+-- erpmem insert
+ INSERT INTO ERPMEM e values(
+ 	'ED0002', '사원', '5555'
+ );
+/*
+  INSERT INTO ERPMEM e values(
+ 	#{empno}, #{auth}, #{pwd}
+ )
+ * */
+SELECT * FROM ERPMEM e ;
     
 
 

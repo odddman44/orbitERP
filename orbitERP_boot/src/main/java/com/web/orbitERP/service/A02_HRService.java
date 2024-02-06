@@ -339,7 +339,21 @@ public class A02_HRService {
 		
 		int ck01 = dao.empInsert(ins);
 		int ck02 = 0;
-		Erpmem erpmem = null;
+		Erpmem erpmem = new Erpmem();
+		erpmem.setEmpno(ins.getEmpno()); // 사원번호 세팅
+		erpmem.setPwd(ins.getPwd()); // 비밀번호 세팅
+		// 권한 설정
+		// 팀장이면 auth는 부서명+관리자
+		String dname = dao.deptDetail(ins.getDeptno()).getDname();
+		if(ins.getJob().equals("팀장")) {
+			erpmem.setAuth(dname+"관리자");
+		}else if(ins.getJob().equals("이사")) {
+			erpmem.setAuth("총괄관리자");
+		}else {
+			erpmem.setAuth("사원");
+		}
+		// erpmem insert
+		dao.insertErpmem(erpmem);
 		String msg = ck01 > 0 ? "기본정보 등록성공" : "등록 실패";
 		MultipartFile mpf = ins.getProfile();
 		if(mpf!=null) {
@@ -375,6 +389,9 @@ public class A02_HRService {
 				fileToDelete.delete();
 			dao.deleteEmpProfile(empno);
 			
+		}
+		if(dao.getErpmem(empno)!=null) {
+			dao.deleteErpmem(empno);
 		}
 		return dao.deleteEmp(empno)>0?"삭제성공":"삭제 실패";
 	}

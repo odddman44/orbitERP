@@ -210,6 +210,12 @@ public class A02_HRController {
 		return service.getEmpnoList();
 	}
 	
+	// http://localhost:4444/mypage
+	@RequestMapping("mypage")
+	public String mypage() {
+		return "a02_humanResource\\a08_myPage";
+	}
+	
 	
 	
 	
