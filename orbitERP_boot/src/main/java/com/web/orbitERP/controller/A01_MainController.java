@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A01_MainService;
 import com.web.orbitERP.service.A02_HRService;
+import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
 
@@ -68,7 +69,11 @@ public class A01_MainController {
 
 	}
 	
-	public String updateMyInfo(Employee upt, Model d) {
-		return "a02_humanResource\\a08_myPage";
+	// http://localhost:4444/myattList
+	@RequestMapping("myattList")
+	public String myattList(AttendanceSch sch, Model d) {
+		d.addAttribute("attendanceList", hrService.getAttMine(sch));
+		return "a02_humanResource\\a09_myAttendanceList";
 	}
+	
 }

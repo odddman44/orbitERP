@@ -409,8 +409,8 @@ public class A02_HRService {
 		return dao.getAttenList(Sch);
 	}
 	
-	public List<AttendanceSch> getAttMine(String empno){
-		return dao.getAttMine(empno);
+	public List<AttendanceSch> getAttMine(AttendanceSch Sch){
+		return dao.getAttMine(Sch);
 	}
 
 }

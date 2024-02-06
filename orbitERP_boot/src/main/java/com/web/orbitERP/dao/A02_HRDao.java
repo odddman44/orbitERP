@@ -101,7 +101,7 @@ public interface A02_HRDao {
 	
 	List<AttendanceSch> getAttenList(AttendanceSch Sch);
 	
-	List<AttendanceSch> getAttMine(@Param("empno") String empno);
+	List<AttendanceSch> getAttMine(AttendanceSch Sch);
 	
 	int insertErpmem(Erpmem ins);
 	

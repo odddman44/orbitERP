@@ -42,11 +42,21 @@
 	<hr class="sidebar-divider my-0">
 
 	<!-- Nav Item - Dashboard -->
-	<li class="nav-item active"><a class="nav-link"
-		href="${path}/mypage?empno=${emem.empno}"> <i
-			class="fa fa-user-circle" style="font-size: 15px"></i> <span
-			style="font-size: 15px">My Page</span>
-	</a></li>
+	<li class="nav-item"><a class="nav-link collapsed" href="#"
+		data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+		aria-controls="collapseTwo"> <i class="fa fa-user-circle"
+			style="font-size: 15px"></i> <span style="font-size: 15px">My
+				Page</span>
+	</a>
+		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+			data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<h6 class="collapse-header">My Page:</h6>
+				<a class="collapse-item" href="${path}/mypage?empno=${emem.empno}">나의
+					정보 관리</a> <a class="collapse-item" href="${path}/myattList?empno=${emem.empno}">나의 근태정보 관리</a>
+			</div>
+		</div></li>
+
 
 	<!-- Divider -->
 	<hr class="sidebar-divider">
@@ -55,11 +65,12 @@
 
 	<!-- Nav Item - Pages Collapse Menu -->
 	<li class="nav-item"><a class="nav-link collapsed" href="#"
-		data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-		aria-controls="collapseTwo"> <i class="fas fa-fw fa-cog"></i> <span>직원관리</span>
+		data-toggle="collapse" data-target="#collapseThree"
+		aria-expanded="true" aria-controls="collapseThree"> <i
+			class="fas fa-fw fa-cog"></i> <span>직원관리</span>
 	</a>
-		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-			data-parent="#accordionSidebar">
+		<div id="collapseThree" class="collapse"
+			aria-labelledby="headingThree" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
 				<h6 class="collapse-header">직원관리:</h6>
 				<a class="collapse-item" href="empList">직원정보관리</a> <a
@@ -67,6 +78,7 @@
 					class="collapse-item" href="#">급여정보관리</a>
 			</div>
 		</div></li>
+
 
 	<!-- Nav Item - Utilities Collapse Menu -->
 	<li class="nav-item"><a class="nav-link collapsed" href="#"

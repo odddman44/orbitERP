@@ -233,7 +233,7 @@
 
 	</select>
 
-	<select id="getAttMine" parameterType="string"
+	<select id="getAttMine" parameterType="attendanceSch"
 		resultType="attendanceSch">
 		SELECT
 		a.empno,to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE,
@@ -251,7 +251,14 @@
 		INNER JOIN
 		DEPT d
 		ON e.DEPTNO = d.DEPTNO
-		WHERE a.empno = #{empno}
+		where 1=1
+		and a.empno = #{empno}
+		<if
+			test="start_date != null and end_date != null and start_date != '' and end_date != ''">
+			AND a.WORK_DATE BETWEEN #{start_date} AND #{end_date}
+		</if>
+		
+		
 	</select>
 
 	<insert id="insertErpmem" parameterType="erpmem">

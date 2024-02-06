@@ -82,6 +82,11 @@
 		$("#goListBtn").click(function() {
 			location.href = "${path}/main"
 		})
+		
+		$("#uptBtn").click(function(){
+			$("form").attr("action", "${path}/empUpdate");
+			$("#frm01").submit();
+		})
 
 		$('#frm01').submit(function(event) {
 			// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
@@ -150,7 +155,7 @@
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">${employee.ename}마이페이지</h1>
+					<h1 class="h3 mb-4 text-gray-800">나의 정보 관리</h1>
 					<br> <br>
 					<div class="d-flex justify-content-left">
 						<!--  <img id="profile" src="${profile}" width="100px" height="100px" alt="사진" /> -->
@@ -284,6 +289,7 @@
 							<div class="col-auto">
 								<input type="button" class="btn btn-info" value="메인화면"
 									id="goListBtn" />
+								<input type="button" class="btn btn-success" id="uptBtn" value="수정">
 							</div>
 						</div>
 					</form>
