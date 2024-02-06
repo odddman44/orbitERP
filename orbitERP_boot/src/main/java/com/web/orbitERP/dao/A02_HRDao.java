@@ -101,11 +101,15 @@ public interface A02_HRDao {
 	
 	List<AttendanceSch> getAttenList(AttendanceSch Sch);
 	
+	List<AttendanceSch> getAttMine(@Param("empno") String empno);
+	
 	int insertErpmem(Erpmem ins);
 	
 	Erpmem getErpmem(@Param("empno") String empno);
 	
 	int deleteErpmem(@Param("empno") String empno);
+	
+	
 	
 	
 	
