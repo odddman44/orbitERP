@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.orbitERP.dao.A03_PRDao;
 import com.web.orbitERP.vo.Calendar;
+import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
@@ -26,6 +27,11 @@ public class A03_PRService {
 	public int insertLecture(Lecture ins) {
 		return dao.insertLecture(ins);
 	}
+	//강의번호 추출
+	public int getlecno() {
+		return dao.getlecno();
+	}
+	
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
@@ -52,9 +58,10 @@ public class A03_PRService {
 	public List<String> getSubjects(){
 		return dao.getSubjects();
 	}
-	
-	
-	
+	//수강테이블
+	public String insertEnroll(Enrollment ins) {
+		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
+	}
 	
 	
 	/*--캘린더 서비스----------------------------------------*/

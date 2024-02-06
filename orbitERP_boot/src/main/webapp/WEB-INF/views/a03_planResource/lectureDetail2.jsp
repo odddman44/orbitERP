@@ -15,22 +15,31 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
  <style>
- #chatArea{
-	height:300px;
+#chatArea {
+	height: 300px;
 }
-#text{
 
-width:70%;
-	 margin-left: auto;
-    margin-right: auto;
+#text {
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
 }
-.input-group-text{width:100%;background-color:linen;
-		color:black;font-weight:bolder;}
-.input-group-prepend{width:20%;}
+
+.input-group-text {
+	width: 100%;
+	background-color: linen;
+	color: black;
+	font-weight: bolder;
+}
+
+.input-group-prepend {
+	width: 20%;
+}
+
 .input_value {
-    display: flex;
-    align-items: center;
-    width: 35%;
+	display: flex;
+	align-items: center;
+	width: 35%;
 }
  </style>
 <!-- jQuery -->
@@ -38,29 +47,28 @@ width:70%;
 <script type="text/javascript">
 	$(document).ready(function() {
 		console.log("${lecture.lecno}")
-	    // 개강일자와 종강일자 input 요소를 가져옴
-	    var startDateInput = $("input[name='start_date']");
-	    var endDateInput = $("input[name='end_date']");
+			searchStu()
+		 	// 숫자에 콤마를 추가하는 함수
+		       function addCommas(nStr) {
+		           nStr += '';
+		           var x = nStr.split('.');
+		           var x1 = x[0];
+		           var x2 = x.length > 1 ? '.' + x[1] : '';
+		           var rgx = /(\d+)(\d{3})/;
+		           while (rgx.test(x1)) {
+		               x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		           }
+		           return x1 + x2;
+		       }
+		   
+		       // 키 입력시 자동으로 콤마 처리
+		       $('#tuition_fee,#textbook_fee').on('input', function() {
+		           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+		           if (!isNaN(input)) { // 입력 값이 숫자인 경우
+		               $(this).val(addCommas(input)); // 콤마 추가
+		           }
+		       });
 	
-	    // input 요소의 값이 변경될 때마다 체크하는 함수
-	    function checkDateValidity() {
-	      // input 요소의 값 가져오기
-	      var startDate = new Date(startDateInput.val());
-	      var endDate = new Date(endDateInput.val());
-	
-	      // 개강일자가 종강일자보다 늦을 때
-	      if (startDate > endDate) {
-	        // 경고 알림창 표시
-	        alert("개강일자는 종강일자보다 빨라야 합니다!");
-	        // 현재 입력값 초기화
-	        startDateInput.val("${lecture.start_date}");
-	        endDateInput.val("${lecture.end_date}");
-	      }
-	    }
-	
-	    // 개강일자와 종강일자 input 요소에 change 이벤트 리스너 등록
-	    startDateInput.change(checkDateValidity);
-	    endDateInput.change(checkDateValidity);
 	    
 	$("#uptBtn").click(function(){
 			if($("[name=lec_name]").val()==""){
@@ -114,7 +122,7 @@ width:70%;
 			location.href="lectureList"
 		}
 	}
-	  });
+});
 </script>
 
 <!-- Custom fonts for this template-->
@@ -261,6 +269,100 @@ width:70%;
 
 					<!-- /.container-fluid (페이지 내용 종료) -->
 				</div>
+				<!-- start 학생조회modal -->
+			<div class="modal" id="stuModal" >
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">학생등록</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+						<div class="card shadow mb-4">
+						<div class="card-header py-3">
+
+							<hr>
+							<form id="frm02" class="form" method="post">
+								<nav class="navbar navbar-expand-sm navbar-light bg-light">
+
+									<input placeholder="학생명" name="name" value="${sch.name}"
+										class="form-control mr-sm-2" /> 
+									<select class="form-control mr-sm-2" name="final_degree">									
+										<option value="">학년 선택</option>
+										<option value="초등">초등</option>
+										<option value="중등">중등</option>
+										<option value="고등">고등</option>
+										<option value="성인">성인</option>
+									</select> 
+									<button class="btn btn-info" type="button" id="schBtn">Search</button>
+								</nav>
+								<div class="input-group mt-3 mb-0">
+									<span class="input-group-text" id="totStu"></span>
+								</div>
+							</form>
+						</div>
+						<div class="card-body">
+							<span>더블클릭시, 학생 상세정보 페이지로 이동합니다.</span>
+							<div class="table-responsive">
+								<table class="table table-bordered" id="dataTable1">
+								  <col width="8%">
+							      <col width="10%">
+							      <col width="18%">
+							      <col width="15%">
+							      <col width="15%">
+							      <col width="25%">
+							      <col width="9%">
+									<thead>
+										<tr>
+											<th>학생번호</th>
+											<th>이름</th>
+											<th>생년월일</th>
+											<th>학년</th>
+											<th>전화번호</th>
+											<th>주소</th>
+											<th>선택</th>
+										</tr>
+									</thead>
+									<tbody id="stu">
+									</tbody>
+								</table>
+							</div>
+							<hr>
+							<div class="table-responsive">
+								<h5>수강학생</h5>
+								<table class="table table-bordered" id="dataTable2">
+								<col width="15%">
+							    <col width="20%">
+							    <col width="25%">
+							    <col width="25%">
+							    <col width="15%">
+									<thead>
+										<tr>
+											<th>학생번호</th>
+											<th>이름</th>
+											<th>학년</th>
+											<th>전화번호</th>
+											<th>삭제</th>
+										</tr>
+									</thead>
+									<tbody id="add">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary" id="insertStu">학생등록</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 				<!-- End of Main Content -->
 
 				<!-- Footer -->
