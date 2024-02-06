@@ -9,68 +9,96 @@
 <head>
 <meta charset="UTF-8">
 <title>Good day!!</title>
+<title>:: Orbit ERP ::</title>
+<link href="${path}/a00_com/img/logo.svg" rel="icon" type="image/x-icon" />
+<!-- DB테이블 플러그인 추가 -->
+<link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
+<link rel="stylesheet"
+	href="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.css">
+<link rel="stylesheet" type="text/css"
+	href="${path}/a00_com/js/select.dataTables.min.css">
+<!-- Custom fonts for this template-->
+<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<!-- 
+    기존 font
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+	rel="stylesheet">
 
+<!-- Custom styles for this template-->
+<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
+<%--
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
+ --%>
 
 
 
 
 <script src="${path}/a00_com/jquery.min.js"></script>
 
-	
+
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		
+
 		// 부서리스트로 화면으로 이동
 		// 부서리스트로 화면으로 이동
 		$("#goListBtn").click(function() {
-			if (confirm("부서리스트 화면으로 이동하시겠습니까?")) {
+			if (confirm("부서리스트 화면으로 이동하시겠습니까??")) {
 				location.href = "deptList";
 			}
 		});
-		$("#delBtn").click(function(){
-			if(confirm("부서 정보를 삭제하시겠습니까?")){
+		$("#delBtn").click(function() {
+			if (confirm("부서 정보를 삭제하시겠습니까?")) {
 				deleteDept();
-				
+
 			}
 		})
-		$("#uptBtn").click(function(){
+		$("#uptBtn").click(function() {
 			updateDept()
 		})
 
 	});
-	
-	function deleteDept(){
+
+	function deleteDept() {
 		var deptno = $("[name=deptno]").val()
-			$.ajax({
-			url:"${path}/deleteDept",
-			data:{ deptno: deptno},
-			dataType:"json",
-			success:function(data){
-				if(data.isDel>0){
-				alert("부서정보 삭제 성공!")
-				location.href="${path}/deptList"
+		$.ajax({
+			url : "${path}/deleteDept",
+			data : {
+				deptno : deptno
+			},
+			dataType : "json",
+			success : function(data) {
+				if (data.isDel > 0) {
+					alert("부서정보 삭제 성공!")
+					location.href = "${path}/deptList"
 				}
 			},
-			error:function(err){
+			error : function(err) {
 				console.log(err);
 			}
 		})
-		
+
 	}
-	function updateDept(){
+	function updateDept() {
 		$.ajax({
-		url:"${path}/updateDept",
-		type: "POST",
-		data:$("#frm01").serialize(),
-		dataType:"json",
-		success:function(data){
-			if(data.isUpt>0){
-			alert("부서정보 수정 성공!")
-			location.href="${path}/deptDetail?deptno="+$("[name=deptno]").val()
+			url : "${path}/updateDept",
+			type : "POST",
+			data : $("#frm01").serialize(),
+			dataType : "json",
+			success : function(data) {
+				if (data.isUpt > 0) {
+					alert("부서정보 수정 성공!")
+					location.href = "${path}/deptDetail?deptno="
+							+ $("[name=deptno]").val()
+				}
 			}
-		}
-	})
+		})
 	}
 </script>
 
@@ -88,15 +116,7 @@ button {
 
 
 
-<!-- Custom fonts for this template-->
-<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
-	rel="stylesheet" type="text/css">
-<link
-	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-	rel="stylesheet">
 
-<!-- Custom styles for this template-->
-<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
 
 
 
@@ -132,8 +152,8 @@ button {
 								<label>부서번호</label>
 							</div>
 							<div class="col-md-11">
-								<input class="form-control form-control-user"
-									name="deptno" value="${dept.deptno}" readonly />
+								<input class="form-control form-control-user" name="deptno"
+									value="${dept.deptno}" readonly />
 							</div>
 						</div>
 						<br>
@@ -142,10 +162,10 @@ button {
 								<label>부서명</label>
 							</div>
 							<div class="col-md-11">
-								<input class="form-control form-control-user"
-									required oninvalid="this.setCustomValidity('부서번호는 반드시 입력해야 합니다.')"
-									oninput="this.setCustomValid('')"
-									value="${dept.dname}" name="dname" />
+								<input class="form-control form-control-user" required
+									oninvalid="this.setCustomValidity('부서번호는 반드시 입력해야 합니다.')"
+									oninput="this.setCustomValid('')" value="${dept.dname}"
+									name="dname" />
 							</div>
 						</div>
 						<br>
@@ -154,8 +174,8 @@ button {
 								<label>부서코드</label>
 							</div>
 							<div class="col-md-11">
-								<input class="form-control form-control-user"
-									required value="${dept.dcode}" name="dcode" />
+								<input class="form-control form-control-user" required
+									value="${dept.dcode}" name="dcode" />
 							</div>
 						</div>
 						<br>
@@ -212,22 +232,22 @@ button {
 	</a>
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp"%>
-
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
-
-
+	<script
+		src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<!-- Core plugin JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
-	<!-- Page level plugins -->
-	<script src="${path}/a00_com/vendor/chart.js/Chart.min.js"></script>
+	<!-- 추가 plugins:js -->
 
-	<!-- Page level custom scripts -->
-	<script src="${path}/a00_com/js/demo/chart-area-demo.js"></script>
-	<script src="${path}/a00_com/js/demo/chart-pie-demo.js"></script>
+	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
+	<script
+		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
+	<script src="${path}/a00_com/js/dataTables.select.min.js"></script>
+
 </body>
 </html>
