@@ -36,7 +36,9 @@ public interface A03_PRDao {
 	
 	//수강테이블 등록
 	int insertEnroll(Enrollment ins);
-	
+	//강의번호 추출
+	@Select("SELECT lecno_seq.CURRVAL FROM DUAL")
+	int getlecno();
 	
 	/*--캘린더 dao-------------------------------------------------------------*/
 	List<Calendar> getCalList();

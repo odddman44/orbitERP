@@ -68,6 +68,8 @@ public class A03_PRController {
 	public String insertLecture(Lecture ins, Model d) {
 		d.addAttribute("msg", 
 				service.insertLecture(ins)>0?"등록완료":"등록실패");
+		d.addAttribute("lecno",service.getlecno());
+		System.out.println(service.getlecno());
 		return "a03_planResource\\lectureInsert";
 	}
 	//학생테이블 검색

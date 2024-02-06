@@ -57,8 +57,10 @@ public class A03_PRService {
 	public String insertEnroll(Enrollment ins) {
 		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
 	}
-	
-	
+	//강의번호 추출
+	public int getlecno() {
+		return dao.getlecno();
+	}
 	
 	
 	/*--캘린더 서비스----------------------------------------*/
