@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import com.web.orbitERP.service.A04_FinanceService;
 import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.Dept;
+import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.VoucherDetail;
 
 @Controller
@@ -36,7 +38,7 @@ public class A04_FinanceController {
 	/*계정과목 리스트 조회*/
 	// http://localhost:4444/accList
 	//  http://211.63.89.67:4444/accList
-	//  브랜치 테스트
+	//  브랜치 테스트 완료
 	@RequestMapping("accList")
 	public String accsubList(@ModelAttribute("sch") AccsubSch sch, Model d) {
 		d.addAttribute("accList", service.accsubList(sch));
@@ -156,6 +158,21 @@ public class A04_FinanceController {
             		(Map.of("status", "error", "message", e.getMessage()));
         }
     }
-
+    
+	/*
+	 * 3. 경영자 보고서 관련
+	 * */
+    // http://localhost:4444/manageReport
+    @RequestMapping("manageReport")
+    public String manageReport() {
+    	return "a04_financeResource\\a03_managementReport";
+    }
+    
+    // http://localhost:4444/salesPurchasesSummary?year=2024
+    @GetMapping("salesPurchasesSummary")
+    public ResponseEntity<?> getSalesAndPurchasesSummaryByYear(@RequestParam("year") int year) {
+        List<FinanceSummary> summary = service.getSalesAndPurchasesSummaryByYear(year);
+        return ResponseEntity.ok(summary);
+    }
 
 }

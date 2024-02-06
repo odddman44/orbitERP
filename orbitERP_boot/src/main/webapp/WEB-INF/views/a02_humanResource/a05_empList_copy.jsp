@@ -17,137 +17,191 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		var msg = "${msg}"
-		if (msg != "") {
-			alert(msg)
-			location.href = "${path}/empList"
-		}
-		
-		$($("#frm02 [name=deptno]")).change(function(){
-			var selectValue = $(this).val()
-			console.log("선택된 부서: "+selectValue)
-			if(selectValue == "50"){
-				$("#msg").css("color", "red")
-			}else{
-				$("#msg").css("color", "black")
-			}
-		})
-		
-		$("#frm02 [name=empno]").keyup(function(){
-			if(event.keyCode==13){
-				ckEmpno()
-			}
-		})
+	$(document).ready(
+			function() {
 
-		$("#regFrmBtn").click(function() {
-		
-			if ($("#frm02 [name=empno]").val() == "") {
-				alert("사원번호를 입력하세요")
-				return;
-			}
-			if ($("#frm02 [name=ckempno]").val() !== "Y") {
-			    alert("중복된 사원 번호이거나 사원번호 중복체크를 진행하지 않았습니다.")
-			    return;
-			}
-			if ($("#frm02 [name=ename]").val() == "") {
-				alert("사원명을 입력하세요")
-				return;
-			}
-			if ($("#frm02 [name=deptno]").val() == "0") {
-				alert("부서를 입력하세요")
-				return;
-			}
-			if ($("#frm02 [name=deptno]").val() == "50" && $("#frm02 [name=subject]").val()=="") {
-				alert("담당 과목을 입력하세요")
-				 $("#frm02 [name=subject]").focus()
-				return;
-			}
-			if ($("#frm02 [name=deptno]").val() == "50" && $("#frm02 [name=job]").val()!="강사") {
-				alert("교육팀의 직급은 강사로 입력해주세요")
-				 $("#frm02 [name=job]").focus()
-				return;
-			}
-			if ($("#jumin1").val() == "") {
-				alert("주민번호 앞자리를 입력하세요")
-				return;
-			}
-			if ($("#jumin2").val() == "") {
-				alert("주민번호 뒷자리를 입력하세요")
-				return;
-			}
+				// 숫자에 콤마를 추가하는 함수
+				function addCommas(nStr) {
+					nStr += '';
+					var x = nStr.split('.');
+					var x1 = x[0];
+					var x2 = x.length > 1 ? '.' + x[1] : '';
+					var rgx = /(\d+)(\d{3})/;
+					while (rgx.test(x1)) {
+						x1 = x1.replace(rgx, '$1' + ',' + '$2');
+					}
+					return x1 + x2;
+				}
 
-			if ($("#frm02 [name=job]").val() == "") {
-				alert("직급을 입력하세요")
-				return;
-			}
-			if ($("#frm02 [name=salary]").val() == "") {
-				alert("연봉을 입력하세요")
-				return;
-			}
-			if ($("#frm02 [name=email]").val() == "") {
-				alert("이메일을 입력하세요")
-				return;
-			}
-			if (confirm("사원 정보를 등록하시겠습니까?")) {
-				//alert("게시물을 등록합니다.")
-				var jumin1 = $('#jumin1').val();
-				var jumin2 = $('#jumin2').val();
-				// 2개 합친값
-				var ssum = jumin1 + "-" + jumin2;
-				$('#frm02 [name=ssnum]').val(ssum)
-				console.log("주민번호: " + ssum)
+				var msg = "${msg}"
+				if (msg != "") {
+					alert(msg)
+					location.href = "${path}/empList"
+				}
 
-				$("#frm02").submit()
-			}
-		})
-		$('input[name="profile"]').on('change', function() {
-			var previewElement = $('#profilePreview')[0];
-			var file = this.files[0];
+				$($("#frm02 [name=deptno]")).change(function() {
+					var selectValue = $(this).val();
+					console.log("선택된 부서: " + selectValue);
+					if (selectValue == "50") {
+						$("#msg").css("color", "red");
+						$("#subject").prop("readonly", false); // "subject" 입력 필드를 읽기/쓰기 가능하도록 변경
+						$("#job").val("강사"); // "job" 입력 필드의 값을 "강사"로 설정
+						$("#job").prop("readonly", true); // 직급 강사로 하고 readonly로 변경
+						$("#job option[value='강사']").prop("disabled", false); // 강사 옵션 활성화
+					} else {
+						$("#msg").css("color", "black");
+						$("#subject").prop("readonly", true); // 교육팀 아니면 과목명 입력 불가
+						$("#subject").val('');
+						$("#job").prop("readonly", false); // 다른 부서면 직급 수정 가능
+						$("#job option[value='강사']").prop("disabled", true); // 강사 옵션 비활성화
+					}
+				});
 
-			if (file) {
-				var reader = new FileReader();
+				$("#frm02 [name=empno]").keyup(function() {
+					if (event.keyCode == 13) {
+						ckEmpno()
+					}
+				})
 
-				reader.onload = function(e) {
-					previewElement.src = e.target.result;
-				};
+				$('#frm02').submit(function(event) {
+					// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
+					var inputField = $('#sal');
+					var valueWithCommas = inputField.val();
+					// 콤마를 제거합니다.
+					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+					// 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+					inputField.val(valueWithoutCommas);
+				});
 
-				reader.readAsDataURL(file);
-			} else {
-				// 파일이 선택되지 않았을 때 기본 이미지로 설정
-				previewElement.src = "";
-			}
-		});
+				$("#regFrmBtn").click(
+						function() {
 
-	});
+							if ($("#frm02 [name=empno]").val() == "") {
+								alert("사원번호를 입력하세요")
+								return;
+							}
+							if ($("#frm02 [name=ckempno]").val() !== "Y") {
+								alert("중복된 사원 번호이거나 사원번호 중복체크를 진행하지 않았습니다.")
+								return;
+							}
+							if ($("#frm02 [name=ename]").val() == "") {
+								alert("사원명을 입력하세요")
+								return;
+							}
+							if ($("#frm02 [name=deptno]").val() == "0") {
+								alert("부서를 입력하세요")
+								return;
+							}
+							if ($("#frm02 [name=deptno]").val() == "50"
+									&& $("#frm02 [name=subject]").val() == "") {
+								alert("담당 과목을 입력하세요")
+								$("#frm02 [name=subject]").focus()
+								return;
+							}
+							if ($("#frm02 [name=deptno]").val() == "50"
+									&& $("#frm02 [name=job]").val() != "강사") {
+								alert("교육팀의 직급은 강사로 입력해주세요")
+								$("#frm02 [name=job]").focus()
+								return;
+							}
+							if ($("#jumin1").val() == "") {
+								alert("주민번호 앞자리를 입력하세요")
+								return;
+							}
+							if ($("#jumin2").val() == "") {
+								alert("주민번호 뒷자리를 입력하세요")
+								return;
+							}
+
+							if ($("#frm02 [name=job]").val() == "") {
+								alert("직급을 입력하세요")
+								return;
+							}
+							if ($("#frm02 [name=salary]").val() == "") {
+								alert("연봉을 입력하세요")
+								return;
+							}
+							if ($("#frm02 [name=email]").val() == "") {
+								alert("이메일을 입력하세요")
+								return;
+							}
+							if (confirm("사원 정보를 등록하시겠습니까?")) {
+								//alert("게시물을 등록합니다.")
+								var jumin1 = $('#jumin1').val();
+								var jumin2 = $('#jumin2').val();
+								// 2개 합친값
+								var ssum = jumin1 + "-" + jumin2;
+								$('#frm02 [name=ssnum]').val(ssum)
+								console.log("주민번호: " + ssum)
+
+								var phone1 = $('#phone1').val();
+								var phone2 = $('#phone2').val();
+								var phone3 = $('#phone2').val();
+								// 3개 합친값
+								var phone = phone1 + "-" + phone2 + "-"
+										+ phone3;
+								$('#frm02 [name=phone]').val(phone)
+								console.log("주민번호: " + ssum)
+
+								$('#frm02').submit();
+
+							}
+						})
+				$('input[name="profile"]').on('change', function() {
+					var previewElement = $('#profilePreview')[0];
+					var file = this.files[0];
+
+					if (file) {
+						var reader = new FileReader();
+
+						reader.onload = function(e) {
+							previewElement.src = e.target.result;
+						};
+
+						reader.readAsDataURL(file);
+					} else {
+						// 파일이 선택되지 않았을 때 기본 이미지로 설정
+						previewElement.src = "";
+					}
+				});
+
+				// 연봉 입력창에 자동으로 , 넣기
+				$('#sal').on('input', function() {
+					var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+					if (!isNaN(input)) { // 입력 값이 숫자인 경우
+						$(this).val(addCommas(input)); // 콤마 추가
+					}
+				});
+
+			});
 	function goDetail(empno) {
 		location.href = "${path}/detailEmp?empno=" + empno
 	}
-	
-	// 사원 번호 중복 체크
-	function ckEmpno(){
-		var empno=$("#frm02 [name=empno]").val()
-			$.ajax({
-				url:"${path}/checkEmpno",
-				type:"get",
-				data:"empno="+empno,
-				dataType:"json",
-				success:function(cnt){
-					//alert(cnt+":"+typeof(cnt))
-					if(cnt>0){
-						$("#empCk").css("color", "red")
-						$("[name=ckempno]").val("N")
-						$("#empCk").text("이미 존재하는 사원번호입니다.")
-						$("[name=empno]").val("").focus()
-					}else{
-						$("#empCk").css("color", "blue")
-						$("[name=ckempno]").val("Y")
-						$("#empCk").text("사용가능한 사원번호입니다.")
 
-					}
+	// 사원 번호 중복 체크
+	function ckEmpno() {
+		var empno = $("#frm02 [name=empno]").val()
+		$.ajax({
+			url : "${path}/checkEmpno",
+			type : "get",
+			data : "empno=" + empno,
+			dataType : "json",
+			success : function(cnt) {
+				//alert(cnt+":"+typeof(cnt))
+				if (cnt > 0) {
+					$("#empCk").css("color", "red")
+					$("[name=ckempno]").val("N")
+					$("#empCk").text("이미 존재하는 사원번호입니다.")
+					$("[name=empno]").val("").focus()
+				} else {
+					$("#empCk").css("color", "blue")
+					$("[name=ckempno]").val("Y")
+					$("#empCk").text("사용가능한 사원번호입니다.")
+
 				}
-			})
-		
+			}
+		})
+
 	}
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -216,9 +270,11 @@
 								</nav>
 								<div class="input-group mt-3 mb-0">
 									<span class="input-group-text">총 : ${sch.count}건</span>
-									<button type="button" id="regBtn" class="btn btn-success"
-										data-toggle="modal" data-target="#registerModal">
-										사원정보등록</button>
+									<c:if test="${emem.auth eq '인사관리자'}">
+										<button type="button" id="regBtn" class="btn btn-success"
+											data-toggle="modal" data-target="#registerModal">
+											사원정보등록</button>
+									</c:if>
 
 
 
@@ -336,12 +392,12 @@
 
 						<br> <br>
 						<div class="row justify-content-left align-items-left">
-							<input type="hidden" name="ckempno" value="N"/>
-							<label for="name" class="col-sm-3 col-form-label">사원번호(*)</label>
+							<input type="hidden" name="ckempno" value="N" /> <label
+								for="name" class="col-sm-3 col-form-label">사원번호(*)</label>
 							<div class="col-sm-9">
-								
+
 								<input type="text" class="form-control form-control-user"
-									name="empno">
+									name="empno" maxlength="6">
 								<p id="empCk">Enter 누르면 사원번호 중복 체크</p>
 							</div>
 						</div>
@@ -362,7 +418,7 @@
 							<label for="name" class="col-sm-3 col-form-label">과목</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control form-control-user"
-									name="subject">
+									id="subject" name="subject" readonly>
 								<p id="msg">부서가 교육팀인 경우 과목 항목을 입력하십시오.</p>
 							</div>
 						</div>
@@ -378,7 +434,8 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="birth" class="col-sm-3 col-form-label">직급(*)</label>
 							<div class="col-sm-9">
-								<select class="form-control form-control-user" name="job">
+								<select class="form-control form-control-user" id="job"
+									name="job">
 									<option value="">직급 선택</option>
 									<option>인턴</option>
 									<option>사원</option>
@@ -409,10 +466,25 @@
 						<br>
 						<div class="row justify-content-left align-items-left">
 							<label for="reg_date" class="col-sm-3 col-form-label">H.P</label>
-							<div class="col-sm-9">
+
+							<input type="hidden" class="form-control form-control-user"
+								name="phone" />
+
+							<div class="col-sm-2">
 								<input type="text" class="form-control form-control-user"
-									name="phone" />
+									id="phone1" pattern="[0-9]*" maxlength="3" />
 							</div>
+							<div class="col-sm-1">-</div>
+							<div class="col-sm-2">
+								<input type="text" class="form-control form-control-user"
+									id="phone2" pattern="[0-9]*" maxlength="4" />
+							</div>
+							<div class="col-sm-1">-</div>
+							<div class="col-sm-2">
+								<input type="text" class="form-control form-control-user"
+									id="phone3" name="pwd" pattern="[0-9]*" maxlength="4" />
+							</div>
+
 						</div>
 						<br>
 						<div class="row justify-content-left align-items-left">
@@ -454,8 +526,8 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="salary" class="col-sm-3 col-form-label">연봉</label>
 							<div class="col-sm-9">
-								<input type="number" class="form-control form-control-user"
-									name="salary">
+								<input type="text" id="sal"
+									class="form-control form-control-user" name="salary">
 							</div>
 						</div>
 					</form>
@@ -492,7 +564,7 @@
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
+
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>

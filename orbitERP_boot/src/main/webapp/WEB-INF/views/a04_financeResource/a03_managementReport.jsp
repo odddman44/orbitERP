@@ -4,8 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
-<%@ page import="jakarta.servlet.http.HttpSession"%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,14 +17,20 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+	var deptAuth = parseInt("${emem.deptno}");
+	console.log(deptAuth);
+	
+	$(document).ready(function() {
 
+	}); // $(document).ready 끝
 </script>
+	<!-- DB테이블 플러그인 추가 -->
+    <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="${path}/a00_com/js/select.dataTables.min.css">
      <!-- Custom fonts for this template-->
     <link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <!-- 
-    기존 font
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    -->
+	<!-- font -->
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 	
     <!-- Custom styles for this template-->
@@ -54,25 +58,21 @@
 				<div class="container-fluid">
 					<!-- Page Heading -->
 					<div class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-						<a href="#" 
-							class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-							class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+						<h1 class="h3 mb-0 text-gray-800">※ 재무 분석</h1>
 					</div>
 					<!-- Content Row -->
 					<div class="row">
-						<%@ include file="/WEB-INF/views/a00_module/a04_main_row01.jsp" %>
+						<%@ include file="/WEB-INF/views/a04_financeResource/z02_barGraph.jsp"%>
 					</div>
-
+					
 					<!-- Content Row -->
-
 					<div class="row">
-						<%@ include file="/WEB-INF/views/a00_module/a05_main_row02.jsp" %>
+						<%--@ include file="/WEB-INF/views/a04_financeResource/#.jsp" --%>
 					</div>
 
 					<!-- Content Row -->
 					<div class="row">
-						<%@ include file="/WEB-INF/views/a00_module/a06_main_row03.jsp"%>
+						<%--@ include file="/WEB-INF/views/a04_financeResource/#.jsp" --%>
 					</div>
 
 				</div>
@@ -85,7 +85,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>
@@ -97,27 +97,26 @@
 	</div>
 	<!-- End of Page Wrapper -->
 
+
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> 
 		<i class="fas fa-angle-up"></i>
 	</a>
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp" %>
-	
 <!-- Bootstrap core JavaScript-->
 <script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
 <script src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
 <script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
-
 <!-- Custom scripts for all pages-->
 <script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="${path}/a00_com/vendor/chart.js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="${path}/a00_com/js/demo/chart-area-demo.js"></script>
-<script src="${path}/a00_com/js/demo/chart-pie-demo.js"></script>	
+<!-- 추가 plugins:js -->
+<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
+<script src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
+<script src="${path}/a00_com/js/dataTables.select.min.js"></script>
+<!-- Chart JS API -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

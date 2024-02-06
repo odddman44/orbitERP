@@ -20,6 +20,7 @@ public class Employee {
 	private String subject;
 	
 	private MultipartFile profile;
+	private String pwd;
 	
 	public Employee() {
 		
@@ -161,6 +162,14 @@ public class Employee {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
 	}
 	
 	

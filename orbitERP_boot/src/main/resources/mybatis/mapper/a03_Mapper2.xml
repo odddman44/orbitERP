@@ -194,15 +194,30 @@
 		WHERE empno = #{empno}
 	</update>
 
+	<!-- <select id="getAttenList" parameterType="attendanceSch" resultType="attendanceSch"> 
+		SELECT a.EMPNO, to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE , a.ARR_TIME 
+		, a.DEP_TIME, late, EARLY_LEAVE, TOT_WORKHOURS, d.DNAME FROM ATTENDANCE a 
+		INNER JOIN EMPLOYEE e ON a.EMPNO = e.EMPNO INNER JOIN DEPT d ON e.DEPTNO 
+		= d.DEPTNO where 1 = 1 <if test="empno != null and empno!=''"> AND a.EMPNO 
+		= #{empno} </if> <if test="deptno != 0"> AND d.DEPTNO = #{deptno} </if> <if 
+		test="start_date != null and end_date != null and start_date != '' and end_date 
+		!= ''"> AND a.WORK_DATE BETWEEN #{start_date} AND #{end_date} </if> </select> -->
+
 	<select id="getAttenList" parameterType="attendanceSch"
 		resultType="attendanceSch">
-		SELECT a.EMPNO, to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE ,
-		a.ARR_TIME , a.DEP_TIME, late, EARLY_LEAVE, TOT_WORKHOURS,
-		d.DNAME
-		FROM ATTENDANCE a
-		INNER JOIN EMPLOYEE e ON a.EMPNO = e.EMPNO
+		SELECT
+		a.empno,to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE,
+		a.ARR_TIME , a.DEP_TIME, late, EARLY_LEAVE, d.dname,
+		TO_CHAR(TRUNC((DEP_TIME - ARR_TIME) * 24) - 1, 'FM00') || '시간 ' ||
+		TO_CHAR(ROUND(MOD((DEP_TIME - ARR_TIME) * 24 * 60, 60)), 'FM00') ||
+		'분' AS tot_workhours
+		FROM
+		ATTENDANCE a
+		INNER JOIN EMPLOYEE e ON a.EMPNO =
+		e.EMPNO
 		INNER JOIN
-		DEPT d ON e.DEPTNO = d.DEPTNO
+		DEPT d
+		ON e.DEPTNO = d.DEPTNO
 		where 1 = 1
 		<if test="empno != null and empno!=''">
 			AND a.EMPNO = #{empno}
@@ -214,8 +229,54 @@
 			test="start_date != null and end_date != null and start_date != '' and end_date != ''">
 			AND a.WORK_DATE BETWEEN #{start_date} AND #{end_date}
 		</if>
+
+
 	</select>
 
+	<select id="getAttMine" parameterType="attendanceSch"
+		resultType="attendanceSch">
+		SELECT
+		a.empno,to_char(a.WORK_DATE, 'yy-MM-DD') AS WORK_DATE,
+		a.ARR_TIME ,
+		a.DEP_TIME, late, EARLY_LEAVE, d.dname,
+		TO_CHAR(TRUNC((DEP_TIME -
+		ARR_TIME) * 24) - 1, 'FM00') || '시간 ' ||
+		TO_CHAR(ROUND(MOD((DEP_TIME -
+		ARR_TIME) * 24 * 60, 60)), 'FM00') ||
+		'분' AS tot_workhours
+		FROM
+		ATTENDANCE a
+		INNER JOIN EMPLOYEE e ON a.EMPNO =
+		e.EMPNO
+		INNER JOIN
+		DEPT d
+		ON e.DEPTNO = d.DEPTNO
+		where 1=1
+		and a.empno = #{empno}
+		<if
+			test="start_date != null and end_date != null and start_date != '' and end_date != ''">
+			AND a.WORK_DATE BETWEEN #{start_date} AND #{end_date}
+		</if>
+		
+		
+	</select>
+
+	<insert id="insertErpmem" parameterType="erpmem">
+		INSERT INTO ERPMEM e
+		values(
+		#{empno}, #{auth}, #{pwd}
+		)
+	</insert>
+
+	<select id="getErpmem" parameterType="string"
+		resultType="erpmem">
+		SELECT * FROM ERPMEM e WHERE empno = #{empno}
+	</select>
+
+	<delete id="deleteErpmem" parameterType="string">
+		DELETE FROM ERPMEM e
+		WHERE empno = #{empno}
+	</delete>
 
 
 

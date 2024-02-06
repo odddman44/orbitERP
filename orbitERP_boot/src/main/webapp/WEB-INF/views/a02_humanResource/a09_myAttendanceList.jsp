@@ -19,6 +19,25 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
+		var empno = "${emem.empno}"
+		// 현재 URL에서 empno 값 가져오기
+		var urlParams = new URLSearchParams(window.location.search);
+		var empnoFromURL = urlParams.get('empno');
+
+		if (empnoFromURL !== empno) {
+			alert("올바르지 않은 접근입니다.")
+			window.location.href = "${path}/main"
+		}
+
+		$("#arrBtn").click(function() {
+			alert("출근하기!")
+			event.preventDefault();
+		})
+		$("#depBtn").click(function() {
+			alert("퇴근하기!")
+			event.preventDefault();
+		})
+
 		$('#dataTable').DataTable({
 			"paging" : true,
 			"searching" : false,
@@ -73,33 +92,21 @@
 					<!-- Page Heading -->
 					<div
 						class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">☆ 직원 근태정보 조회</h1>
+						<h1 class="h3 mb-0 text-gray-800">나의 근태 정보 조회</h1>
 					</div>
 					<!-- 테이블 -->
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">날짜로 직원 근태 조회</h6>
+							<h6 class="m-0 font-weight-bold text-primary">날짜별로 조회</h6>
 							<form id="frm01" class="form" method="POST">
-								시작날짜 : <input type="date" name="start_date" value="${attendanceSch.start_date}" /> ~ 마지막날짜
-								:<input type="date" name="end_date" value="${attendanceSch.end_date}" />
+								시작날짜 : <input type="date" name="start_date"
+									value="${attendanceSch.start_date}" /> ~ 마지막날짜 :<input
+									type="date" name="end_date" value="${attendanceSch.end_date}" />
 								<nav class="navbar navbar-expand-sm navbar-light bg-light">
-									<select name="empno" class="form-control form-control-user">
-										<option value="">사원번호</option>
-										<c:forEach var="empno" items="${empnoList}">
-											<option>${empno}</option>
-										</c:forEach>
-									</select> <select name="deptno" class="form-control form-control-user">
-										<option value="0">부서선택</option>
-										<c:forEach var="dept" items="${dlist}">
-											<option value="${dept.deptno}">${dept.dname}(${dept.deptno})</option>
-										</c:forEach>
-									</select>
-									
-
 									<button class="btn btn-info" type="submit">Search</button>
 								</nav>
-								
-								
+
+
 							</form>
 						</div>
 						<div class="card-body">
@@ -107,7 +114,7 @@
 								<table class="table table-bordered" id="dataTable">
 									<thead>
 										<tr>
-											
+
 											<th>근태일</th>
 											<th>사원번호</th>
 											<th>부서명</th>
@@ -128,8 +135,8 @@
 												<td>${att.arr_time}</td>
 												<td>${att.dep_time}</td>
 												<td>${att.late}</td>
-												<td>${att.early_leave}</td>				
-												<td>${att.tot_workhours}</td>			
+												<td>${att.early_leave}</td>
+												<td>${att.tot_workhours}</td>
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -140,6 +147,18 @@
 					</div>
 
 				</div>
+				<div class="text-center">
+					<a href="#" class="btn btn-primary btn-icon-split btn-lg"
+						id="arrBtn"> <span class="icon text-white-50"> <i
+							class="fas fa-flag"></i>
+					</span> <span class="text">출근하기</span>
+					</a> <a href="#" class="btn btn-danger btn-icon-split btn-lg"
+						id="depBtn"> <span class="icon text-white-50"> <i
+							class="fas fa-flag"></i>
+					</span> <span class="text">퇴근하기</span>
+					</a>
+				</div>
+
 				<!-- /.container-fluid (페이지 내용 종료) -->
 
 			</div>
@@ -161,93 +180,7 @@
 	</div>
 	<!-- End of Page Wrapper -->
 
-	<!-- 모달 창 -->
-	<div class="modal fade" id="registerModal" tabindex="-1" role="dialog"
-		aria-labelledby="registerModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="registerModalLabel">전표 등록</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form id="frm02" method="POST" class="text-left">
-						<div class="form-group row">
-							<div class="col-md-4">
-								<!-- 전표일자 입력 -->
-								<label for="voucerDate">전표일자</label> <input type="date"
-									class="form-control" id="voucher_date" name="voucher_dateStr"
-									required />
-								<!-- 거래처명 표시 -->
-								<label for="accCode">거래처명</label> <input type="text"
-									class="form-control" id="trans_cname" name="trans_cname"
-									placeholder="거래(처)명 입력.." required>
-							</div>
-							<div class="col-md-4">
-								<!-- 전표번호 입력 -->
-								<label for="voucherNo">전표번호</label> <input type="number"
-									class="form-control" id="voucher_no" name="voucher_no"
-									placeholder="전표 No. 입력" required>
-								<!-- 부서명 표시 -->
-								<label for="accName">부서명</label>
-								<!--input type="text" class="form-control" id="dname" name="dname" placeholder="부서명 선택" required-->
-								<select name="deptno" class="form-control">
-									<c:forEach var="dept" items="${dlist}">
-										<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
-									</c:forEach>
-								</select>
-							</div>
-						</div>
-						<!-- 적요 입력/숨은 총계창 -->
-						<div class="form-group">
-							<label for="remarks">적요</label> <input type="text"
-								class="form-control underlined-input" id="remarks"
-								name="remarks" placeholder="적요를 입력하세요"> <input
-								type="hidden" id="total_amount" name="total_amount" />
-						</div>
-						<hr>
-						<span>분개 상세 입력</span>
-						<!-- 테이블 행 추가 버튼 -->
-						<button type="button" class="btn btn-secondary" id="addRowBtn">추가</button>
-						<div class="table-responsive">
-							<table class="table table-hover table-striped table-bordered"
-								style="width: 100%;">
-								<thead>
-									<tr class="table-primary text-center">
-										<th>계정코드</th>
-										<th>차변</th>
-										<th>계정명</th>
-										<th>대변</th>
-										<th>거래(처)명</th>
-										<th>적요</th>
-									</tr>
-								</thead>
-								<tbody id="modalTable">
 
-									</tr>
-
-								</tbody>
-							</table>
-						</div>
-					</form>
-				</div>
-				<hr style="border-color: #46bcf2;">
-				<div class="modal-footer d-flex justify-content-between">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">닫기</button>
-					<button type="button" id="regFrmBtn" form="registerForm"
-						class="btn btn-primary">등록</button>
-					<button type="button" id="uptBtn" form="registerForm"
-						class="btn btn-info">수정</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- 모달창 종료 -->
-	<!-- 계정과목 조회 모달창 -->
 	<%@ include
 		file="/WEB-INF/views/a04_financeResource/z01_modalAccsub.jsp"%>
 
@@ -260,7 +193,7 @@
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp"%>
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
-	
+
 	<!-- Core plugin JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
 

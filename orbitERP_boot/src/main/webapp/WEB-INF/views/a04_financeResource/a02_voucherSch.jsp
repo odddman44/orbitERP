@@ -17,6 +17,9 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+	var deptAuth = parseInt("${emem.deptno}");
+	console.log(deptAuth);
+	
 	$(document).ready(function() {
 		$('.modal-dialog').css('max-width', '70%');
 	   	$('#dataTable').DataTable({
@@ -33,13 +36,17 @@
 		
 		// 전표 '신규' 버튼 클릭시의 모달창
 		$("#newBtn").click(function() {
-			console.log("신규 버튼 클릭 - 모달창 열림");
-	        openNewVoucherModal()
-	        // 모달창 제목 변경
-	        $('#registerModalLabel').text('신규 전표 등록').parent().css
-			({'background-color': '#2ECDCD', 'color': '#ffffff'});
-	        $('#regFrmBtn').show();  // 등록 버튼 보이기
-	        $('#uptBtn').hide();     // 수정 버튼 숨기기
+			 if (deptAuth !== 1 && deptAuth !== 20) {
+			        alert("권한이 없는 이용자입니다.");
+			    } else {
+			        console.log("신규 버튼 클릭 - 모달창 열림");
+			        openNewVoucherModal()
+			        // 모달창 제목 변경
+			        $('#registerModalLabel').text('신규 전표 등록').parent().css
+					({'background-color': '#2ECDCD', 'color': '#ffffff'});
+			        $('#regFrmBtn').show();  // 등록 버튼 보이기
+			        $('#uptBtn').hide();     // 수정 버튼 숨기기
+			    }
 		});
 		
 		// '추가' 버튼 클릭 이벤트
@@ -231,40 +238,45 @@
 	    }); 
 		// '선택삭제' 버튼 클릭 이벤트
 	    $("#delBtn").click(function() {
-	        var selectedIds = $(".selectRow:checked").map(function() {
-	            return $(this).val();
-	        }).get();
-
-	        if (selectedIds.length === 0) {
-	            alert("삭제할 전표를 선택하세요.");
-	            return;
+	    	if (deptAuth !== 1 && deptAuth !== 20) {
+	            alert("권한이 없는 이용자입니다.");
+	        } else {
+	            // 선택삭제 로직
+		        var selectedIds = $(".selectRow:checked").map(function() {
+		            return $(this).val();
+		        }).get();
+	
+		        if (selectedIds.length === 0) {
+		            alert("삭제할 전표를 선택하세요.");
+		            return;
+		        }
+		     	// 사용자에게 삭제 확인 요청
+		        var confirmDelete = confirm("선택한 전표를 삭제하시겠습니까?");
+		        if (!confirmDelete) {
+		            return; // 함수 종료, 삭제 요청 중단
+		        }
+	
+		        // AJAX 요청으로 백엔드에 삭제 요청
+		        $.ajax({
+		            url: '${path}/deleteVouchers', // 백엔드 URL 변경 필요
+		            method: 'POST',
+		            contentType: 'application/json', // 서버로 전송할 데이터의 MIME 타입 지정
+		            data: JSON.stringify(selectedIds), // JavaScript 객체나 배열을 JSON 문자열로 변환
+		            success: function(response) {
+		                if(response.status === "success") {
+		                    alert("선택한 전표가 삭제되었습니다.");
+		                    location.reload(); // 성공 시 페이지 새로고침
+		                } else {
+		                    alert("삭제 실패: " + response.message);
+		                }
+		            },
+		            error: function(xhr, status, err) {
+		                alert("삭제 중 오류 발생");
+		                console.error("Error: ", status, err);
+		            }
+		        });
 	        }
 	        
-	     	// 사용자에게 삭제 확인 요청
-	        var confirmDelete = confirm("선택한 전표를 삭제하시겠습니까?");
-	        if (!confirmDelete) {
-	            return; // 함수 종료, 삭제 요청 중단
-	        }
-
-	        // AJAX 요청으로 백엔드에 삭제 요청
-	        $.ajax({
-	            url: '${path}/deleteVouchers', // 백엔드 URL 변경 필요
-	            method: 'POST',
-	            contentType: 'application/json', // 서버로 전송할 데이터의 MIME 타입 지정
-	            data: JSON.stringify(selectedIds), // JavaScript 객체나 배열을 JSON 문자열로 변환
-	            success: function(response) {
-	                if(response.status === "success") {
-	                    alert("선택한 전표가 삭제되었습니다.");
-	                    location.reload(); // 성공 시 페이지 새로고침
-	                } else {
-	                    alert("삭제 실패: " + response.message);
-	                }
-	            },
-	            error: function(xhr, status, err) {
-	                alert("삭제 중 오류 발생");
-	                console.error("Error: ", status, err);
-	            }
-	        });
 	    });
 
 	}); // $(document).ready 끝
@@ -320,7 +332,12 @@
 	            $('#registerModalLabel').text('전표 수정').parent().css
 				({'background-color': '#868a83', 'color': '#ffffff'});
 	            $('#regFrmBtn').hide();  // 등록 버튼 숨기기
-	            $('#uptBtn').show();     // 수정 버튼 보여주기
+	         	// 권한에 따른 수정 버튼 활성화/비활성화
+	            if (deptAuth !== 1 && deptAuth !== 20) {
+	                $('#uptBtn').hide(); // 수정 버튼 숨기기
+	            } else {
+	                $('#uptBtn').show(); // 수정 버튼 보여주기
+	            }
 	            $('#registerModal').modal('show');
 	        },
 	        error: function(err) {
@@ -562,16 +579,14 @@
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp" %>
 <!-- Bootstrap core JavaScript-->
-    <script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
+<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
 <script src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
 <script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
-
 <!-- Custom scripts for all pages-->
 <script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 <!-- 추가 plugins:js -->
-<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>	
 <script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 <script src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
 <script src="${path}/a00_com/js/dataTables.select.min.js"></script>

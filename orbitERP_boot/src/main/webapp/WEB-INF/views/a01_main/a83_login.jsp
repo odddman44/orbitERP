@@ -21,10 +21,10 @@
 		console.log("요청값2:"+id)
 		if (sessId != "") {
 			console.log("요청값3:"+sessId)
-			alert("로그인 성공\n메인페이지로 이동")
+			alert("${emem.ename}님 반갑습니다!\r\n 로그인 되었습니다.")
 			location.href = "${path}/main"
 		} else {
-			alert("로그인 실패\n다시 로그인하세요")
+			alert("로그인 실패! \n다시 로그인하세요..")
 		}
 	}
 </script>

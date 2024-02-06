@@ -8,8 +8,28 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Good day!!</title>
+<title>:: Orbit ERP ::</title>
+<link href="${path}/a00_com/img/logo.svg" rel="icon" type="image/x-icon" />
+<!-- DB테이블 플러그인 추가 -->
+<link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
+<link rel="stylesheet"
+	href="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.css">
+<link rel="stylesheet" type="text/css"
+	href="${path}/a00_com/js/select.dataTables.min.css">
+<!-- Custom fonts for this template-->
+<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<!-- 
+    기존 font
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+	rel="stylesheet">
 
+<!-- Custom styles for this template-->
+<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 
 
 
@@ -19,16 +39,15 @@
 
 
 <script type="text/javascript">
-var msg = "${msg}"
+	var msg = "${msg}"
 
-
-if(msg!=""){
-	var sno = $("[name=sno]").val()
-	if(!confirm(msg+"\n계속 수정하시겠습니까?")){
-		location.href="${path}/studentList"
+	if (msg != "") {
+		var sno = $("[name=sno]").val()
+		if (!confirm(msg + "\n계속 수정하시겠습니까?")) {
+			location.href = "${path}/studentList"
+		}
 	}
-}
-	
+
 	$(document).ready(function() {
 		var sno = $("[name=sno]").val();
 
@@ -45,17 +64,16 @@ if(msg!=""){
 
 			}
 		})
-		$("#profileInput").on("change", function () {
-		    var input = this;
-		    if (input.files && input.files[0]) {
-		        var reader = new FileReader();
-		        reader.onload = function (e) {
-		            $("#profileImage").attr("src", e.target.result);
-		        };
-		        reader.readAsDataURL(input.files[0]);
-		    }
+		$("#profileInput").on("change", function() {
+			var input = this;
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$("#profileImage").attr("src", e.target.result);
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
 		});
-		
 
 	});
 
@@ -92,15 +110,7 @@ button {
 
 
 
-<!-- Custom fonts for this template-->
-<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
-	rel="stylesheet" type="text/css">
-<link
-	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-	rel="stylesheet">
 
-<!-- Custom styles for this template-->
-<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
 
 
 
@@ -150,8 +160,8 @@ button {
 									<img id="profileImage" src="${path}/z02_upload/기본프사.png"
 										width="103px" height="132px">
 								</c:if>
-								<input id="profileInput" class="form-control form-control-user" type="file"
-									name="profile" accept="image/*">
+								<input id="profileInput" class="form-control form-control-user"
+									type="file" name="profile" accept="image/*">
 							</div>
 							<br>
 						</div>
@@ -256,6 +266,7 @@ button {
 		<!-- End of Content Wrapper -->
 
 	</div>
+
 	<!-- End of Page Wrapper -->
 
 	<!-- Scroll to Top Button-->
@@ -264,23 +275,21 @@ button {
 	</a>
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp"%>
-
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
 	<script
 		src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
 	<!-- Core plugin JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
-	<!-- Page level plugins -->
-	<script src="${path}/a00_com/vendor/chart.js/Chart.min.js"></script>
+	<!-- 추가 plugins:js -->
 
-	<!-- Page level custom scripts -->
-	<script src="${path}/a00_com/js/demo/chart-area-demo.js"></script>
-	<script src="${path}/a00_com/js/demo/chart-pie-demo.js"></script>
+	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
+	<script
+		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
+	<script src="${path}/a00_com/js/dataTables.select.min.js"></script>
 </body>
 </html>

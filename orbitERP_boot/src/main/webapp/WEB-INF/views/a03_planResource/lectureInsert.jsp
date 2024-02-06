@@ -47,7 +47,28 @@
 <script type="text/javascript">
 $(document).ready(function() {
     			searchStu()
-    			//searchTch()
+    			 // 숫자에 콤마를 추가하는 함수
+		       function addCommas(nStr) {
+		           nStr += '';
+		           var x = nStr.split('.');
+		           var x1 = x[0];
+		           var x2 = x.length > 1 ? '.' + x[1] : '';
+		           var rgx = /(\d+)(\d{3})/;
+		           while (rgx.test(x1)) {
+		               x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		           }
+		           return x1 + x2;
+		       }
+		   
+		       // 키 입력시 자동으로 콤마 처리
+		       $('#tuition_fee,#textbook_fee').on('input', function() {
+		           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+		           if (!isNaN(input)) { // 입력 값이 숫자인 경우
+		               $(this).val(addCommas(input)); // 콤마 추가
+		           }
+		       });
+
+    			
 				var msg = "${msg}"
 				if (msg != "") {
 					if (!confirm(msg + "\n계속 등록하시겠습니까?")) {
@@ -69,6 +90,19 @@ $(document).ready(function() {
 				
 				$("#insBtn").click(
 						function() {
+							 var inputField = $('#tuition_fee');
+					           var valueWithCommas = inputField.val();
+					           // 콤마를 제거합니다.
+					           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+					           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+					           inputField.val(valueWithoutCommas);
+							 var inputField = $('#textbook_fee');
+					           var valueWithCommas = inputField.val();
+					           // 콤마를 제거합니다.
+					           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+					           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+					           inputField.val(valueWithoutCommas);
+					           
 							if ($("[name=lec_name]").val() == "") {
 								alert("강의명을 입력하세요")
 								return;
@@ -99,9 +133,27 @@ $(document).ready(function() {
 								alert("강의내용을 입력하세요")
 								return;
 							}
+
 							if (confirm("강의를 등록하시겠습니까?")) {
-								$("#insLecture").submit()
-							}
+								//$("#insLecture").submit()
+							     $.ajax({
+							            type: "POST",
+							            url: "/lectureInsert",
+							            data: $("#insLecture").serialize(),
+							            dataType: "json",
+							            success: function (data) {
+							            	var lecno=data.lecno //받아온 lecno_seq.CURRVAL
+							                snoList.forEach(function (sno) {
+							                    insertEnroll(sno, lecno, $("[name=empno]").val());
+							                });
+							            },
+							            error: function (err) {
+							                console.log(err);
+							                // Handle form submission error here
+							            }
+							        })
+							    }
+							        
 						})
 
 				// 개강일자와 종강일자 input 요소를 가져옴
@@ -146,6 +198,7 @@ $(document).ready(function() {
 					  'JS': 'Javascript',
 					  'C++': 'C++',
 					  'PY': 'Python',
+					  'C': 'C'
 					  // 계속 추가 예정
 					};
 			$("#schTch").click(function(){
@@ -153,26 +206,66 @@ $(document).ready(function() {
 				//등록페이지에서 받아온 강의코드를 mapping
 				$("[name=subject]").val(selectedSubject);
 				//form에 넣고
-				if($("[name=subject]").val()==""){
+				//console.log($("[name=subject]").val())
+				//subject에 들어갈 수 없으면 자동으로 null됨
+			    searchTch() 
+				if($("[name=subject]").val()==null){
 					if(confirm("해당과목 담당강사가 없습니다.\n강사등록을 하시겠습니까?")){
 						location.href="empList";
 						return;
 					}
 				}
-			    searchTch() 
 				//검색
 			});
 		
 });
-			
 
+//수강테이블 insert
+function insertEnroll(sno,lecno,empno) {
+    $.ajax({
+    	//type: "POST",
+        url: "/insertEnroll",
+        data: {
+            sno: sno,
+            lecno:lecno,
+            empno: empno
+        },
+        dataType: "text",
+        success: function (data) {
+        	console.log("수강 "+data)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    });
+}
+//테이블 페이징처리
+function table(id){
+	$("#"+id).DataTable({
+    	//"paging": true,        // 페이지 나누기 기능 사용
+    	"pageLength": 10, 
+        "lengthChange": false, // 한 페이지에 표시되는 행 수 변경 가능
+        "searching": false, // 검색 기능 사용
+        "ordering": true, // 정렬 기능 사용
+        "info": true, // 표시 건수 및 현재 페이지 표시
+        "autoWidth": false, // 컬럼 너비 자동 조절 해제
+        "language" : {
+        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
+        	 "paginate": {
+        		  	"next": "다음",
+        			"previous": "이전"
+        		  }
+        }
+    })
+}
 function searchStu() {
     $.ajax({
         url: "/stuSch",
         data: $("#frm02").serialize(),
         dataType: "json",
         success: function (studentList) {
-        	$("#totStu").text('총 학생 수 : 명'+studentList.length)
+        	$("#totStu").text('총 학생 수 : '+studentList.length+'명')
+            $("#dataTable2").DataTable().destroy();
             var stuhtml = "";
             $.each(studentList, function (idx, stu) {
             	stuhtml += "<tr ondblclick=\"location.href='detailStudent?sno=" + stu.sno + "'\">";
@@ -185,14 +278,17 @@ function searchStu() {
                 stuhtml += '<td><button class="btn btn-success" type="button" onclick="addStu(\'' + stu.sno + '\',\'' + stu.name + '\',\'' + stu.final_degree + '\',\'' + stu.phone + '\')">등록</button></td>';
                 stuhtml += "</tr>"
             })
-
             $("#stu").html(stuhtml);
+            //$("#dataTable2").DataTable().draw();
+            table('dataTable2')
         },
         error: function (err) {
             console.log(err)
         }
     });
 }
+
+
 function searchTch() {
     $.ajax({
         url: "/schTch",
@@ -200,6 +296,7 @@ function searchTch() {
         dataType: "json",
         success: function (data) {
             var stuhtml = "";
+            $("#dataTable1").DataTable().destroy();
             $.each(data.teacherList, function (idx, tch) {
             	stuhtml += "<tr ondblclick=\"location.href='detailEmp?empno=" + tch.empno + "'\">";
                 stuhtml += "<td>" + tch.empno + "</td>"
@@ -211,6 +308,8 @@ function searchTch() {
             })
 
             $("#tch").html(stuhtml);
+            table('dataTable1')
+
         },
         error: function (err) {
             console.log(err)
@@ -220,6 +319,7 @@ function searchTch() {
 
 function addTch(empno,ename,subject){
 	$("[name=lec_teacher]").val(ename);
+	$("[name=empno]").val(empno);
 	$("#frm01")[0].reset() //검색값 리셋
 	searchTch() //다시 강사조회했을 때 전체출력
 	$("#tchModal").modal("hide");//모달 닫기
@@ -247,6 +347,7 @@ function addStu(sno, name, final_degree,phone) {
     row += "</tr>";
 
     $("#add").append(row);
+    $("#tot").text('수강학생('+snoList.length+')') //등록시 총 수 변경
 }
 
 function deleteStu(button) {
@@ -259,6 +360,7 @@ function deleteStu(button) {
     if (index !== -1) {
         snoList.splice(index, 1);
     }
+    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
 }
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -309,7 +411,7 @@ function deleteStu(button) {
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div id="text">
-								<form method="post" action="${path}/lectureInsert" id=insLecture>
+								<form method="post" id=insLecture>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend">
 											<span class="input-group-text  justify-content-center">
@@ -338,7 +440,8 @@ function deleteStu(button) {
 												강사명</span>
 										</div>
 										<div class="input_value">
-											<input name="lec_teacher" class="form-control" type="text" readonly/> <input
+											<input name="lec_teacher" class="form-control" type="text" readonly/>
+											<input name="empno" class="form-control" type="hidden"/> <input
 												type="button" class="btn btn-dark" value="강사찾기"
 												data-toggle="modal" data-target="#tchModal" id="schTch"/>
 										</div>
@@ -370,7 +473,7 @@ function deleteStu(button) {
 									        </span>
 									    </div>
 									    <div class="input_value">
-									        <input name="lec_snum" class="form-control" readonly type="number"/> 
+									        <input name="lec_snum" class="form-control" readonly/> 
 									        <input type="button" class="btn btn-dark" value="학생등록"
 									            data-toggle="modal" data-target="#stuModal" id="schStu" />
 									    </div>
@@ -380,13 +483,13 @@ function deleteStu(button) {
 											<span class="input-group-text  justify-content-center">
 												강의료</span>
 										</div>
-										<input name="tuition_fee" class="form-control" type="number"/>
+										<input name="tuition_fee" id="tuition_fee" class="form-control" />
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
 												교재비</span>
 										</div>
 										<div class="input_value">
-											<input name="textbook_fee" class="form-control" type="number"/>
+											<input name="textbook_fee" id="textbook_fee" class="form-control"/>
 										</div>
 									</div>
 									<div class="input-group mb-3">
@@ -431,18 +534,11 @@ function deleteStu(button) {
 									<input placeholder="강사명" name="ename" value="${schT.ename}"
 										class="form-control mr-sm-2" /> 
 									<select name="subject"  class="form-control mr-sm-2" >
-										<option value="">담당과목</option>
+										<option value="">전체조회</option>
 										<c:forEach var="subject" items="${subjects}">
 											<option>${subject}</option>
 										</c:forEach>
 									</select>
-								<!-- <select class="form-control mr-sm-2" name="subject">									
-										<option value="">담당과목</option>
-										<option >JAVA</option>
-										<option >국어</option>
-										<option >수학</option>
-										<option >영어</option>
-									</select> -->
 									<button class="btn btn-info" type="button" id="schTBtn">Search</button>
 								</nav>
 							</form>
@@ -450,7 +546,7 @@ function deleteStu(button) {
 						<div class="card-body">
 							<span>더블클릭시, 강사 상세정보 페이지로 이동합니다.</span>
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable3">
+								<table class="table table-bordered" id="dataTable1">
 								  <col width="20%">
 							      <col width="15%">
 							      <col width="15%">
@@ -511,14 +607,14 @@ function deleteStu(button) {
 									<button class="btn btn-info" type="button" id="schBtn">Search</button>
 								</nav>
 								<div class="input-group mt-3 mb-0">
-									<span class="input-group-text" id="totStu">총 학생 수 : 명</span>
+									<span class="input-group-text" id="totStu"></span>
 								</div>
 							</form>
 						</div>
 						<div class="card-body">
 							<span>더블클릭시, 학생 상세정보 페이지로 이동합니다.</span>
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable1">
+								<table class="table table-bordered" id="dataTable2">
 								  <col width="8%">
 							      <col width="10%">
 							      <col width="18%">
@@ -528,7 +624,7 @@ function deleteStu(button) {
 							      <col width="9%">
 									<thead>
 										<tr>
-											<th>학생번호</th>
+											<th>학번</th>
 											<th>이름</th>
 											<th>생년월일</th>
 											<th>학년</th>
@@ -543,8 +639,8 @@ function deleteStu(button) {
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<h5>수강학생</h5>
-								<table class="table table-bordered" id="dataTable2">
+								<h5 id="tot">수강학생</h5>
+								<table class="table table-bordered">
 								<col width="15%">
 							    <col width="20%">
 							    <col width="25%">
@@ -608,7 +704,6 @@ function deleteStu(button) {
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 	
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
