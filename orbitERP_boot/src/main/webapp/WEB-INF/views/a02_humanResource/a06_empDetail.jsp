@@ -214,13 +214,7 @@
 							<div class="col-sm-3">
 
 								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
-								<input class="form-control form-control-user" name="salary"
-<<<<<<< HEAD
-									id="sal"
-									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
-=======
-									 id="sal" value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
->>>>>>> branch 'feature/HR' of https://github.com/odddman44/orbitERP.git
+								<input class="form-control form-control-user" name="salary">
 							</div>
 
 						</div>
