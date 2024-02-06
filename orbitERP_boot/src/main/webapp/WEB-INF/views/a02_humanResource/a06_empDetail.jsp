@@ -65,91 +65,86 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+	var proc = "${proc}";
+	var msg = "${msg}";
 
-var proc = "${proc}"
-	var msg = "${msg}"
 	if (msg != "") {
-		if (proc == "upt") {
+		if (proc == "upt" || proc == "del") {
 			if (confirm(msg + "\n메인화면으로 이동하시겠습니까?")) {
 				location.href = "${path}/empList";
 			}
 		}
-		
-		if (proc == "del") {
-			if (confirm(msg + "\n메인화면으로 이동하시겠습니까?")) {
-				location.href = "${path}/empList";
-			}
+	}
+
+	// 숫자에 콤마를 추가하는 함수
+	function addCommas(nStr) {
+		nStr += '';
+		var x = nStr.split('.');
+		var x1 = x[0];
+		var x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\d+)(\d{3})/;
+		while (rgx.test(x1)) {
+			x1 = x1.replace(rgx, '$1' + ',' + '$2');
 		}
-	
-	
-    // 숫자에 콤마를 추가하는 함수
-    function addCommas(nStr) {
-        nStr += '';
-        var x = nStr.split('.');
-        var x1 = x[0];
-        var x2 = x.length > 1 ? '.' + x[1] : '';
-        var rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + ',' + '$2');
-        }
-        return x1 + x2;
-    }
-    
-    
+		return x1 + x2;
+	}
 
-    $(document).ready(function() {
-        console.log("받아온 정보:" + "${employee}");
-        
-        // 사원 리스트로 이동
-        $("#goListBtn").click(function() {
-            location.href = "${path}/empList";
-        });
+	$(document).ready(
+			function() {
+				console.log("받아온 정보:" + "${employee}");
 
-        // 사원 정보 수정
-        $("#uptBtn").click(function() {
-            if ($("[name=deptno]").val() == 50 && $("[name=job]").val() != "강사") {
-                alert("교육팀 직급은 강사로 입력해주세요");
-                return;
-            } else {
-                $("form").attr("action", "${path}/empUpdate");
-                $("#frm01").submit();
-            }
-        });
+				// 사원 리스트로 이동
+				$("#goListBtn").click(function() {
+					location.href = "${path}/empList";
+				});
 
-        // 콤마가 포함된 입력 필드의 값에서 콤마를 제거
-        $('#frm01').submit(function(event) {
-            var inputField = $('#sal');
-            var valueWithCommas = inputField.val();
-            var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-            inputField.val(valueWithoutCommas);
-        });
+				// 사원 정보 수정
+				$("#uptBtn").click(
+						function() {
+							if ($("[name=deptno]").val() == 50
+									&& $("[name=job]").val() != "강사") {
+								alert("교육팀 직급은 강사로 입력해주세요");
+								return;
+							} else {
+								$("form").attr("action", "${path}/empUpdate");
+								$("#frm01").submit();
+							}
+						});
 
-        // 사원 삭제
-        $("#delBtn").click(function() {
-            var empno = $("[name=empno]").val();
-            location.href = "${path}/deleteEmp?empno=" + empno;
-        });
+				// 콤마가 포함된 입력 필드의 값에서 콤마를 제거
+				$('#frm01').submit(function(event) {
+					var inputField = $('#sal');
+					var valueWithCommas = inputField.val();
+					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+					inputField.val(valueWithoutCommas);
+				});
 
-        // 연봉 입력창에 자동으로 콤마 추가
-        $('#sal').on('input', function() {
-            var input = $(this).val().replace(/,/g, '');
-            if (!isNaN(input)) {
-                $(this).val(addCommas(input));
-            }
-        });
+				// 사원 삭제
+				$("#delBtn").click(function() {
+					var empno = $("[name=empno]").val();
+					location.href = "${path}/deleteEmp?empno=" + empno;
+				});
 
-        // 사진 미리보기
-        $("#profileInput").on("change", function() {
-            var input = this;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $("#profileImage").attr("src", e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        });
-    });
+				// 연봉 입력창에 자동으로 콤마 추가
+				$('#sal').on('input', function() {
+					var input = $(this).val().replace(/,/g, '');
+					if (!isNaN(input)) {
+						$(this).val(addCommas(input));
+					}
+				});
+
+				// 사진 미리보기
+				$("#profileInput").on("change", function() {
+					var input = this;
+					if (input.files && input.files[0]) {
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							$("#profileImage").attr("src", e.target.result);
+						};
+						reader.readAsDataURL(input.files[0]);
+					}
+				});
+			});
 </script>
 
 </head>
@@ -233,7 +228,9 @@ var proc = "${proc}"
 							<div class="col-sm-3">
 
 								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
-								<input class="form-control form-control-user" name="salary">
+								<input class="form-control form-control-user" name="salary"
+									id="sal"
+									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
 							</div>
 
 						</div>
