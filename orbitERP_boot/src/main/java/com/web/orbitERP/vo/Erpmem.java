@@ -13,6 +13,14 @@ public class Erpmem {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Erpmem(String empno, String auth, String pwd) {
+		super();
+		this.empno = empno;
+		this.auth = auth;
+		this.pwd = pwd;
+	}
+
 	public Erpmem(String empno, String auth, String ename, String pwd, String email) {
 		super();
 		this.empno = empno;

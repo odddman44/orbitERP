@@ -238,6 +238,14 @@
 		#{empno}, #{auth}, #{pwd}
 		)
 	</insert>
+	
+	<select id="getErpmem" parameterType="string" resultType="erpmem">
+		SELECT * FROM ERPMEM e WHERE empno = #{empno}
+	</select>
+	
+	<delete id="deleteErpmem" parameterType="string">
+		DELETE FROM ERPMEM e WHERE empno = #{empno}
+	</delete>
 
 
 
