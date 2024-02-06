@@ -18,10 +18,35 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#dataTable').DataTable();
-        $("#uptBtn").click(function(){
-            window.location.href = 'lectureInsertFrm';
-        });
+
+		var empno = "${emem.empno}"
+		// 현재 URL에서 empno 값 가져오기
+		var urlParams = new URLSearchParams(window.location.search);
+		var empnoFromURL = urlParams.get('empno');
+
+		if (empnoFromURL !== empno) {
+			alert("올바르지 않은 접근입니다.")
+			window.location.href = "${path}/main"
+		}
+
+		$("#arrBtn").click(function() {
+			alert("출근하기!")
+			event.preventDefault();
+		})
+		$("#depBtn").click(function() {
+			alert("퇴근하기!")
+			event.preventDefault();
+		})
+
+		$('#dataTable').DataTable({
+			"paging" : true,
+			"searching" : false,
+			"ordering" : true,
+			"info" : true,
+			"pagingType" : "full_numbers",
+			"pageLength" : 10
+		});
+
 	});
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -64,60 +89,76 @@
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
-					<div class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">☆ 강의조회</h1>
-						<div style="text-align: right;">
-								<input type="button" class="btn btn-info" value="강의등록" id="uptBtn" />
-								<input type="button" class="btn btn-info" value="강의과목등록" id="subBtn" />
-							</div>
+					<!-- Page Heading -->
+					<div
+						class="d-sm-flex align-items-center justify-content-between mb-4">
+						<h1 class="h3 mb-0 text-gray-800">나의 근태 정보 조회</h1>
 					</div>
+					<!-- 테이블 -->
 					<div class="card shadow mb-4">
-						<!-- <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">날짜로 전표 조회</h6>
-                            <form id="frm01" class="form"  method="post">
-	                            <input type="date" name="voucher_date" placeholder="(연/월/일)"/>
-	                            <button type="button" id="schBtn" class="btn btn-secondary">검색</button>
-	                        </form>
-                        </div> -->
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">날짜별로 조회</h6>
+							<form id="frm01" class="form" method="POST">
+								시작날짜 : <input type="date" name="start_date"
+									value="${attendanceSch.start_date}" /> ~ 마지막날짜 :<input
+									type="date" name="end_date" value="${attendanceSch.end_date}" />
+								<nav class="navbar navbar-expand-sm navbar-light bg-light">
+									<button class="btn btn-info" type="submit">Search</button>
+								</nav>
+
+
+							</form>
+						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable" width="100%"
-									cellspacing="0">
+								<table class="table table-bordered" id="dataTable">
 									<thead>
 										<tr>
-											<th>강의코드</th>
-											<th>강의번호</th>
-											<th>강의명</th>
-											<th>개강일자</th>
-											<th>종강일자</th>
-											<th>강사명</th>
-											<th>강의실</th>
+
+											<th>근태일</th>
+											<th>사원번호</th>
+											<th>부서명</th>
+											<th>출근시간</th>
+											<th>퇴근시간</th>
+											<th>지각여부</th>
+											<th>조퇴여부</th>
+											<th>총 근무시간</th>
+
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="lec" items="${lecList}">
-											<tr ondblclick="goDetail(${lec.lecno})">
-												<td>${lec.lec_code}</td>
-												<td>${lec.lecno}</td>
-												<td>${lec.lec_name}</td>
-												<td>${lec.start_date}</td>
-												<td>${lec.end_date}</td>
-												<td>${lec.lec_teacher}</td>
-												<td>${lec.lec_num}</td>
+										<c:forEach var="att" items="${attendanceList}">
+											<tr>
+												<td>${att.work_date}</td>
+												<td>${att.empno}</td>
+												<td>${att.dname}</td>
+												<td>${att.arr_time}</td>
+												<td>${att.dep_time}</td>
+												<td>${att.late}</td>
+												<td>${att.early_leave}</td>
+												<td>${att.tot_workhours}</td>
 											</tr>
 										</c:forEach>
 									</tbody>
 								</table>
-								<script type="text/javascript">
-									function goDetail(lecno) {
-									    location.href = "${path}/lectureDetail2?lecno="+ lecno;
-									}
-								</script>
 
 							</div>
 						</div>
 					</div>
+
 				</div>
+				<div class="text-center">
+					<a href="#" class="btn btn-primary btn-icon-split btn-lg"
+						id="arrBtn"> <span class="icon text-white-50"> <i
+							class="fas fa-flag"></i>
+					</span> <span class="text">출근하기</span>
+					</a> <a href="#" class="btn btn-danger btn-icon-split btn-lg"
+						id="depBtn"> <span class="icon text-white-50"> <i
+							class="fas fa-flag"></i>
+					</span> <span class="text">퇴근하기</span>
+					</a>
+				</div>
+
 				<!-- /.container-fluid (페이지 내용 종료) -->
 
 			</div>
@@ -127,7 +168,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>
@@ -139,17 +180,20 @@
 	</div>
 	<!-- End of Page Wrapper -->
 
+
+	<%@ include
+		file="/WEB-INF/views/a04_financeResource/z01_modalAccsub.jsp"%>
+
+
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>
 	</a>
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp"%>
-
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
-	<script
-		src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 	<!-- Core plugin JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
 
@@ -157,6 +201,7 @@
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 	<!-- 추가 plugins:js -->
+	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>

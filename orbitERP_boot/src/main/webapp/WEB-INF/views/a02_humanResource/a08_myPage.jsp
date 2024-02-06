@@ -34,6 +34,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
+
 <style>
 #chatArea {
 	height: 300px;
@@ -65,88 +66,75 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	var proc = "${proc}";
-	var msg = "${msg}";
+	
+	$(document).ready(function() {
+		var empno = "${emem.empno}"
+		// 현재 URL에서 empno 값 가져오기
+		var urlParams = new URLSearchParams(window.location.search);
+		var empnoFromURL = urlParams.get('empno');
+		
+		if(empnoFromURL!==empno){
+			alert("올바르지 않은 접근입니다.")
+			window.location.href="${path}/main"
+		}
 
-	if (msg != "") {
-		if (proc == "upt" || proc == "del") {
-			if (confirm(msg + "\n메인화면으로 이동하시겠습니까?")) {
-				location.href = "${path}/empList";
+		// 메인으로 이동
+		$("#goListBtn").click(function() {
+			location.href = "${path}/main"
+		})
+		
+		$("#uptBtn").click(function(){
+			$("form").attr("action", "${path}/empUpdate");
+			$("#frm01").submit();
+		})
+
+		$('#frm01').submit(function(event) {
+			// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
+			var inputField = $('#sal');
+			var valueWithCommas = inputField.val();
+			// 콤마를 제거합니다.
+			var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+			// 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+			inputField.val(valueWithoutCommas);
+		});
+
+		// 연봉 입력창에 자동으로 , 넣기
+		$('#sal').on('input', function() {
+			var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+			if (!isNaN(input)) { // 입력 값이 숫자인 경우
+				$(this).val(addCommas(input)); // 콤마 추가
 			}
-		}
-	}
+		});
 
-	// 숫자에 콤마를 추가하는 함수
-	function addCommas(nStr) {
-		nStr += '';
-		var x = nStr.split('.');
-		var x1 = x[0];
-		var x2 = x.length > 1 ? '.' + x[1] : '';
-		var rgx = /(\d+)(\d{3})/;
-		while (rgx.test(x1)) {
-			x1 = x1.replace(rgx, '$1' + ',' + '$2');
-		}
-		return x1 + x2;
-	}
+		// 사진 미리보기
+		$("#profileInput").on("change", function() {
+			var input = this;
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$("#profileImage").attr("src", e.target.result);
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
+		});
 
-	$(document).ready(
-			function() {
-				console.log("받아온 정보:" + "${employee}");
-
-				// 사원 리스트로 이동
-				$("#goListBtn").click(function() {
-					location.href = "${path}/empList";
-				});
-
-				// 사원 정보 수정
-				$("#uptBtn").click(
-						function() {
-							if ($("[name=deptno]").val() == 50
-									&& $("[name=job]").val() != "강사") {
-								alert("교육팀 직급은 강사로 입력해주세요");
-								return;
-							} else {
-								$("form").attr("action", "${path}/empUpdate");
-								$("#frm01").submit();
-							}
-						});
-
-				// 콤마가 포함된 입력 필드의 값에서 콤마를 제거
-				$('#frm01').submit(function(event) {
-					var inputField = $('#sal');
-					var valueWithCommas = inputField.val();
-					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-					inputField.val(valueWithoutCommas);
-				});
-
-				// 사원 삭제
-				$("#delBtn").click(function() {
-					var empno = $("[name=empno]").val();
-					location.href = "${path}/deleteEmp?empno=" + empno;
-				});
-
-				// 연봉 입력창에 자동으로 콤마 추가
-				$('#sal').on('input', function() {
-					var input = $(this).val().replace(/,/g, '');
-					if (!isNaN(input)) {
-						$(this).val(addCommas(input));
-					}
-				});
-
-				// 사진 미리보기
-				$("#profileInput").on("change", function() {
-					var input = this;
-					if (input.files && input.files[0]) {
-						var reader = new FileReader();
-						reader.onload = function(e) {
-							$("#profileImage").attr("src", e.target.result);
-						};
-						reader.readAsDataURL(input.files[0]);
-					}
-				});
-			});
+	});
 </script>
 
+<!-- Custom fonts for this template-->
+<link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<!-- 
+    기존 font
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+	rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 </head>
 <body id="page-top">
 
@@ -167,7 +155,7 @@
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">${employee.ename}사원상세정보</h1>
+					<h1 class="h3 mb-4 text-gray-800">나의 정보 관리</h1>
 					<br> <br>
 					<div class="d-flex justify-content-left">
 						<!--  <img id="profile" src="${profile}" width="100px" height="100px" alt="사진" /> -->
@@ -205,7 +193,7 @@
 							<label for="ename" class="col-sm-1 col-form-label">사원명</label>
 							<div class="col-sm-3">
 								<input type="text" class="form-control form-control-user"
-									name="ename" value="${employee.ename}">
+									readonly name="ename" value="${employee.ename}">
 							</div>
 
 						</div>
@@ -213,23 +201,17 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="sno" class="col-sm-1 col-form-label">직급</label>
 							<div class="col-sm-3">
-								<select class="form-control form-control-user" name="job">
-									<option value="${employee.job}">${employee.job}(기존직급)</option>
-									<option>인턴</option>
-									<option>사원</option>
-									<option>주임</option>
-									<option>대리</option>
-									<option>팀장</option>
-									<option>이사</option>
-									<option>강사</option>
-								</select>
+
+								<input readonly class="form-control form-control-user"
+									value="${employee.job}" name="job">
+
 							</div>
 							<label for="salary" class="col-sm-1 col-form-label">연봉</label>
 							<div class="col-sm-3">
 
 								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
 								<input class="form-control form-control-user" name="salary"
-									id="sal"
+									readonly id="sal"
 									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
 							</div>
 
@@ -239,18 +221,13 @@
 							<label for="ssnum" class="col-sm-1 col-form-label">주민번호</label>
 							<div class="col-sm-3">
 								<input class="form-control form-control-user" name="ssnum"
-									value="${employee.ssnum}" readonly />
+									readonly value="${employee.ssnum}" readonly />
 							</div>
 							<label for="final_degree" class="col-sm-1 col-form-label">부서번호</label>
 							<div class="col-sm-3">
-								<select name="deptno" class="form-control form-control-user">
-									<option value="${employee.deptno}">${dept.dname}(기존
-										소속팀)</option>
-									<c:forEach var="dept" items="${dlist}">
-										<option value="${dept.deptno}">${dept.dname}(${dept.dcode})</option>
-									</c:forEach>
+								<input class="form-control form-control-user" name="deptno"
+									readonly value="${employee.deptno}" readonly />
 
-								</select>
 							</div>
 						</div>
 						<br>
@@ -259,7 +236,7 @@
 								<label for="subject" class="col-sm-1 col-form-label">담당과목</label>
 								<div class="col-sm-3">
 									<input type="text" class="form-control form-control-user"
-										name="subject"
+										readonly name="subject"
 										value="${empty employee.subject ? '없음' : employee.subject}">
 								</div>
 							</div>
@@ -310,16 +287,9 @@
 						<br> <br>
 						<div class="row justify-content-left">
 							<div class="col-auto">
-								<input type="button" class="btn btn-primary" value="수정"
-									id="uptBtn" />
-							</div>
-							<div class="col-auto">
-								<input type="button" class="btn btn-primary" value="삭제"
-									id="delBtn" />
-							</div>
-							<div class="col-auto">
-								<input type="button" class="btn btn-info" value="사원리스트"
+								<input type="button" class="btn btn-info" value="메인화면"
 									id="goListBtn" />
+								<input type="button" class="btn btn-success" id="uptBtn" value="수정">
 							</div>
 						</div>
 					</form>
@@ -367,6 +337,5 @@
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
 	<script src="${path}/a00_com/js/dataTables.select.min.js"></script>
-
 </body>
 </html>

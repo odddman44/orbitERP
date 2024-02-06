@@ -47,7 +47,28 @@
 <script type="text/javascript">
 $(document).ready(function() {
     			searchStu()
-    			//searchTch()
+    			 // 숫자에 콤마를 추가하는 함수
+		       function addCommas(nStr) {
+		           nStr += '';
+		           var x = nStr.split('.');
+		           var x1 = x[0];
+		           var x2 = x.length > 1 ? '.' + x[1] : '';
+		           var rgx = /(\d+)(\d{3})/;
+		           while (rgx.test(x1)) {
+		               x1 = x1.replace(rgx, '$1' + ',' + '$2');
+		           }
+		           return x1 + x2;
+		       }
+		   
+		       // 키 입력시 자동으로 콤마 처리
+		       $('#tuition_fee,#textbook_fee').on('input', function() {
+		           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+		           if (!isNaN(input)) { // 입력 값이 숫자인 경우
+		               $(this).val(addCommas(input)); // 콤마 추가
+		           }
+		       });
+
+    			
 				var msg = "${msg}"
 				if (msg != "") {
 					if (!confirm(msg + "\n계속 등록하시겠습니까?")) {
@@ -69,6 +90,19 @@ $(document).ready(function() {
 				
 				$("#insBtn").click(
 						function() {
+							 var inputField = $('#tuition_fee');
+					           var valueWithCommas = inputField.val();
+					           // 콤마를 제거합니다.
+					           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+					           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+					           inputField.val(valueWithoutCommas);
+							 var inputField = $('#textbook_fee');
+					           var valueWithCommas = inputField.val();
+					           // 콤마를 제거합니다.
+					           var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+					           // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+					           inputField.val(valueWithoutCommas);
+					           
 							if ($("[name=lec_name]").val() == "") {
 								alert("강의명을 입력하세요")
 								return;
@@ -99,9 +133,27 @@ $(document).ready(function() {
 								alert("강의내용을 입력하세요")
 								return;
 							}
+
 							if (confirm("강의를 등록하시겠습니까?")) {
-								$("#insLecture").submit()
-							}
+								//$("#insLecture").submit()
+							     $.ajax({
+							            type: "POST",
+							            url: "/lectureInsert",
+							            data: $("#insLecture").serialize(),
+							            dataType: "json",
+							            success: function (data) {
+							            	var lecno=data.lecno //받아온 lecno_seq.CURRVAL
+							                snoList.forEach(function (sno) {
+							                    insertEnroll(sno, lecno, $("[name=empno]").val());
+							                });
+							            },
+							            error: function (err) {
+							                console.log(err);
+							                // Handle form submission error here
+							            }
+							        })
+							    }
+							        
 						})
 
 				// 개강일자와 종강일자 input 요소를 가져옴
@@ -154,8 +206,10 @@ $(document).ready(function() {
 				//등록페이지에서 받아온 강의코드를 mapping
 				$("[name=subject]").val(selectedSubject);
 				//form에 넣고
+				//console.log($("[name=subject]").val())
+				//subject에 들어갈 수 없으면 자동으로 null됨
 			    searchTch() 
-				if($("[name=subject]").val()=="" || $("#tch tr").length === 0){
+				if($("[name=subject]").val()==null){
 					if(confirm("해당과목 담당강사가 없습니다.\n강사등록을 하시겠습니까?")){
 						location.href="empList";
 						return;
@@ -165,8 +219,26 @@ $(document).ready(function() {
 			});
 		
 });
-			
 
+//수강테이블 insert
+function insertEnroll(sno,lecno,empno) {
+    $.ajax({
+    	//type: "POST",
+        url: "/insertEnroll",
+        data: {
+            sno: sno,
+            lecno:lecno,
+            empno: empno
+        },
+        dataType: "text",
+        success: function (data) {
+        	console.log("수강 "+data)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    });
+}
 function searchStu() {
     $.ajax({
         url: "/stuSch",
@@ -221,6 +293,7 @@ function searchTch() {
 
 function addTch(empno,ename,subject){
 	$("[name=lec_teacher]").val(ename);
+	$("[name=empno]").val(empno);
 	$("#frm01")[0].reset() //검색값 리셋
 	searchTch() //다시 강사조회했을 때 전체출력
 	$("#tchModal").modal("hide");//모달 닫기
@@ -310,7 +383,7 @@ function deleteStu(button) {
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div id="text">
-								<form method="post" action="${path}/lectureInsert" id=insLecture>
+								<form method="post" id=insLecture>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend">
 											<span class="input-group-text  justify-content-center">
@@ -339,7 +412,8 @@ function deleteStu(button) {
 												강사명</span>
 										</div>
 										<div class="input_value">
-											<input name="lec_teacher" class="form-control" type="text" readonly/> <input
+											<input name="lec_teacher" class="form-control" type="text" readonly/>
+											<input name="empno" class="form-control" type="hidden"/> <input
 												type="button" class="btn btn-dark" value="강사찾기"
 												data-toggle="modal" data-target="#tchModal" id="schTch"/>
 										</div>
@@ -381,13 +455,13 @@ function deleteStu(button) {
 											<span class="input-group-text  justify-content-center">
 												강의료</span>
 										</div>
-										<input name="tuition_fee" class="form-control" type="number"/>
+										<input name="tuition_fee" id="tuition_fee" class="form-control" />
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
 												교재비</span>
 										</div>
 										<div class="input_value">
-											<input name="textbook_fee" class="form-control" type="number"/>
+											<input name="textbook_fee" id="textbook_fee" class="form-control"/>
 										</div>
 									</div>
 									<div class="input-group mb-3">
@@ -609,7 +683,6 @@ function deleteStu(button) {
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 	
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>

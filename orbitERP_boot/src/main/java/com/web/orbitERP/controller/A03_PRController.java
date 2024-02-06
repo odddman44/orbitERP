@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.service.A03_PRService;
 import com.web.orbitERP.vo.Calendar;
+import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
@@ -62,19 +62,20 @@ public class A03_PRController {
 	public String lectureInsert() {
 		return "a03_planResource\\lectureInsert";
 	}
+
 	//강의등록
 	@RequestMapping("lectureInsert")
 	public String insertLecture(Lecture ins, Model d) {
 		d.addAttribute("msg", 
 				service.insertLecture(ins)>0?"등록완료":"등록실패");
-		return "a03_planResource\\lectureInsert";
+		d.addAttribute("lecno",service.getlecno());
+		return "pageJsonReport";
 	}
 	//학생테이블 검색
 	//http://localhost:4444/stuSch	
 	@RequestMapping("stuSch")
 	public ResponseEntity<?> stuSch(@ModelAttribute("sch") LectureStu sch) {
 		//d.addAttribute("studentList", service.getStus(sch));
-		System.out.println(sch.getCount());
 		return ResponseEntity.ok(service.getStus(sch));
 	}
 	
@@ -90,20 +91,11 @@ public class A03_PRController {
 	public List<String> getSubjects(){
 		return service.getSubjects();
 	}
-	
-//	---------------------------------------------------------------------------
-	/*
-	@RequestMapping("studentList.do")
-	public String studentList(@ModelAttribute("sch") StudentSch sch, Model d,
-			@RequestParam(value = "msg", required = false) String msg) {
-		d.addAttribute("msg", msg);
-		d.addAttribute("studentList", service.getStudentList(sch));
-
-		return "WEB-INF\\view\\a02_humanResource\\a03_studentList.jsp";
-	} 
-	 */
-	//http://localhost:4444/stuList
-	
+	//수강테이블
+	@RequestMapping("insertEnroll")
+	public ResponseEntity<?> insertEnroll(Enrollment ins){
+		return ResponseEntity.ok(service.insertEnroll(ins));
+	}
 	
 	
 	
