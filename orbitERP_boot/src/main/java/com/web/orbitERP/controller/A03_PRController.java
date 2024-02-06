@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.service.A03_PRService;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
@@ -69,8 +68,7 @@ public class A03_PRController {
 		d.addAttribute("msg", 
 				service.insertLecture(ins)>0?"등록완료":"등록실패");
 		d.addAttribute("lecno",service.getlecno());
-		System.out.println(service.getlecno());
-		return "a03_planResource\\lectureInsert";
+		return "pageJsonReport";
 	}
 	//학생테이블 검색
 	//http://localhost:4444/stuSch	

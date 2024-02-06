@@ -142,9 +142,7 @@ $(document).ready(function() {
 							            data: $("#insLecture").serialize(),
 							            dataType: "json",
 							            success: function (data) {
-							            	//var lecno=data.lecno //받아온 lecno_seq.CURRVAL
-							            	console.log(data)
-							            	console.log(data.lecno)
+							            	var lecno=data.lecno //받아온 lecno_seq.CURRVAL
 							                snoList.forEach(function (sno) {
 							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });
@@ -208,8 +206,10 @@ $(document).ready(function() {
 				//등록페이지에서 받아온 강의코드를 mapping
 				$("[name=subject]").val(selectedSubject);
 				//form에 넣고
+				//console.log($("[name=subject]").val())
+				//subject에 들어갈 수 없으면 자동으로 null됨
 			    searchTch() 
-				if($("[name=subject]").val()=="" || $("#tch tr").length === 0){
+				if($("[name=subject]").val()==null){
 					if(confirm("해당과목 담당강사가 없습니다.\n강사등록을 하시겠습니까?")){
 						location.href="empList";
 						return;
@@ -232,7 +232,7 @@ function insertEnroll(sno,lecno,empno) {
         },
         dataType: "text",
         success: function (data) {
-        	console.log(data)
+        	console.log("수강 "+data)
         },
         error: function (err) {
             console.log(err)
@@ -683,7 +683,6 @@ function deleteStu(button) {
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 	
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>
