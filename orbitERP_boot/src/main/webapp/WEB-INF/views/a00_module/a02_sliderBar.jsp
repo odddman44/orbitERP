@@ -122,7 +122,7 @@
          aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">영업계획:</h6>
-            <a class="collapse-item" href="calendar">연간스케줄조회</a> <a
+            <a class="collapse-item" href="planCalendar">연간스케줄조회</a> <a
                class="collapse-item" href="calendar">개인스케줄조회</a> <a
                class="collapse-item" href="#">알림 보내기</a>
          </div>
@@ -171,7 +171,7 @@
             <h6 class="collapse-header">재무관리:</h6>
             <a class="collapse-item" href="accList">계정과목 관리</a> <a
                class="collapse-item" href="voucherList">회계전표 관리</a> <a
-               class="collapse-item" href="#">경영자 보고서</a>
+               class="collapse-item" href="manageReport">경영자 보고서</a>
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
