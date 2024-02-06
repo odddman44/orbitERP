@@ -106,7 +106,7 @@
 					aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<h6 class="collapse-header">강의관리:</h6>
-						<a class="collapse-item" href="calendar">강의스케줄조회</a> 
+						<a class="collapse-item" href="lectureCalendar">강의스케줄조회</a> 
 						<a class="collapse-item" href="lectureList">강의조회</a> <a
 							class="collapse-item" href="lectureInsertFrm">강의등록</a> <a
 							class="collapse-item" href="#">알림 보내기</a>
