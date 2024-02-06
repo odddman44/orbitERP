@@ -239,6 +239,25 @@ function insertEnroll(sno,lecno,empno) {
         }
     });
 }
+//테이블 페이징처리
+function table(id){
+	$("#"+id).DataTable({
+    	//"paging": true,        // 페이지 나누기 기능 사용
+    	"pageLength": 10, 
+        "lengthChange": false, // 한 페이지에 표시되는 행 수 변경 가능
+        "searching": false, // 검색 기능 사용
+        "ordering": true, // 정렬 기능 사용
+        "info": true, // 표시 건수 및 현재 페이지 표시
+        "autoWidth": false, // 컬럼 너비 자동 조절 해제
+        "language" : {
+        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
+        	 "paginate": {
+        		  	"next": "다음",
+        			"previous": "이전"
+        		  }
+        }
+    })
+}
 function searchStu() {
     $.ajax({
         url: "/stuSch",
@@ -246,6 +265,7 @@ function searchStu() {
         dataType: "json",
         success: function (studentList) {
         	$("#totStu").text('총 학생 수 : '+studentList.length+'명')
+            $("#dataTable2").DataTable().destroy();
             var stuhtml = "";
             $.each(studentList, function (idx, stu) {
             	stuhtml += "<tr ondblclick=\"location.href='detailStudent?sno=" + stu.sno + "'\">";
@@ -258,14 +278,17 @@ function searchStu() {
                 stuhtml += '<td><button class="btn btn-success" type="button" onclick="addStu(\'' + stu.sno + '\',\'' + stu.name + '\',\'' + stu.final_degree + '\',\'' + stu.phone + '\')">등록</button></td>';
                 stuhtml += "</tr>"
             })
-
             $("#stu").html(stuhtml);
+            //$("#dataTable2").DataTable().draw();
+            table('dataTable2')
         },
         error: function (err) {
             console.log(err)
         }
     });
 }
+
+
 function searchTch() {
     $.ajax({
         url: "/schTch",
@@ -273,6 +296,7 @@ function searchTch() {
         dataType: "json",
         success: function (data) {
             var stuhtml = "";
+            $("#dataTable1").DataTable().destroy();
             $.each(data.teacherList, function (idx, tch) {
             	stuhtml += "<tr ondblclick=\"location.href='detailEmp?empno=" + tch.empno + "'\">";
                 stuhtml += "<td>" + tch.empno + "</td>"
@@ -284,6 +308,8 @@ function searchTch() {
             })
 
             $("#tch").html(stuhtml);
+            table('dataTable1')
+
         },
         error: function (err) {
             console.log(err)
@@ -321,6 +347,7 @@ function addStu(sno, name, final_degree,phone) {
     row += "</tr>";
 
     $("#add").append(row);
+    $("#tot").text('수강학생('+snoList.length+')') //등록시 총 수 변경
 }
 
 function deleteStu(button) {
@@ -333,6 +360,7 @@ function deleteStu(button) {
     if (index !== -1) {
         snoList.splice(index, 1);
     }
+    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
 }
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -445,7 +473,7 @@ function deleteStu(button) {
 									        </span>
 									    </div>
 									    <div class="input_value">
-									        <input name="lec_snum" class="form-control" readonly type="number"/> 
+									        <input name="lec_snum" class="form-control" readonly/> 
 									        <input type="button" class="btn btn-dark" value="학생등록"
 									            data-toggle="modal" data-target="#stuModal" id="schStu" />
 									    </div>
@@ -506,18 +534,11 @@ function deleteStu(button) {
 									<input placeholder="강사명" name="ename" value="${schT.ename}"
 										class="form-control mr-sm-2" /> 
 									<select name="subject"  class="form-control mr-sm-2" >
-										<option value="">담당과목</option>
+										<option value="">전체조회</option>
 										<c:forEach var="subject" items="${subjects}">
 											<option>${subject}</option>
 										</c:forEach>
 									</select>
-								<!-- <select class="form-control mr-sm-2" name="subject">									
-										<option value="">담당과목</option>
-										<option >JAVA</option>
-										<option >국어</option>
-										<option >수학</option>
-										<option >영어</option>
-									</select> -->
 									<button class="btn btn-info" type="button" id="schTBtn">Search</button>
 								</nav>
 							</form>
@@ -525,7 +546,7 @@ function deleteStu(button) {
 						<div class="card-body">
 							<span>더블클릭시, 강사 상세정보 페이지로 이동합니다.</span>
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable3">
+								<table class="table table-bordered" id="dataTable1">
 								  <col width="20%">
 							      <col width="15%">
 							      <col width="15%">
@@ -593,7 +614,7 @@ function deleteStu(button) {
 						<div class="card-body">
 							<span>더블클릭시, 학생 상세정보 페이지로 이동합니다.</span>
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable1">
+								<table class="table table-bordered" id="dataTable2">
 								  <col width="8%">
 							      <col width="10%">
 							      <col width="18%">
@@ -603,7 +624,7 @@ function deleteStu(button) {
 							      <col width="9%">
 									<thead>
 										<tr>
-											<th>학생번호</th>
+											<th>학번</th>
 											<th>이름</th>
 											<th>생년월일</th>
 											<th>학년</th>
@@ -618,8 +639,8 @@ function deleteStu(button) {
 							</div>
 							<hr>
 							<div class="table-responsive">
-								<h5>수강학생</h5>
-								<table class="table table-bordered" id="dataTable2">
+								<h5 id="tot">수강학생</h5>
+								<table class="table table-bordered">
 								<col width="15%">
 							    <col width="20%">
 							    <col width="25%">
