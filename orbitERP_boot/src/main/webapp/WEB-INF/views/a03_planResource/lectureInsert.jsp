@@ -135,28 +135,24 @@ $(document).ready(function() {
 							}
 
 							if (confirm("강의를 등록하시겠습니까?")) {
-							    $("#insLecture").submit(function (event) {
-							        // Prevent the form from submitting normally
-							        event.preventDefault();
-
-							        // Submit the form
-							        $.ajax({
+								//$("#insLecture").submit()
+							     $.ajax({
 							            type: "POST",
-							            url: $(this).attr("action"),
-							            data: $(this).serialize(),
+							            url: "/lectureInsert",
+							            data: $("#insLecture").serialize(),
+							            dataType: "text",
 							            success: function (data) {
-							                // Form submitted successfully, now insert enrollment records
+							            	var lecno=data.lecno //수정
 							                snoList.forEach(function (sno) {
-							                    insertEnroll(sno, $("[name=lec_teacher]").val());
+							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });
 							            },
 							            error: function (err) {
 							                console.log(err);
 							                // Handle form submission error here
 							            }
-							        });
-							    });
-							}
+							        })
+							    }
 							        
 						})
 
@@ -221,16 +217,18 @@ $(document).ready(function() {
 			});
 		
 });
-			
 
-function insertEnroll(sno,empno) {
+//수강테이블 insert
+function insertEnroll(sno,lecno,empno) {
     $.ajax({
+    	//type: "POST",
         url: "/insertEnroll",
         data: {
             sno: sno,
+            lecno:lecno,
             empno: empno
         },
-        dataType: "json",
+        dataType: "text",
         success: function (data) {
         	console.log(data)
         },
@@ -293,6 +291,7 @@ function searchTch() {
 
 function addTch(empno,ename,subject){
 	$("[name=lec_teacher]").val(ename);
+	$("[name=empno]").val(empno);
 	$("#frm01")[0].reset() //검색값 리셋
 	searchTch() //다시 강사조회했을 때 전체출력
 	$("#tchModal").modal("hide");//모달 닫기
@@ -382,7 +381,7 @@ function deleteStu(button) {
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div id="text">
-								<form method="post" action="${path}/lectureInsert" id=insLecture>
+								<form method="post" id=insLecture>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend">
 											<span class="input-group-text  justify-content-center">
@@ -411,7 +410,8 @@ function deleteStu(button) {
 												강사명</span>
 										</div>
 										<div class="input_value">
-											<input name="lec_teacher" class="form-control" type="text" readonly/> <input
+											<input name="lec_teacher" class="form-control" type="text" readonly/>
+											<input name="empno" class="form-control" type="hidden"/> <input
 												type="button" class="btn btn-dark" value="강사찾기"
 												data-toggle="modal" data-target="#tchModal" id="schTch"/>
 										</div>
