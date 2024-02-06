@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.web.orbitERP.dao.A04_FinanceDao;
 import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
+import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.Journalizing;
 import com.web.orbitERP.vo.Voucher;
 import com.web.orbitERP.vo.VoucherDetail;
@@ -148,4 +149,14 @@ public class A04_FinanceService {
     	// 그 다음 전표 삭제
         dao.deleteVouchers(voucherIds);
     }
+    
+	/*
+	 * 3. 경영자보고서 관련
+	 * */
+    public List<FinanceSummary> getSalesAndPurchasesSummaryByYear(int year) {
+    	List<FinanceSummary> summary = dao.getSalesAndPurchasesSummaryByYear(year);
+    	System.out.println("조회된 금융 요약 데이터: " + summary);
+        return summary;
+    }
+    
 }

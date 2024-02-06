@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -406,6 +407,10 @@ public class A02_HRService {
 	
 	public List<AttendanceSch> getAttenList(AttendanceSch Sch){
 		return dao.getAttenList(Sch);
+	}
+	
+	public List<AttendanceSch> getAttMine(AttendanceSch Sch){
+		return dao.getAttMine(Sch);
 	}
 
 }
