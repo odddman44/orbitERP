@@ -61,7 +61,7 @@ public class A02_HRController {
 	}
 
 	// teplete test용
-	// http://localhost:4444/test.do
+	// http://localhost:4444/test
 	@RequestMapping("test")
 	public String test() {
 		return "a02_humanResource\\a10_buttons";
