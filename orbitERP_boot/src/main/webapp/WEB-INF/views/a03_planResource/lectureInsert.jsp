@@ -140,9 +140,11 @@ $(document).ready(function() {
 							            type: "POST",
 							            url: "/lectureInsert",
 							            data: $("#insLecture").serialize(),
-							            dataType: "text",
+							            dataType: "json",
 							            success: function (data) {
-							            	var lecno=data.lecno //수정
+							            	//var lecno=data.lecno //받아온 lecno_seq.CURRVAL
+							            	console.log(data)
+							            	console.log(data.lecno)
 							                snoList.forEach(function (sno) {
 							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });

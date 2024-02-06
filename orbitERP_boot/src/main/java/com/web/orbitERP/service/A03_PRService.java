@@ -27,6 +27,11 @@ public class A03_PRService {
 	public int insertLecture(Lecture ins) {
 		return dao.insertLecture(ins);
 	}
+	//강의번호 추출
+	public int getlecno() {
+		return dao.getlecno();
+	}
+	
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
@@ -56,10 +61,6 @@ public class A03_PRService {
 	//수강테이블
 	public String insertEnroll(Enrollment ins) {
 		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
-	}
-	//강의번호 추출
-	public int getlecno() {
-		return dao.getlecno();
 	}
 	
 	
