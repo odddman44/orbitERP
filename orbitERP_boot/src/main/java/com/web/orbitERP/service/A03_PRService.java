@@ -43,8 +43,12 @@ public class A03_PRService {
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
+	
 	public int deleteLecture(int lecno) {
 		return dao.deleteLecture(lecno);
+	}
+	public int deleteEnroll(int lecno) {
+		return dao.deleteEnroll(lecno);
 	}
 	
 	

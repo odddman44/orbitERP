@@ -159,6 +159,7 @@ $(document).ready(function() {
 							                snoList.forEach(function (sno) {
 							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });
+							            	alert(data.msg)
 							            },
 							            error: function (err) {
 							                console.log(err);

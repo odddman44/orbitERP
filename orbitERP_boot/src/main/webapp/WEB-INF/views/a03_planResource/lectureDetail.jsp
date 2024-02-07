@@ -147,19 +147,23 @@ width:70%;
 	})
 	$("#delBtn").click(function(){
 		if(confirm("${lecture.lec_code}${lecture.lecno}를 삭제하시겠습니까?")){
-			$("form").attr("action", "lectureDelete");
-	        $("form").submit();
+			$.ajax({
+	            type: "POST",
+	            url: "/lectureDelete",
+	            data: $("#info").serialize(),
+	            dataType: "json",
+	            success: function (data) {
+	            	alert(data.msg+data.msg2)
+	            	location.href="lectureList"
+	            },
+	            error: function (err) {
+	                console.log(err);
+	                // Handle form submission error here
+	            }
+	        })
 		}
 	
 	})
-	
-	var msg = "${msg}"
-	if(msg!=""){
-		alert(msg)
-		if(msg="삭제완료"){
-			location.href="lectureList"
-		}
-	}
 	
 	$("#schTBtn").click(function(){ //강사 모달창 검색
 		searchTch()
@@ -368,7 +372,7 @@ width:70%;
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div id="text">
-							<form>
+							<form id="info">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
@@ -434,7 +438,8 @@ width:70%;
 									<input name="lec_snum" class="form-control" value="${lecture.lec_snum}" readonly/> 
 									<input type="button" class="btn btn-dark" value="학생변경"
 									data-toggle="modal" data-target="#stuModal" id="schStu" />
-									<input type="button" class="btn btn-dark" value="성적등록" id="gradeStu" />
+									<input type="button" class="btn btn-dark" value="성적등록"
+									data-toggle="modal" data-target="#stuGradeModal" id="gradeStu" />
 								</div>
 							</div>
 							<div class="input-group mb-3">
@@ -583,7 +588,7 @@ width:70%;
 							</form>
 						</div>
 						<div class="card-body">
-							<h5 id="tot">수강학생</h5>
+							<h5 id="tot"></h5>
 							<span>더블클릭시, 학생 상세정보 페이지로 이동합니다.</span>
 							<div class="table-responsive">
 								<table class="table table-bordered">
@@ -648,6 +653,66 @@ width:70%;
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">닫기</button>
 							<button type="button" class="btn btn-primary" id="insertStu">학생등록</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			<!-- start 성적등록 modal -->
+			<div class="modal" id="stuGradeModal" >
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">성적등록</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+						<div class="card shadow mb-4">
+						<div class="card-header py-3">
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="dataTable2">
+								<col width="15%">
+							    <col width="20%">
+							    <col width="25%">
+							    <col width="20%">
+							    <col width="20%">
+									<thead>
+										<tr>
+											<th>학생번호</th>
+											<th>이름</th>
+											<th>학년</th>
+											<th>전화번호</th>
+											<th>점수</th>
+											<th>등급</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="stu" items="${stuList}">
+											<tr>
+											<td>${stu.sno}</td>
+											<td>${stu.name}</td>
+											<td>${stu.final_degree}</td>
+											<td>${stu.phone}</td>
+											<td><input/></td>
+											<td>${stu.grade}</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+							</div>
+							<hr>
+						</div>
+					</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary" id="insertGrade">성적등록</button>
 						</div>
 					</div>
 				</div>

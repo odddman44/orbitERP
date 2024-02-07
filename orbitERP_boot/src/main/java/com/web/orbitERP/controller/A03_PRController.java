@@ -38,9 +38,8 @@ public class A03_PRController {
 	@RequestMapping("lectureDetail")
 	public String lectureDetail(@RequestParam("lecno") int lecno,Model d) {
 		d.addAttribute("lecture",service.getLecture(lecno));
-		d.addAttribute("tch",service.getTch(lecno));
-		d.addAttribute("stuList",service.getStuList(lecno));
-		System.out.println(service.getTch(lecno));
+		d.addAttribute("tch",service.getTch(lecno));//강의의 강사
+		d.addAttribute("stuList",service.getStuList(lecno));//수강중인 학생들
 		return"a03_planResource\\lectureDetail";
 	}
 	//강의수정
@@ -49,14 +48,16 @@ public class A03_PRController {
 		d.addAttribute("msg", 
 				service.updateLecture(upt)>0?"수정완료":"수정실패");
 		d.addAttribute("lecture",service.getLecture(upt.getLecno()));
-		return "a03_planResource\\lectureDetail";
+		return "pageJsonReport";
 	}
 	//강의삭제
 	@RequestMapping("lectureDelete")
 	public String lectureDelete(@RequestParam("lecno") int lecno, Model d) {
+		d.addAttribute("msg2", 
+				service.deleteEnroll(lecno)>0?"수강삭제":"삭제실패");
 		d.addAttribute("msg", 
-				service.deleteLecture(lecno)>0?"삭제완료":"삭제실패");
-		return "a03_planResource\\lectureDetail";
+				service.deleteLecture(lecno)>0?"강의삭제":"삭제실패");
+		return "pageJsonReport";
 	}
 	
 	

@@ -22,6 +22,7 @@ public interface A03_PRDao {
 	int insertLecture(Lecture ins);
 	int updateLecture(Lecture upt);
 	int deleteLecture(@Param("lecno") int lecno);
+	int deleteEnroll(@Param("lecno") int lecno);
 	
 	
 	//학생정보 불러오기	
