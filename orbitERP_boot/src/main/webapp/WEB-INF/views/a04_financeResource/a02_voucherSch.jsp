@@ -28,11 +28,23 @@
 	            "ordering": true,
 	            "info": true,
 	            "pagingType": "full_numbers",
-	            "pageLength": 5
+	            "pageLength": 10
 	    });
+	   	
 		$("#schBtn").click(function(){
 			$("#frm01").submit();
 		})
+		
+		
+		// 전표유형 select시 자동 제출
+		$("#selectSch").change(function() {
+			$("#schBtn").click();
+		})
+		// 선택된 전표 유형값을 저장
+        var selectedValue = "${selectedType}";
+        if(selectedValue){
+        	$("#selectSch").val(selectedValue);
+        }
 		
 		// 전표 '신규' 버튼 클릭시의 모달창
 		$("#newBtn").click(function() {
@@ -405,9 +417,29 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">날짜로 전표 조회</h6>
                             <form id="frm01" class="form"  method="POST">
-	                            시작날짜 : <input type="date" name="startDate" value="${selectedStartDate}"/> ~ 
-								마지막날짜 :<input type="date" name="endDate" value="${selectedEndDate}"/>
-	                            <button type="button" id="schBtn" class="btn btn-secondary">검색</button>
+	                            <div class="form-row align-items-center">
+	                            	<div class="col-auto">
+		                            	시작날짜 : <input type="date" name="startDate" value="${selectedStartDate}"/>~
+		                            </div>
+		                            <div class="col-auto">
+										마지막날짜 :<input type="date" name="endDate"  value="${selectedEndDate}"/>
+									</div>
+									<div class="col-auto">
+		                            	<button type="button" id="schBtn" class="btn btn-secondary">검색</button>
+		                            </div>
+								</div>
+								<br>
+									<h6 class="m-0 font-weight-bold text-secondary">전표유형으로 조회</h6>
+								<div class="form-row align-items-center">
+									<div class="col-auto">
+										<select name="voucher_type" id="selectSch" class="form-control">
+										    <option value="">전체</option>
+										    <option value="일반전표">일반전표</option>
+										    <option value="매출전표">매출전표</option>
+										    <option value="매입전표">매입전표</option>
+										</select>
+									</div>
+		                        </div>
 	                            <div style="text-align:right;">
 	                            	<button type="button" id="newBtn" class="btn btn-primary btn-icon-split">
 	                            	<span class="icon text-white-50"><i class="fas fa-check"></i></span>

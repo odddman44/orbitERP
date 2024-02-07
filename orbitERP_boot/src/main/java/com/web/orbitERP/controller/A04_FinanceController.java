@@ -1,6 +1,7 @@
 package com.web.orbitERP.controller;
 
 
+import java.nio.file.FileVisitOption;
 import java.util.List;
 import java.util.Map;
 
@@ -88,10 +89,12 @@ public class A04_FinanceController {
     public String voucherList(
     	    @RequestParam(value = "startDate", required = false) String startDate,
     	    @RequestParam(value = "endDate", required = false) String endDate, 
+    	    @RequestParam(value = "voucher_type", required = false) String voucher_type, 
     	    Model d) {
     	d.addAttribute("selectedStartDate", startDate);
     	d.addAttribute("selectedEndDate", endDate);
-        d.addAttribute("vlist", service.voucherList(startDate, endDate));
+    	d.addAttribute("selectedType", voucher_type);
+        d.addAttribute("vlist", service.voucherList(startDate, endDate, voucher_type));
         return "a04_financeResource\\a02_voucherSch";
     }
     

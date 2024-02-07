@@ -63,16 +63,13 @@
 					<!-- Content Row -->
 					<div class="row">
 						<%@ include file="/WEB-INF/views/a04_financeResource/z02_barGraph.jsp"%>
-					</div>
 					
-					<!-- Content Row -->
-					<div class="row">
-						<%--@ include file="/WEB-INF/views/a04_financeResource/#.jsp" --%>
+						<%@ include file="/WEB-INF/views/a04_financeResource/z03_areaGraph.jsp" %>
 					</div>
 
 					<!-- Content Row -->
 					<div class="row">
-						<%--@ include file="/WEB-INF/views/a04_financeResource/#.jsp" --%>
+						<%@ include file="/WEB-INF/views/a04_financeResource/z04_SPtable.jsp" %>
 					</div>
 
 				</div>
