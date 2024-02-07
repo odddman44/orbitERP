@@ -20,9 +20,15 @@
 		FROM LECTURE WHERE lecno = #{lecno}
 	</select>
 	<select id="getTch" resultType="lectureTch" parameterType="int">
-		SELECT DISTINCT t.EMPNO AS empno, t.ENAME AS ename ,t.JOB AS job ,t.EMAIL AS email ,t.SUBJECT AS subject
+		SELECT DISTINCT t.EMPNO, t.ENAME , t.JOB, t.EMAIL ,t.SUBJECT
 		FROM ENROLLMENT e
-		JOIN EMPLOYEE t ON e.empno=t.EMPNO
+		JOIN EMPLOYEE t ON e.empno=t.empno
+		WHERE lecno = #{lecno}
+	</select>
+	<select id="getStuList" resultType="lectureStu" parameterType="int">
+		SELECT DISTINCT s.SNO ,s.NAME ,s.FINAL_DEGREE ,s.NAME,s.PHONE, e.GRADE 
+		FROM ENROLLMENT e
+		JOIN STUDENT s ON e.sno=s.sno
 		WHERE lecno = #{lecno}
 	</select>
 	

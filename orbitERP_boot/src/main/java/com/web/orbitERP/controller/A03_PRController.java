@@ -39,6 +39,7 @@ public class A03_PRController {
 	public String lectureDetail(@RequestParam("lecno") int lecno,Model d) {
 		d.addAttribute("lecture",service.getLecture(lecno));
 		d.addAttribute("tch",service.getTch(lecno));
+		d.addAttribute("stuList",service.getStuList(lecno));
 		System.out.println(service.getTch(lecno));
 		return"a03_planResource\\lectureDetail";
 	}

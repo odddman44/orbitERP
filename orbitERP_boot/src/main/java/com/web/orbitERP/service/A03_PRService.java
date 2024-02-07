@@ -25,7 +25,12 @@ public class A03_PRService {
 		return dao.getLecture(lecno);
 	}
 	public LectureTch getTch(int lecno) {
+		System.out.println(lecno);
+		System.out.println(dao.getTch(lecno));
 		return dao.getTch(lecno);
+	}
+	public List<LectureStu> getStuList(int lecno){
+		return dao.getStuList(lecno);
 	}
 	public int insertLecture(Lecture ins) {
 		return dao.insertLecture(ins);

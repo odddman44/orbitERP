@@ -44,9 +44,11 @@ width:70%;
 		    	event.preventDefault();
 		  	}
 		});	
+		var snoList=[] //등록처리된 sno들
 	$(document).ready(function() {
 		console.log("${lecture.lecno}")
 		searchStu()
+		
 		// 등록된 강사 색상 바꾸기
 		 $("#color").find("tr").css("background-color", "#f4d03f");
 		// 숫자에 콤마를 추가하는 함수
@@ -158,14 +160,12 @@ width:70%;
 			location.href="lectureList"
 		}
 	}
-	alert("${tch}")
 	
 	$("#schTBtn").click(function(){ //강사 모달창 검색
 		searchTch()
 	})
 	$("#schTch").click(function(){ // 강사변경 클릭시
 		$("[name=subject]").val($("[name=lec_code]").val());
-		console.log($("[name=subject]").val())
 	    searchTch() 
 	});
 	
@@ -182,9 +182,17 @@ width:70%;
 	})
 	$("[name=ename],[name=subject]").keyup(function(){
 		if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
-		earchTch()
+		searchTch()
 	})
+	$("#tot").text('수강학생('+snoList.length+')') // 초기화면 총 수 나타내기
 	
+	$("#insertStu").click(function(){
+	    $("[name=lec_snum]").val(snoList.length);
+	    $("#frm02")[0].reset() //검색값 리셋
+	    searchStu() //다시 학생조회했을 때 전체출력
+	    $("#stuModal").modal("hide");//모달 닫기
+	    $(".modal-backdrop").remove();//뒷배경 제거
+	});
 });
 	
 	//테이블 페이징처리
@@ -275,7 +283,6 @@ width:70%;
 	    });
 	}
 	
-	var snoList=[] //등록처리된 sno들
 	function addStu(sno, name, final_degree,phone) {	
 		//이미 등록된 학생 중복X
 		//snoList의 값들과 sno를 비교하는 코드
@@ -296,6 +303,7 @@ width:70%;
 
 	    $("#add").append(row);
 	    $("#tot").text('수강학생('+snoList.length+')') //등록시 총 수 변경
+	    console.log(snoList)
 	}
 
 	function deleteStu(button) {
@@ -309,6 +317,7 @@ width:70%;
 	        snoList.splice(index, 1);
 	    }
 	    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
+	    console.log(snoList)
 	}
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -516,11 +525,11 @@ width:70%;
 									</thead>
 									<tbody id="color">
 										<tr>
-												<td>${getTch.empno }</td>
-												<td>${getTch.ename }</td>
-												<td>${getTch.subject }</td>
-												<td>${getTch.email }</td>
-												<td>기존등록</td>
+											<td><c:out value="${tch.empno }"></c:out></td>
+											<td><c:out value="${tch.ename }"></c:out></td>
+											<td><c:out value="${tch.subject }"></c:out></td>
+											<td><c:out value="${tch.email }"></c:out></td>
+											<td>기존등록</td>
 										</tr>
 									</tbody>
 									<tbody id="tch">
@@ -593,6 +602,18 @@ width:70%;
 										</tr>
 									</thead>
 									<tbody id="add">
+										<c:forEach var="stu" items="${stuList}">
+											<tr>
+											<td>${stu.sno}</td>
+											<td>${stu.name}</td>
+											<td>${stu.final_degree}</td>
+											<td>${stu.phone}</td>
+											<td><button class='btn btn-danger' type='button' onclick='deleteStu(this)'>삭제</td>
+											</tr>
+											<script>
+										        snoList.push("${stu.sno}");
+										    </script>
+										</c:forEach>
 									</tbody>
 								</table>
 							</div>

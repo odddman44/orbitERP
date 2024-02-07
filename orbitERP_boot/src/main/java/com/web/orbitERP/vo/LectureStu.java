@@ -8,29 +8,19 @@ public class LectureStu {
 	 private String final_degree;
 	 private String phone;
 	 private String address;
-	 private int count;
+	 private String grade; //값을 전달하기 위해 추가함
 	 
 	public LectureStu() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public LectureStu(int sno, String name, String birth, String final_degree, String phone, String address,
-			int count) {
+	public LectureStu(int sno, String name, String birth, String final_degree, String phone, String address) {
 		this.sno = sno;
 		this.name = name;
 		this.birth = birth;
 		this.final_degree = final_degree;
 		this.phone = phone;
 		this.address = address;
-		this.count = count;
 	}
 
 	public int getSno() {
@@ -68,6 +58,14 @@ public class LectureStu {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 	 
 }

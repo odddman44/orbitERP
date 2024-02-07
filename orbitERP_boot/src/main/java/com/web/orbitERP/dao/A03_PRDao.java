@@ -18,6 +18,7 @@ public interface A03_PRDao {
 	List<Lecture> lectureList(Lecture sch);
 	Lecture getLecture(@Param("lecno") int lecno);
 	LectureTch getTch(@Param("lecno") int lecno); // 강사조회
+	List<LectureStu> getStuList(@Param("lecno") int lecno);//학생조회
 	int insertLecture(Lecture ins);
 	int updateLecture(Lecture upt);
 	int deleteLecture(@Param("lecno") int lecno);
