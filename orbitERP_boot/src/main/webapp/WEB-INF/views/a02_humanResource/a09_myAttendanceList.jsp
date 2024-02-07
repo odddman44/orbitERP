@@ -20,6 +20,13 @@
 	$(document).ready(function() {
 
 		var empno = "${emem.empno}"
+		var today = new Date();
+		var yyyy = today.getFullYear();
+		var mm = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1이 필요하며, 두 자리로 만들기 위해 padStart를 사용합니다.
+		var dd = String(today.getDate()).padStart(2, '0'); // 일자를 두 자리로 만들기 위해 padStart를 사용합니다.
+		var todayString = yyyy + '-' + mm + '-' + dd; // 'YYYY-MM-DD' 형식의 문자열로 조합합니다.
+		console.log("오늘 날짜: " + todayString)
+
 		// 현재 URL에서 empno 값 가져오기
 		var urlParams = new URLSearchParams(window.location.search);
 		var empnoFromURL = urlParams.get('empno');
@@ -30,11 +37,53 @@
 		}
 
 		$("#arrBtn").click(function() {
-			alert("출근하기!")
+			// alert("출근하기!")
+			$.ajax({
+				type : "POST",
+				url : "${path}/isExitsCheckIn", // 작업 날짜 중복을 확인하는 API 엔드포인트
+				data : {
+					work_date : todayString,
+					empno : "${emem.empno}"
+				}, // 확인하려는 작업 날짜 데이터를 전달
+				success : function(data) {
+					// 중복된 작업 날짜가 발견되지 않으면 AJAX 요청 실행
+					if (data <= 0) {
+						checkIn();
+						alert("오늘 출근완료! 오늘 근무도 화이팅 ㅎㅎ")
+						location.reload(); // 화면 새로고침
+					} else {
+						alert("이미 출근 등록을 했습니다.")
+					}
+				},
+				error : function(err) {
+					console.log(err);
+				}
+			});
 			event.preventDefault();
-		})
+		});
+
 		$("#depBtn").click(function() {
-			alert("퇴근하기!")
+			// alert("퇴근하기!")
+			$.ajax({
+				type : "POST",
+				url : "${path}/checkOut", // 작업 날짜 중복을 확인하는 API 엔드포인트
+				data : {
+					work_date : todayString,
+					empno : "${emem.empno}"
+				}, // 확인하려는 작업 날짜 데이터를 전달
+				success : function(data) {
+					
+					if (data > 0) {
+						alert("퇴근완료 수고하셨습니다.")
+						location.reload(); // 화면 새로고침
+					} else {
+						console.log("퇴근 실패")
+					}
+				},
+				error : function(err) {
+					console.log(err);
+				}
+			});
 			event.preventDefault();
 		})
 
@@ -48,6 +97,23 @@
 		});
 
 	});
+
+	function checkIn() {
+		$.ajax({
+			type : "POST",
+			url : "${path}/checkIn",
+			data : {
+				empno : "${emem.empno}"
+			},
+			success : function(data) {
+				if (data > 0)
+					console.log("출근 기록 저장완료")
+			},
+			error : function(data) {
+				console.log("출근 기록 저장 실패")
+			}
+		})
+	}
 </script>
 <!-- DB테이블 플러그인 추가 -->
 <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
