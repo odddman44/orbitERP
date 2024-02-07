@@ -36,6 +36,14 @@ width:70%;
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+		// form 하위에 있는 모든 요소객체들을  enter키 입력시, submit
+		// 되는 기본 이벤트 속성이 있다. ajax처리시 충돌되는 이 이벤트 속성을
+		// 아래의 코드로 방지 처리..
+		document.addEventListener('keydown', function(event) {
+		  	if (event.key === "Enter") {
+		    	event.preventDefault();
+		  	}
+		});	
 	$(document).ready(function() {
 		console.log("${lecture.lecno}")
 		searchStu()
@@ -172,6 +180,10 @@ width:70%;
 		if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
 		searchStu()
 	})
+	$("[name=ename],[name=subject]").keyup(function(){
+		if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
+		earchTch()
+	})
 	
 });
 	
@@ -186,6 +198,7 @@ width:70%;
 	        "info": true, // 표시 건수 및 현재 페이지 표시
 	        "autoWidth": false, // 컬럼 너비 자동 조절 해제
 	        "language" : {
+	        	 "emptyTable" : "검색한 데이터가 없습니다.",
 	        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
 	        	 "paginate": {
 	        		  	"next": "다음",
