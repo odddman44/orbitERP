@@ -267,6 +267,7 @@
 									</select>
 
 									<button class="btn btn-info" type="submit">Search</button>
+									
 								</nav>
 								<div class="input-group mt-3 mb-0">
 									<span class="input-group-text">총 : ${sch.count}건</span>
@@ -275,10 +276,14 @@
 											data-toggle="modal" data-target="#registerModal">
 											사원정보등록</button>
 									</c:if>
+									
 
 
 
 								</div>
+								<div class="text-right">
+										<button class="btn btn-info" type="button">이메일 보내기</button>
+									</div>
 								<script type="text/javascript">
 									// 선택된 페이지 사이즈를 다음 호출된 페이지에서 출력
 									$("[name=pageSize]").val("${sch.pageSize}")

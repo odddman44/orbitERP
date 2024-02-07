@@ -257,6 +257,28 @@ FROM
  )
  * */
 SELECT * FROM ERPMEM e ;
+
+-- 출근 하기
+
+INSERT INTO attendance (empno, work_date, arr_time)
+VALUES ('HR0001', TRUNC(sysdate), sysdate);
+
+-- 퇴근하기
+
+UPDATE ATTENDANCE SET 
+DEP_TIME = SYSDATE
+WHERE empno = 'HR0001'
+AND WORK_DATE = TO_DATE('2024-02-07', 'YYYY-MM-DD');
+
+-- 근태 정보 삭제하기
+
+DELETE FROM ATTENDANCE a WHERE WORK_DATE BETWEEN TO_DATE('2024-02-07 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+                     AND TO_DATE('2024-02-07 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+AND empno = 'HR0001';
+
+SELECT * FROM ERPMEM e ;
+
+UPDATE ERPMEM SET pwd = '5555' WHERE EMPNO = 'HR0001';
     
 
 
