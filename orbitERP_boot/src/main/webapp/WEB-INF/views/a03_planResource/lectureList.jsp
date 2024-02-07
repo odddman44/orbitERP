@@ -20,6 +20,8 @@
 	$(document).ready(function() {
 		$('#dataTable').DataTable({
 			"language" : {
+				"lengthMenu" : "_MENU_",
+				"search" : "검색 : ",
 	        	 "emptyTable" : "검색한 데이터가 없습니다.",
 	        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
 	        	 "paginate": {
