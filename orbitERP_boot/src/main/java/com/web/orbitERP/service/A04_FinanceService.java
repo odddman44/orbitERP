@@ -1,5 +1,6 @@
 package com.web.orbitERP.service;
 
+import java.lang.invoke.MethodHandles.Lookup.ClassOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +96,7 @@ public class A04_FinanceService {
 	/*
 	 * 2. 전표 조회 관련
 	 * */
-	public List<Voucher> voucherList(String startDate, String endDate){
+	public List<Voucher> voucherList(String startDate, String endDate, String voucher_type){
 		// 현재 날짜를 'YYYY-MM-DD' 형식의 문자열로 변환
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    String currentDate = sdf.format(new Date());
@@ -109,12 +110,15 @@ public class A04_FinanceService {
 	    if (endDate == null || endDate.isEmpty()) {
 	        endDate = currentDate;
 	    }
-	    return dao.voucherList(startDate, endDate);
+	    if(voucher_type == null) voucher_type = "";
+	    
+	    return dao.voucherList(startDate, endDate, voucher_type);
 	}
 	
 	
 	// 전표 상세조회
 	public VoucherDetail getVoucherDetail(int voucher_id) {
+		System.out.println("조회:"+dao.getVoucherDetail(voucher_id));
         return dao.getVoucherDetail(voucher_id);
     }
 	

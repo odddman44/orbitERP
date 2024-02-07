@@ -69,6 +69,8 @@
         WHERE TRUNC(V.voucher_date) 
         	BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') 
         	AND TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        	AND V.voucher_type LIKE '%'||#{voucher_type}||'%'
+        ORDER BY V.voucher_date DESC
 	</select>
 	<!-- 전표 상세 조회 -->
 	<resultMap id="voucherDetailMap" type="voucherDetail">

@@ -41,7 +41,8 @@ public interface A04_FinanceDao {
 	 *  2. 전표관련  *
 	 **********************/
 	// 전표 조회
-	List<Voucher> voucherList(@Param("startDate") String startDate, @Param("endDate") String endDate);
+	List<Voucher> voucherList(@Param("startDate") String startDate, @Param("endDate") String endDate,
+								@Param("voucher_type") String voucher_type);
 	
 	
 	// 전표 상세 조회
