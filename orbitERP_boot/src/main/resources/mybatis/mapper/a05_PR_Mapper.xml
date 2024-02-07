@@ -57,11 +57,7 @@
 		lec_teacher=#{lec_teacher}
 		WHERE lecno=#{lecno}
 	</update>
-	<!-- 수강테이블 수정 -->
-	<update id="">
-		
-	</update>
-	
+
 	
 	<!-- 강의테이블 삭제 -->
 	<delete id="deleteLecture" parameterType="int">

@@ -77,13 +77,6 @@ $(document).ready(function() {
 		       });
 
     			
-				var msg = "${msg}"
-				if (msg != "") {
-					if (!confirm(msg + "\n계속 등록하시겠습니까?")) {
-						location.href = "lectureList"
-					}
-					$("form")[0].reset()
-				}
 				$("#schBtn").click(function(){ //학생 모달창 검색
 					//$("[name=subject]").val($("[name=lec_code]").text());
 					searchStu()
@@ -159,7 +152,11 @@ $(document).ready(function() {
 							                snoList.forEach(function (sno) {
 							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });
-							            	alert(data.msg)
+							            	if (!confirm(data.msg + "\n계속 등록하시겠습니까?")) {
+							                    location.href = "lectureList";
+							                } else {
+							                    window.location.reload();
+							                }
 							            },
 							            error: function (err) {
 							                console.log(err);

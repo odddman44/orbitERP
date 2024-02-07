@@ -140,8 +140,23 @@ width:70%;
 			}
 			
 			if(confirm("수정하시겠습니까?")){
-	        $("form").attr("action", "lectureUpdate");
-	        $("form").submit();
+				$.ajax({
+		            type: "POST",
+		            url: "/lectureUpdate",
+		            data: $("#info").serialize(),
+		            dataType: "json",
+		            success: function (data) {
+		            	alert(data.msg)
+		                snoList.forEach(function (sno) {
+		                    insertEnroll(sno, $("[name=lecno]").val(), $("[name=empno]").val());
+		                });
+		                window.location.reload();
+		            },
+		            error: function (err) {
+		                console.log(err);
+		                // Handle form submission error here
+		            }
+		        })
 		}
 		
 	})
@@ -153,7 +168,7 @@ width:70%;
 	            data: $("#info").serialize(),
 	            dataType: "json",
 	            success: function (data) {
-	            	alert(data.msg+data.msg2)
+	            	alert(data.msg+","+data.msg2)
 	            	location.href="lectureList"
 	            },
 	            error: function (err) {
@@ -198,6 +213,26 @@ width:70%;
 	    $(".modal-backdrop").remove();//뒷배경 제거
 	});
 });
+		
+	//수강테이블 insert
+	function insertEnroll(sno,lecno,empno) {
+		$.ajax({
+		   //type: "POST",
+		   url: "/insertEnroll",
+		   data: {
+		     sno: sno,
+		     lecno:lecno,
+		     empno: empno
+		   },
+		   dataType: "text",
+		   success: function (data) {
+		   	console.log("수강 "+data)
+		   },
+		     error: function (err) {
+		       console.log(err)
+		   }
+		});
+	}
 	
 	//테이블 페이징처리
 	function table(id){
@@ -617,6 +652,7 @@ width:70%;
 											</tr>
 											<script>
 										        snoList.push("${stu.sno}");
+										        
 										    </script>
 										</c:forEach>
 									</tbody>

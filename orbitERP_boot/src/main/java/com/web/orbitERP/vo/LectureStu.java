@@ -10,6 +10,7 @@ public class LectureStu {
 	 private String address;
 	 private String grade; //값을 전달하기 위해 추가함
 	 
+
 	public LectureStu() {
 		// TODO Auto-generated constructor stub
 	}

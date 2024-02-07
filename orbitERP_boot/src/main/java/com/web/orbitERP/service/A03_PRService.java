@@ -35,15 +35,21 @@ public class A03_PRService {
 	public int insertLecture(Lecture ins) {
 		return dao.insertLecture(ins);
 	}
+	//수강테이블
+	public String insertEnroll(Enrollment ins) {
+		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
+	}
 	//강의번호 추출
 	public int getlecno() {
 		return dao.getlecno();
 	}
 	
+	//강의 수정
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
 	
+	// 수강, 강의 삭제
 	public int deleteLecture(int lecno) {
 		return dao.deleteLecture(lecno);
 	}
@@ -69,10 +75,6 @@ public class A03_PRService {
 	//강사 과목리스트
 	public List<String> getSubjects(){
 		return dao.getSubjects();
-	}
-	//수강테이블
-	public String insertEnroll(Enrollment ins) {
-		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
 	}
 	
 	
