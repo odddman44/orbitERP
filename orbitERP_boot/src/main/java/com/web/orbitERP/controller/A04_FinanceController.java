@@ -1,7 +1,6 @@
 package com.web.orbitERP.controller;
 
 
-import java.nio.file.FileVisitOption;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +24,7 @@ import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.FinanceSummary;
+import com.web.orbitERP.vo.GrossProfit;
 import com.web.orbitERP.vo.VoucherDetail;
 
 @Controller
@@ -176,6 +175,21 @@ public class A04_FinanceController {
     public ResponseEntity<?> getSalesAndPurchasesSummaryByYear(@RequestParam("year") int year) {
         List<FinanceSummary> summary = service.getSalesAndPurchasesSummaryByYear(year);
         return ResponseEntity.ok(summary);
+    }
+    // http://localhost:4444/grossProfit?deptno=50
+    @GetMapping("grossProfit")
+    public ResponseEntity<?> getGrossProfit(@RequestParam("deptno") int deptno,
+    										@RequestParam(value="startDate", required = false) String startDate,
+    										@RequestParam(value="endDate", required = false) String endDate) {
+    	// 기본 날짜값 설정
+        if (startDate == null || startDate.isEmpty()) {
+            startDate = "1900-01"; // 최소한의 기본 시작 날짜
+        }
+        if (endDate == null || endDate.isEmpty()) {
+            endDate = "9999-12"; // 최대한의 기본 종료 날짜
+        }
+    	List<GrossProfit> grossProfits = service.getGrossProfit(deptno, startDate, endDate);
+    	return ResponseEntity.ok(grossProfits);
     }
 
 }
