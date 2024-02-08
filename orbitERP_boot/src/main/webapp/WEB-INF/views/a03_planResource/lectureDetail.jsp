@@ -45,7 +45,18 @@ width:70%;
 		  	}
 		});	
 		var snoList=[] //등록처리된 sno들
+		
 	$(document).ready(function() {
+		var sessionCk="${emem.auth}"//로그인된 session값
+		if(sessionCk!=='총괄관리자' && sessionCk!=='계획관리자'){
+			$("#uptBtn").hide()
+			$("#delBtn").hide()
+			$("#mainBtn").hide()
+			$("#schTch").hide()
+			$("#schStu1").hide()
+			$("#schStu2").show()
+			$("#gradeStu").hide()
+		}
 		console.log("${lecture.lecno}")
 		searchStu()
 		
@@ -213,7 +224,26 @@ width:70%;
 	    $(".modal-backdrop").remove();//뒷배경 제거
 	});
 });
-		
+	// 강사 세션확인
+	<%--function sessCk(empno){
+		$.ajax({
+			type: "POST",
+			url: "/sessCk",
+			data : {
+				empno: empno
+			},
+			dataType: "text",
+			success: function (data) {
+				if (data) {
+					tch="강사";
+					console.log(tch); //여기는 강사
+	            } 
+			},
+			error: function (err) {
+				console.log(err)
+			}
+		})
+	}--%>
 	//수강테이블 insert
 	function insertEnroll(sno,lecno,empno) {
 		$.ajax({
@@ -472,7 +502,9 @@ width:70%;
 								<div class="input_value">
 									<input name="lec_snum" class="form-control" value="${lecture.lec_snum}" readonly/> 
 									<input type="button" class="btn btn-dark" value="학생변경"
-									data-toggle="modal" data-target="#stuModal" id="schStu" />
+									data-toggle="modal" data-target="#stuModal" id="schStu1" />
+									<input class="btn btn-dark" value="학생조회"
+									data-toggle="modal" data-target="#stuModal" id="schStu2" type="hidden"/>
 									<input type="button" class="btn btn-dark" value="성적등록"
 									data-toggle="modal" data-target="#stuGradeModal" id="gradeStu" />
 								</div>
@@ -483,14 +515,14 @@ width:70%;
 										강의료</span>
 								</div>
 								<input id="tuition_fee" name="tuition_fee" class="form-control"
-									value="${lecture.tuition_fee}"/>
+								value='﻿<fmt:formatNumber value="${lecture.tuition_fee}" pattern="#,###"/>'/>
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
 										교재비</span>
 								</div>
 								<div class="input_value">
 								<input id="textbook_fee" name="textbook_fee" class="form-control"
-									value="${lecture.textbook_fee}" />
+								value='﻿<fmt:formatNumber value="${lecture.textbook_fee}" pattern="#,###"/>'>
 								</div>
 							</div>
 							<div class="input-group mb-3">
@@ -754,6 +786,7 @@ width:70%;
 				</div>
 			</div>
 		</div>
+	</div>
 				<!-- Footer -->
 				<footer class="sticky-footer bg-white">
 					<div class="container my-auto">
@@ -764,10 +797,8 @@ width:70%;
 				</footer>
 				<!-- End of Footer -->
 
-			</div>
 			<!-- End of Content Wrapper -->
 
-		</div>
 		<!-- End of Page Wrapper -->
 
 		<!-- Scroll to Top Button-->
