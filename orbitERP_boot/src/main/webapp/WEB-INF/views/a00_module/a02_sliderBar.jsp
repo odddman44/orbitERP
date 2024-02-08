@@ -168,8 +168,8 @@
 			</a></li>
 
 			<!-- Nav Item - Tables -->
-			<li class="nav-item"><a class="nav-link" href="#">
-					<i class="fas fa-fw fa-table"></i> <span>게시판</span>
+			<li class="nav-item"><a class="nav-link" href="chatting">
+					<i class="fas fa-fw fa-table"></i> <span>메신저</span>
 			</a></li>
 
 			<!-- Divider -->
