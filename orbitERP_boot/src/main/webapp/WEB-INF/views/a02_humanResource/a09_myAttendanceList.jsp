@@ -72,7 +72,7 @@
 					empno : "${emem.empno}"
 				}, // 확인하려는 작업 날짜 데이터를 전달
 				success : function(data) {
-					
+
 					if (data > 0) {
 						alert("퇴근완료 수고하셨습니다.")
 						location.reload(); // 화면 새로고침
@@ -168,14 +168,14 @@
 								시작날짜 : <input type="date" name="start_date"
 									value="${attendanceSch.start_date}" /> ~ 마지막날짜 :<input
 									type="date" name="end_date" value="${attendanceSch.end_date}" />
-								<nav class="navbar navbar-expand-sm navbar-light bg-light">
-									<button class="btn btn-info" type="submit">Search</button>
-								</nav>
-
-
+								<button class="btn btn-info btn-sm" type="submit">조회</button>
 							</form>
+							
 						</div>
 						<div class="card-body">
+						<div class="text-right">
+								<a href="#" style="font-size: 1.2em;"><b>나의 연차 조회하기</b></a>
+							</div>
 							<div class="table-responsive">
 								<table class="table table-bordered" id="dataTable">
 									<thead>

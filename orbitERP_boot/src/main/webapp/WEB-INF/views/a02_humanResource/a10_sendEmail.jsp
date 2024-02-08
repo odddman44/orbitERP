@@ -31,7 +31,6 @@
 	height: 500px;
 	overflow-y: auto;
 	text-align: left;
-	
 }
 </style>
 <%--
@@ -42,7 +41,9 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-
+		$("#goListBtn").click(function() {
+			location.href = "empList"
+		})
 	});
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -94,12 +95,25 @@
 					<div class="card shadow mb-4">
 
 						<div class="card-header py-3">
-							<h5>
-								<span class="badge badge-warning custom-badge">${emem.auth}</span>
-								${emem.ename}님 메일 발송 페이지
-							</h5>
+							<div class="row">
+								<div class="col-6">
+									<div class="text-left">
+										<h5>
+											<span class="badge badge-warning custom-badge">${emem.auth}</span>
+											${emem.ename}님 메일 발송 페이지
+										</h5>
+									</div>
+								</div>
+								<div class="col-6">
+									<div class="text-right">
+										<input type="button" class="btn btn-success" value="사원조회 페이지로 이동"
+											id="goListBtn" />
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="card-body">
+
 							<form method="post">
 								<div class="input-group mb-3">
 									<div class="input-group-prepend ">
@@ -107,11 +121,11 @@
 											수신자</span>
 									</div>
 									<select name="receiver" class="form-control">
-									<c:forEach var="emp" items="${empListModel}">
-										<option value="${emp.email}">${emp.email}(${emp.ename}/부서번호:${emp.deptno})</option>
-									</c:forEach>
+										<c:forEach var="emp" items="${empListModel}">
+											<option value="${emp.email}">${emp.email}(${emp.ename}/부서번호:${emp.deptno})</option>
+										</c:forEach>
 									</select>
-									
+
 								</div>
 								<div class="input-group mb-3">
 									<div class="input-group-prepend ">
@@ -138,10 +152,15 @@
 									<textarea id="chatArea" name="content" class="form-control"
 										placeholder="메일 내용 입력"></textarea>
 								</div>
+
 								<div style="text-align: right;">
 									<input type="submit" class="btn btn-info" value="메일발송"
 										id="regBtn" />
 								</div>
+
+
+
+
 								<script type="text/javascript">
 									var msg = "${msg}"
 									if (msg != "") {
