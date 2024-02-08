@@ -1,6 +1,7 @@
 package com.web.orbitERP.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,12 +103,19 @@ public class A05_BulletinController {
 	         return "z02_bulletinUploads";
 	      }
 
+	   // 업로드 파일 다운로드
+	  	@RequestMapping("download")
+	  	public String download(@RequestParam("fname") String fname, Model d) {
+	  		d.addAttribute("downloadFile", fname);
+	  		return "downloadViewer";
+	  	}
+	      
 	      // 권한에 따른 등록,수정,삭제 기능 부여
 	      @Autowired(required=false)
 	      private A01_MainService lg;
 	      
 	      @RequestMapping("login")
-	      public String login(Erpmem mem, HttpSession session) {
+	      public String login(@ModelAttribute("emem") Erpmem mem, HttpSession session) {
 	         Erpmem emem = lg.login(mem);
 	         if(emem!=null) {
 	            session.setAttribute("emem", emem);
