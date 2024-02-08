@@ -1,6 +1,7 @@
 package com.web.orbitERP.controller;
 
 
+import java.nio.file.FileVisitOption;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import com.web.orbitERP.service.A04_FinanceService;
 import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.Dept;
+import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.VoucherDetail;
 
 @Controller
@@ -86,10 +89,12 @@ public class A04_FinanceController {
     public String voucherList(
     	    @RequestParam(value = "startDate", required = false) String startDate,
     	    @RequestParam(value = "endDate", required = false) String endDate, 
+    	    @RequestParam(value = "voucher_type", required = false) String voucher_type, 
     	    Model d) {
     	d.addAttribute("selectedStartDate", startDate);
     	d.addAttribute("selectedEndDate", endDate);
-        d.addAttribute("vlist", service.voucherList(startDate, endDate));
+    	d.addAttribute("selectedType", voucher_type);
+        d.addAttribute("vlist", service.voucherList(startDate, endDate, voucher_type));
         return "a04_financeResource\\a02_voucherSch";
     }
     
@@ -156,6 +161,21 @@ public class A04_FinanceController {
             		(Map.of("status", "error", "message", e.getMessage()));
         }
     }
-
+    
+	/*
+	 * 3. 경영자 보고서 관련
+	 * */
+    // http://localhost:4444/manageReport
+    @RequestMapping("manageReport")
+    public String manageReport() {
+    	return "a04_financeResource\\a03_managementReport";
+    }
+    
+    // http://localhost:4444/salesPurchasesSummary?year=2024
+    @GetMapping("salesPurchasesSummary")
+    public ResponseEntity<?> getSalesAndPurchasesSummaryByYear(@RequestParam("year") int year) {
+        List<FinanceSummary> summary = service.getSalesAndPurchasesSummaryByYear(year);
+        return ResponseEntity.ok(summary);
+    }
 
 }

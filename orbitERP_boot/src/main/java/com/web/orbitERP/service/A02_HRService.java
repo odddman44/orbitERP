@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.orbitERP.dao.A02_HRDao;
+import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
@@ -191,7 +192,7 @@ public class A02_HRService {
 			}
 			msg += "프로필 사진 " + ck02 + "건 수정 완료";
 
-		} else if (mpf != null && dao.isExistProfile(sno) >= 1) { // 첨부파일이 존재하고, 현재 프로필 사진이 있으면
+		} else if (mpf != null && dao.isExistProfile(sno) >= 1 && mpf.getOriginalFilename()!=null) { // 첨부파일이 존재하고, 현재 프로필 사진이 있으면
 
 			// 기존 프로필 파일명 가져와서 물리적으로 삭제
 			String deleteFname = dao.getStuProfile(sno).getFname();
@@ -279,10 +280,15 @@ public class A02_HRService {
 		String msg = "";
 		String empno = upt.getEmpno();
 		int ck01 = dao.empUpdate(upt);
+		if(upt.getPwd()!=null && !upt.getPwd().isEmpty() && upt.getPwd()!="") {
+			dao.updateErpmem(new Erpmem(empno, upt.getPwd()));
+		}
+		
 		
 		int ck02 = 0;
 		msg = ck01 > 0 ? "기본 사원 정보 수정 성공" : "수정실패";
 		MultipartFile mpf = upt.getProfile();
+		System.out.println("파일명: "+upt.getProfile());
 		if (mpf != null && dao.getEmpProfie(empno)==null) { // 업로드한 파일이 존재하고 현재 프로필 사진이 없으면
 			String fname = mpf.getOriginalFilename();
 			try {
@@ -302,14 +308,12 @@ public class A02_HRService {
 			}
 			msg += "프로필 사진 " + ck02 + "건 수정 완료";
 
-		} else if (mpf != null && dao.getEmpProfie(empno)!=null) { // 첨부파일이 존재하고, 현재 프로필 사진이 있으면
+		} else if (mpf != null && dao.getEmpProfie(empno)!=null && (mpf.getOriginalFilename()!=null || !mpf.getOriginalFilename().equals("") )) { // 첨부파일이 존재하고, 현재 프로필 사진이 있으면(프로필 사진의 fname이 null이면 기존 사진 유지)
 
 			// 기존 프로필 파일명 가져와서 물리적으로 삭제
 			String deleteFname = dao.getEmpProfie(empno).getFname();
 			System.out.println(empno + "의 프로필 파일명: " + deleteFname);
-			File fileToDelete = new File(path2 + deleteFname);
-			if (fileToDelete.exists())
-				fileToDelete.delete();
+		
 
 			String fname = mpf.getOriginalFilename(); // 새로 저장할 프로필 파일명
 			System.out.println(empno + " 새로 저장될 프로필 파일명: " + fname);
@@ -339,7 +343,21 @@ public class A02_HRService {
 		
 		int ck01 = dao.empInsert(ins);
 		int ck02 = 0;
-		Erpmem erpmem = null;
+		Erpmem erpmem = new Erpmem();
+		erpmem.setEmpno(ins.getEmpno()); // 사원번호 세팅
+		erpmem.setPwd(ins.getPwd()); // 비밀번호 세팅
+		// 권한 설정
+		// 팀장이면 auth는 부서명+관리자
+		String dname = dao.deptDetail(ins.getDeptno()).getDname();
+		if(ins.getJob().equals("팀장")) {
+			erpmem.setAuth(dname+"관리자");
+		}else if(ins.getJob().equals("이사")) {
+			erpmem.setAuth("총괄관리자");
+		}else {
+			erpmem.setAuth("사원");
+		}
+		// erpmem insert
+		dao.insertErpmem(erpmem);
 		String msg = ck01 > 0 ? "기본정보 등록성공" : "등록 실패";
 		MultipartFile mpf = ins.getProfile();
 		if(mpf!=null) {
@@ -365,16 +383,17 @@ public class A02_HRService {
 	}
 	
 	public String deleteEmp(String empno) {
+		dao.deleteAtt(empno); // 근태 정보 지우기
 		
 		if(dao.getEmpProfie(empno)!=null) {
 			
 			String fname = dao.getEmpProfie(empno).getFname();
 			System.out.println(empno + "의 프로필 파일명: " + fname);
-			File fileToDelete = new File(path2 + fname);
-			if (fileToDelete.exists())
-				fileToDelete.delete();
 			dao.deleteEmpProfile(empno);
 			
+		}
+		if(dao.getErpmem(empno)!=null) {
+			dao.deleteErpmem(empno);
 		}
 		return dao.deleteEmp(empno)>0?"삭제성공":"삭제 실패";
 	}
@@ -389,6 +408,22 @@ public class A02_HRService {
 	
 	public List<AttendanceSch> getAttenList(AttendanceSch Sch){
 		return dao.getAttenList(Sch);
+	}
+	
+	public List<AttendanceSch> getAttMine(AttendanceSch Sch){
+		return dao.getAttMine(Sch);
+	}
+	
+	public int checkIn(String empno) {
+		return dao.checkIn(empno);
+	}
+	
+	public int isExitsCheckIn(String work_date, String empno) {
+		return dao.isExitsCheckIn(work_date, empno);
+	}
+	
+	public int checkOut(String work_date, String empno) {
+		return dao.checkOut(work_date, empno);
 	}
 
 }

@@ -17,6 +17,9 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+	var deptAuth = parseInt("${emem.deptno}");
+	console.log(deptAuth);
+	
 	$(document).ready(function() {
 		$('.modal-dialog').css('max-width', '70%');
 	   	$('#dataTable').DataTable({
@@ -25,21 +28,37 @@
 	            "ordering": true,
 	            "info": true,
 	            "pagingType": "full_numbers",
-	            "pageLength": 5
+	            "pageLength": 10
 	    });
+	   	
 		$("#schBtn").click(function(){
 			$("#frm01").submit();
 		})
 		
+		
+		// 전표유형 select시 자동 제출
+		$("#selectSch").change(function() {
+			$("#schBtn").click();
+		})
+		// 선택된 전표 유형값을 저장
+        var selectedValue = "${selectedType}";
+        if(selectedValue){
+        	$("#selectSch").val(selectedValue);
+        }
+		
 		// 전표 '신규' 버튼 클릭시의 모달창
 		$("#newBtn").click(function() {
-			console.log("신규 버튼 클릭 - 모달창 열림");
-	        openNewVoucherModal()
-	        // 모달창 제목 변경
-	        $('#registerModalLabel').text('신규 전표 등록').parent().css
-			({'background-color': '#2ECDCD', 'color': '#ffffff'});
-	        $('#regFrmBtn').show();  // 등록 버튼 보이기
-	        $('#uptBtn').hide();     // 수정 버튼 숨기기
+			 if (deptAuth !== 1 && deptAuth !== 20) {
+			        alert("권한이 없는 이용자입니다.");
+			    } else {
+			        console.log("신규 버튼 클릭 - 모달창 열림");
+			        openNewVoucherModal()
+			        // 모달창 제목 변경
+			        $('#registerModalLabel').text('신규 전표 등록').parent().css
+					({'background-color': '#2ECDCD', 'color': '#ffffff'});
+			        $('#regFrmBtn').show();  // 등록 버튼 보이기
+			        $('#uptBtn').hide();     // 수정 버튼 숨기기
+			    }
 		});
 		
 		// '추가' 버튼 클릭 이벤트
@@ -231,40 +250,45 @@
 	    }); 
 		// '선택삭제' 버튼 클릭 이벤트
 	    $("#delBtn").click(function() {
-	        var selectedIds = $(".selectRow:checked").map(function() {
-	            return $(this).val();
-	        }).get();
-
-	        if (selectedIds.length === 0) {
-	            alert("삭제할 전표를 선택하세요.");
-	            return;
+	    	if (deptAuth !== 1 && deptAuth !== 20) {
+	            alert("권한이 없는 이용자입니다.");
+	        } else {
+	            // 선택삭제 로직
+		        var selectedIds = $(".selectRow:checked").map(function() {
+		            return $(this).val();
+		        }).get();
+	
+		        if (selectedIds.length === 0) {
+		            alert("삭제할 전표를 선택하세요.");
+		            return;
+		        }
+		     	// 사용자에게 삭제 확인 요청
+		        var confirmDelete = confirm("선택한 전표를 삭제하시겠습니까?");
+		        if (!confirmDelete) {
+		            return; // 함수 종료, 삭제 요청 중단
+		        }
+	
+		        // AJAX 요청으로 백엔드에 삭제 요청
+		        $.ajax({
+		            url: '${path}/deleteVouchers', // 백엔드 URL 변경 필요
+		            method: 'POST',
+		            contentType: 'application/json', // 서버로 전송할 데이터의 MIME 타입 지정
+		            data: JSON.stringify(selectedIds), // JavaScript 객체나 배열을 JSON 문자열로 변환
+		            success: function(response) {
+		                if(response.status === "success") {
+		                    alert("선택한 전표가 삭제되었습니다.");
+		                    location.reload(); // 성공 시 페이지 새로고침
+		                } else {
+		                    alert("삭제 실패: " + response.message);
+		                }
+		            },
+		            error: function(xhr, status, err) {
+		                alert("삭제 중 오류 발생");
+		                console.error("Error: ", status, err);
+		            }
+		        });
 	        }
 	        
-	     	// 사용자에게 삭제 확인 요청
-	        var confirmDelete = confirm("선택한 전표를 삭제하시겠습니까?");
-	        if (!confirmDelete) {
-	            return; // 함수 종료, 삭제 요청 중단
-	        }
-
-	        // AJAX 요청으로 백엔드에 삭제 요청
-	        $.ajax({
-	            url: '${path}/deleteVouchers', // 백엔드 URL 변경 필요
-	            method: 'POST',
-	            contentType: 'application/json', // 서버로 전송할 데이터의 MIME 타입 지정
-	            data: JSON.stringify(selectedIds), // JavaScript 객체나 배열을 JSON 문자열로 변환
-	            success: function(response) {
-	                if(response.status === "success") {
-	                    alert("선택한 전표가 삭제되었습니다.");
-	                    location.reload(); // 성공 시 페이지 새로고침
-	                } else {
-	                    alert("삭제 실패: " + response.message);
-	                }
-	            },
-	            error: function(xhr, status, err) {
-	                alert("삭제 중 오류 발생");
-	                console.error("Error: ", status, err);
-	            }
-	        });
 	    });
 
 	}); // $(document).ready 끝
@@ -320,7 +344,12 @@
 	            $('#registerModalLabel').text('전표 수정').parent().css
 				({'background-color': '#868a83', 'color': '#ffffff'});
 	            $('#regFrmBtn').hide();  // 등록 버튼 숨기기
-	            $('#uptBtn').show();     // 수정 버튼 보여주기
+	         	// 권한에 따른 수정 버튼 활성화/비활성화
+	            if (deptAuth !== 1 && deptAuth !== 20) {
+	                $('#uptBtn').hide(); // 수정 버튼 숨기기
+	            } else {
+	                $('#uptBtn').show(); // 수정 버튼 보여주기
+	            }
 	            $('#registerModal').modal('show');
 	        },
 	        error: function(err) {
@@ -388,9 +417,29 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">날짜로 전표 조회</h6>
                             <form id="frm01" class="form"  method="POST">
-	                            시작날짜 : <input type="date" name="startDate" value="${selectedStartDate}"/> ~ 
-								마지막날짜 :<input type="date" name="endDate" value="${selectedEndDate}"/>
-	                            <button type="button" id="schBtn" class="btn btn-secondary">검색</button>
+	                            <div class="form-row align-items-center">
+	                            	<div class="col-auto">
+		                            	시작날짜 : <input type="date" name="startDate" value="${selectedStartDate}"/>~
+		                            </div>
+		                            <div class="col-auto">
+										마지막날짜 :<input type="date" name="endDate"  value="${selectedEndDate}"/>
+									</div>
+									<div class="col-auto">
+		                            	<button type="button" id="schBtn" class="btn btn-secondary">검색</button>
+		                            </div>
+								</div>
+								<br>
+									<h6 class="m-0 font-weight-bold text-secondary">전표유형으로 조회</h6>
+								<div class="form-row align-items-center">
+									<div class="col-auto">
+										<select name="voucher_type" id="selectSch" class="form-control">
+										    <option value="">전체</option>
+										    <option value="일반전표">일반전표</option>
+										    <option value="매출전표">매출전표</option>
+										    <option value="매입전표">매입전표</option>
+										</select>
+									</div>
+		                        </div>
 	                            <div style="text-align:right;">
 	                            	<button type="button" id="newBtn" class="btn btn-primary btn-icon-split">
 	                            	<span class="icon text-white-50"><i class="fas fa-check"></i></span>
@@ -562,11 +611,10 @@
 	<!-- Logout Modal-->
 	<%@ include file="/WEB-INF/views/a00_module/a08_logout_modal.jsp" %>
 <!-- Bootstrap core JavaScript-->
-    <script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
+<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
 <script src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Core plugin JavaScript-->
 <script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
-
 <!-- Custom scripts for all pages-->
 <script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 

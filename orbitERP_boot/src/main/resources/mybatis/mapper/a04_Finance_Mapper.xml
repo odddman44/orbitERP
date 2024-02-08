@@ -69,6 +69,8 @@
         WHERE TRUNC(V.voucher_date) 
         	BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') 
         	AND TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        	AND V.voucher_type LIKE '%'||#{voucher_type}||'%'
+        ORDER BY V.voucher_date DESC
 	</select>
 	<!-- 전표 상세 조회 -->
 	<resultMap id="voucherDetailMap" type="voucherDetail">
@@ -157,4 +159,16 @@
 	        	#{id}
 	    </foreach>
 	</delete>
+	
+	<!--  매출매입데이터 조회-->
+	<select id="getSalesAndPurchasesSummaryByYear" parameterType="int" resultType="financeSummary">
+	    SELECT
+	        EXTRACT(MONTH FROM VOUCHER_DATE) AS month,
+	        SUM(CASE WHEN VOUCHER_TYPE = '매출전표' THEN TOTAL_AMOUNT ELSE 0 END) AS sales,
+	        SUM(CASE WHEN VOUCHER_TYPE = '매입전표' THEN TOTAL_AMOUNT ELSE 0 END) AS purchases
+	    FROM VOUCHER
+	    WHERE EXTRACT(YEAR FROM VOUCHER_DATE) = #{year}
+	    GROUP BY EXTRACT(MONTH FROM VOUCHER_DATE)
+	    ORDER BY month
+	</select>
 </mapper>	

@@ -12,16 +12,39 @@
 			AND lec_teacher LIKE '%'||#{lec_teacher}||'%'
 			ORDER BY start_date  -->
 	</select>
+	
+	<!-- 강의상세조회 -->
 	<select id="getLecture" resultType="lecture" parameterType="int">
 		SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
 		 to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher 
 		FROM LECTURE WHERE lecno = #{lecno}
 	</select>
+	<select id="getTch" resultType="lectureTch" parameterType="int">
+		SELECT DISTINCT t.EMPNO, t.ENAME , t.JOB, t.EMAIL ,t.SUBJECT
+		FROM ENROLLMENT e
+		JOIN EMPLOYEE t ON e.empno=t.empno
+		WHERE lecno = #{lecno}
+	</select>
+	<select id="getStuList" resultType="lectureStu" parameterType="int">
+		SELECT DISTINCT s.SNO ,s.NAME ,s.FINAL_DEGREE ,s.NAME,s.PHONE, e.GRADE 
+		FROM ENROLLMENT e
+		JOIN STUDENT s ON e.sno=s.sno
+		WHERE lecno = #{lecno}
+	</select>
+	
+	<!-- 강의테이블 등록 -->
 	<insert id="insertLecture" parameterType="lecture">
 		INSERT INTO LECTURE VALUES (
 		 lecno_seq.NEXTVAL, #{lec_code}, #{lec_name}, to_date(#{start_date},'YYYY-MM-DD'), to_date(#{end_date},'YYYY-MM-DD'),
 		  #{lec_snum}, #{lec_num}, #{tuition_fee}, #{textbook_fee}, #{lec_content}, #{lec_teacher}) 
 	</insert>
+	<!-- 수강테이블 등록 -->
+	<insert id="insertEnroll" parameterType="enrollment">
+		INSERT INTO ENROLLMENT (enno, sno, lecno, empno)
+		VALUES (enno_seq.nextval, #{sno}, #{lecno}, #{empno})
+	</insert>
+	
+	<!-- 강의테이블 수정 -->
 	<update id="updateLecture" parameterType="lecture">
 		UPDATE LECTURE SET lec_name=#{lec_name},
 		start_date=to_date(#{start_date},'YYYY-MM-DD'),
@@ -34,24 +57,23 @@
 		lec_teacher=#{lec_teacher}
 		WHERE lecno=#{lecno}
 	</update>
+
+	
+	<!-- 강의테이블 삭제 -->
 	<delete id="deleteLecture" parameterType="int">
 		DELETE FROM LECTURE WHERE LECNO = #{lecno}
 	</delete>
+	<!-- 수강테이블 삭제 -->
+	<delete id="deleteEnroll" parameterType="int">
+		DELETE FROM ENROLLMENT WHERE LECNO = #{lecno}
+	</delete>
+	
+	
 	
 	
 	<!-- 학생 데이터 조회 -->
 	<select id="getStus" resultType="lectureStu" parameterType="lectureStu">
 		SELECT sno,name,to_char(birth,'yyyy-mm-dd') birth,final_degree,phone,address
-		FROM STUDENT
-		WHERE 1=1
-		AND name LIKE
-		'%'||#{name}||'%'
-		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
-	</select>
-	<!-- 총 수 -->
-	<select id="totStudent" parameterType="lectureStu"
-		resultType="int">
-		SELECT count(*)
 		FROM STUDENT
 		WHERE 1=1
 		AND name LIKE
@@ -65,6 +87,8 @@
 		WHERE JOB LIKE '강사'
 		AND (ENAME LIKE '%'||#{ename}||'%' AND SUBJECT LIKE '%'||#{subject}||'%')
 	</select>
+	
+	
 	
 	
 	

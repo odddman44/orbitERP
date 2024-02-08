@@ -18,7 +18,18 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#dataTable').DataTable();
+		$('#dataTable').DataTable({
+			"language" : {
+				"lengthMenu" : "_MENU_",
+				"search" : "검색 : ",
+	        	 "emptyTable" : "검색한 데이터가 없습니다.",
+	        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
+	        	 "paginate": {
+	        		  	"next": "다음",
+	        			"previous": "이전"
+	        		  }
+	        }
+		});
         $("#uptBtn").click(function(){
             window.location.href = 'lectureInsertFrm';
         });
@@ -157,7 +168,6 @@
 	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
 
 	<!-- 추가 plugins:js -->
-	<script src="${path}/a00_com/vendor/js/vendor.bundle.base.js"></script>
 	<script src="${path}/a00_com/vendor/datatables/jquery.dataTables.js"></script>
 	<script
 		src="${path}/a00_com/vendor/datatables/dataTables.bootstrap4.js"></script>

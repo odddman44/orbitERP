@@ -44,7 +44,7 @@ body {
 
 
 .ko_holiday {
-    color: #ff0000;
+    color: #ffffff;
   }
 
 </style>

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
+import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.Journalizing;
 import com.web.orbitERP.vo.Voucher;
 import com.web.orbitERP.vo.VoucherDetail;
@@ -40,7 +41,8 @@ public interface A04_FinanceDao {
 	 *  2. 전표관련  *
 	 **********************/
 	// 전표 조회
-	List<Voucher> voucherList(@Param("startDate") String startDate, @Param("endDate") String endDate);
+	List<Voucher> voucherList(@Param("startDate") String startDate, @Param("endDate") String endDate,
+								@Param("voucher_type") String voucher_type);
 	
 	
 	// 전표 상세 조회
@@ -66,4 +68,10 @@ public interface A04_FinanceDao {
     // 선택한 전표들 다중 삭제
     int deleteJournalizings(List<Integer> voucherIds);
     int deleteVouchers(List<Integer> voucherIds);
+    
+    
+	/***********************
+	 *  3. 경영보고서관련  *
+	 **********************/
+    List<FinanceSummary> getSalesAndPurchasesSummaryByYear(@Param("year") int year);
 }

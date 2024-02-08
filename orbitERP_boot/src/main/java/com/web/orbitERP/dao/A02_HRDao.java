@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
@@ -101,7 +102,29 @@ public interface A02_HRDao {
 	
 	List<AttendanceSch> getAttenList(AttendanceSch Sch);
 	
+	List<AttendanceSch> getAttMine(AttendanceSch Sch);
+	
 	int insertErpmem(Erpmem ins);
+	
+	Erpmem getErpmem(@Param("empno") String empno);
+	
+	int deleteErpmem(@Param("empno") String empno);
+	
+	int updateErpmem(Erpmem upt);
+	
+	int deleteAtt(String empno);
+	
+	int checkIn(@Param("empno") String empno);
+	
+	int isExitsCheckIn(@Param("work_date") String work_date, @Param("empno") String empno);
+	
+	int checkOut(@Param("work_date") String work_date, @Param("empno") String empno);
+	
+	
+	
+	
+	
+	
 	
 	
 	
