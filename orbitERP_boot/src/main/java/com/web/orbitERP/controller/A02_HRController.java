@@ -228,6 +228,7 @@ public class A02_HRController {
 		return ResponseEntity.ok(service.checkOut(work_date, empno));
 		
 	}
+
 	
 
 	

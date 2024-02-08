@@ -284,7 +284,7 @@
 										</c:if>
 									</div>
 									<div class="text-right col-6">
-										<button class="btn btn-info" type="button" onclick="location.href='sendEmail'">이메일 보내기</button>
+										<button class="btn btn-info" type="button" onclick="location.href='mailSend'">이메일 보내기</button>
 									</div>
 								</div>
 
