@@ -11,6 +11,10 @@
 <script type="text/javascript">
    $(document).ready(function() {
 	   var sessionCk="${emem.auth}"
+	   if(sessionCk !== "총괄관리자" && sessionCk!=="계획관리자"){
+		   $("#session1").hide()
+		   $("#session2").hide()
+	   }
    });
 
    function goMypage(empno) {
@@ -124,9 +128,7 @@
             <h6 class="collapse-header">영업계획:</h6>
             <a class="collapse-item" href="planCalendar">연간스케줄조회</a> <a
                class="collapse-item" href="calendar">개인스케줄조회</a> 
-               <c:if test="${not(sessionCk eq '총괄관리자' or sessionCk eq '계획관리자')}">
                <a class="collapse-item" href="#">알림 보내기</a>
-               </c:if>
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
@@ -140,10 +142,8 @@
             <h6 class="collapse-header">강의관리:</h6>
             <a class="collapse-item" href="lectureCalendar">강의스케줄조회</a> <a
                class="collapse-item" href="lectureList">강의조회</a> 
-               <c:if test="${not(sessionCk eq '총괄관리자' or sessionCk eq '계획관리자')}">
-               <a class="collapse-item" href="lectureInsertFrm" style="display: none;">강의등록</a>
-               <a class="collapse-item" href="#" style="display: none;">알림 보내기</a>
-               </c:if>
+               <a class="collapse-item" href="lectureInsertFrm" id="session1">강의등록</a>
+               <a class="collapse-item" href="#" id="session2">알림 보내기</a>
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
