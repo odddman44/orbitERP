@@ -212,6 +212,11 @@ public class A02_HRController {
 		return service.getEmpnoList();
 	}
 	
+	@ModelAttribute("empListModel")
+	public List<Employee> getEmpListModel(){
+		return service.getEmpListModel();
+	}
+	
 	@RequestMapping("checkIn")
 	public ResponseEntity<?> checkIn(@RequestParam("empno") String empno) {
 		return ResponseEntity.ok(service.checkIn(empno));
@@ -226,6 +231,11 @@ public class A02_HRController {
 	public ResponseEntity<?> checkOut(@RequestParam("work_date") String work_date, @RequestParam("empno") String empno) {
 		return ResponseEntity.ok(service.checkOut(work_date, empno));
 		
+	}
+	
+	@RequestMapping("sendEmail")
+	public String sendEmain() {
+		return "a02_humanResource\\a10_sendEmail";
 	}
 	
 

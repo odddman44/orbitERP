@@ -311,6 +311,10 @@
 		WHERE empno = #{empno}
 		AND WORK_DATE = TO_DATE(#{work_date}, 'YYYY-MM-DD')
 	</update>
+	
+	<select id="getEmpListModel" resultType="employee">
+		select * from employee
+	</select>
 
 
 

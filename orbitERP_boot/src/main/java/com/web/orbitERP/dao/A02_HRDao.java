@@ -120,6 +120,8 @@ public interface A02_HRDao {
 	
 	int checkOut(@Param("work_date") String work_date, @Param("empno") String empno);
 	
+	List<Employee> getEmpListModel();
+	
 	
 	
 	
