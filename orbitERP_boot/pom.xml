@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.web</groupId>
-	<artifactId>orbitERP_boot</artifactId>
+	<artifactId>springbtexp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>orbitERP_boot</name>
+	<name>springbtexp</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -28,20 +28,37 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.glassfish.web/jakarta.servlet.jsp.jstl -->
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		    	
+		<dependency> 
+		    <groupId>org.apache.tomcat.embed</groupId> 
+		    <artifactId>tomcat-embed-jasper</artifactId> 
+		    <scope>provided</scope> 
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc11</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -54,49 +71,45 @@
 			<version>3.0.3</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- 추가된부분 -->
-	  <dependency>
-         <groupId>jakarta.servlet.jsp.jstl</groupId>
-         <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-      <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
-      <dependency>
-         <groupId>jakarta.servlet</groupId>
-         <artifactId>jakarta.servlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-      <!-- https://mvnrepository.com/artifact/org.glassfish.web/jakarta.servlet.jsp.jstl -->
-      <dependency>
-         <groupId>org.glassfish.web</groupId>
-         <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-             
-      <dependency> 
-          <groupId>org.apache.tomcat.embed</groupId> 
-          <artifactId>tomcat-embed-jasper</artifactId> 
-          <scope>provided</scope> 
-      </dependency>
-      
-        <!-- reload -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
+		</dependency>		
+		<dependency>
+			<groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.6</version>
 		</dependency>
-	  <!-- 추가된 부분 끝 -->	
+		    <!-- File Upload (file upload 기능 사용) -->
+		    <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+		<dependency>
+		        <groupId>commons-fileupload</groupId>
+		        <artifactId>commons-fileupload</artifactId>
+		        <version>1.3.1</version>
+		</dependency>			
 		
+
 		<!-- 채팅 웹소켓 -->
 		 <dependency>
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-websocket</artifactId>
-	    </dependency>
-		
+	    </dependency>	
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>1.6.7</version>
+		</dependency>		
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-aop	</artifactId>
+	    </dependency>	    
+	    
 	</dependencies>
 
 	<build>
@@ -104,14 +117,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

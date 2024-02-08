@@ -212,6 +212,7 @@ public class A02_HRController {
 		return service.getEmpnoList();
 	}
 	
+	
 	@RequestMapping("checkIn")
 	public ResponseEntity<?> checkIn(@RequestParam("empno") String empno) {
 		return ResponseEntity.ok(service.checkIn(empno));
@@ -227,6 +228,9 @@ public class A02_HRController {
 		return ResponseEntity.ok(service.checkOut(work_date, empno));
 		
 	}
+
+	
+
 	
 
 	
