@@ -91,6 +91,7 @@
 		</dependency>
 	  <!-- 추가된 부분 끝 -->	
 		
+		<!-- 채팅 웹소켓 -->
 		 <dependency>
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-websocket</artifactId>

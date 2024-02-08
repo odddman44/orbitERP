@@ -16,48 +16,54 @@
 
 <script src="${path}/a00_com/jquery.min.js"></script>
 
-	
+
 
 <script type="text/javascript">
 	var proc = "${proc}"
 	var msg = "${msg}"
-	if(msg!=""){
-		if(proc=="upt"){
-			if(confirm(msg+"\n게시판으로 이동하시겠습니까?")){
-				location.href="${path}/bulList"
-			}	
+	if (msg != "") {
+		if (proc == "upt") {
+			if (confirm(msg + "\n게시판으로 이동하시겠습니까?")) {
+				location.href = "${path}/bulList"
+			}
 		}
-		if(proc=="del"){
-			alert(msg+"\n게시판으로 이동합니다.")
-				location.href="${path}/bulList"	
+		if (proc == "del") {
+			alert(msg + "\n게시판으로 이동합니다.")
+			location.href = "${path}/bulList"
 		}
 	}
 	$(document).ready(function() {
-		
+
 		if ("${emem.auth}" === "총괄관리자") {
-		        $("#uptBtn").css("visibility", "visible");
-		    } else {
-		        $("#uptBtn").css("visibility", "hidden");
-		    }
-		 if ("${emem.auth}" === "총괄관리자") {
-		        $("#delBtn").css("visibility", "visible");
-		    } else {
-		        $("#delBtn").css("visibility", "hidden");
-		    }
-		
-		$("#goListBtn").click(function(){
-			location.href="${path}/bulList";
+			$("#uptBtn").css("visibility", "visible");
+		} else {
+			$("#uptBtn").css("visibility", "hidden");
+		}
+		if ("${emem.auth}" === "총괄관리자") {
+			$("#delBtn").css("visibility", "visible");
+		} else {
+			$("#delBtn").css("visibility", "hidden");
+		}
+
+		$("#goListBtn").click(function() {
+			location.href = "${path}/bulList"
 		})
-		
-		$("#uptBtn").click(function(){
+
+		$("#uptBtn").click(function() {
 			$("form").attr("action", "${path}/updateBulletin")
 			$("form").submit()
 		})
-		$("#delBtn").click(function(){
+		$("#delBtn").click(function() {
 			var no = $("[name=no]").val()
-			location.href="${path}/deleteBulletin?no="+no;
+			location.href = "${path}/deleteBulletin?no=" + no;
 		})
-	})	
+	})
+
+	function download(fname) {
+		if (confirm(fname + " 다운로드 하시겠습니까?")) {
+			location.href = "${path}/download?fname=" + fname
+		}
+	}
 </script>
 
 <style>
@@ -108,11 +114,14 @@ button {
 
 				<!-- Begin Page Content -->
 				<div class="container-fluid">
+				
 
 					<!-- Page Heading -->
 					<h1 class="h3 mb-4 text-gray-800">게시글</h1>
 					<br> <br>
+					
 					<form id="frm01" method="post">
+						<input type="hidden" value="${bulletin.no}" name="no" />
 						
 						<div class="row">
 							<div class="col-md-1">
@@ -129,11 +138,25 @@ button {
 								<label>게시자</label>
 							</div>
 							<div class="col-md-11">
-								<input class="form-control form-control-user"
-									required value="${bulletin.auth}" name="auth" readonly />
+								<input class="form-control form-control-user" required
+									value="${bulletin.auth}" name="auth" readonly />
 							</div>
 						</div>
 						<br>
+
+						<div class="row">
+							<div class="col-md-1">
+								<label>첨부파일</label>
+							</div>
+							<div class="col-md-11">
+								<c:forEach var="fname" items="${bulletin.fnames}">
+									<input ondblclick="download('${fname}')" type="text"
+										class="form-control" value="${fname}" readonly/>
+								</c:forEach>
+							</div>
+						</div>
+						<br>
+
 						<div class="row">
 							<div class="col-md-1">
 								<label>내용</label>

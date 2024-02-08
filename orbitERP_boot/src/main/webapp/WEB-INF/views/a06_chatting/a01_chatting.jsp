@@ -24,44 +24,39 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 
 <script type="text/javascript">
-	window.addEventListener("resize",function(){
+window.addEventListener("resize",function(){
 	$("#chatMessageArea>div").width(
 			$("#chatArea").width()-5)
-
-	$(document).ready(function() {
-		var wsocket = new WebSocket(
-			"ws:localhost:5050/chat"	
-		)
-		
+	
+})
+$(document).ready(function(){
+		var wsocket = null;
+		var idVal = $("#pabeda").val()
+		wsocket = new WebSocket(
+			"ws:localhost:4444/chat"	// 서버 4444 / 5050 여부 잘 확인할 것
+		)	
 		wsocket.onopen = function(evt){
 			console.log(evt)
-			
-			wsocket.send("${emem.auth}"+"님이 접속하셨습니다!")
+			wsocket.send(idVal+"님이 접속했습니다!") // ':'가 사용자명과 메시지를 갈라놓은 뒤 사용자명을 누락시킴 ":접속하셨습니다!" 사용자명 누락 + 왼쪽 출력
+			console.log(idVal)
 		}
 		wsocket.onmessage = function(evt){
-			// 서버에서 push 접속한 모든 client에 전송..
-			revMsg(evt.data) // 메시지 처리 공통 함수 정의				
+			revMsg(evt.data) 				
 		}
-		
+	
+	
 		function revMsg(msg){
-			// 보내는 메시지는 오른쪽
-			// 받는 메시지는 왼쪽 정렬 처리 : 사용자아이디:메시지 내용
 			var alignOpt = "left"
 			var msgArr = msg.split(":") // 사용자명:메시지 구분 하여 처리..
 			var sndId = msgArr[0] // 보내는 사람 메시지 id
-			if($("#id").val()==sndId){ 
+			if($("#pabeda").val()==sndId){ 
 				// 보내는 사람과 받는 사람의 아이디 동일:현재 접속한 사람이 보낸 메시지 
 				alignOpt = "right"
-				msg = msgArr[1] // 받는 사람 아이디 생략 처리
+				msg = msgArr[1] 
 			}
 			var msgObj = $("<div></div>").text(msg).attr("align",
 					alignOpt).css("width",$("#chatArea").width())
 			$("#chatMessageArea").append(msgObj);
-			
-			// 스크롤링 처리..
-			// 1. 전체 해당 데이터의 높이를 구한다.
-			// 2. 포함하고 있는 부모 객체(#chatArea)에서
-			//    스크롤 기능 메서드로 스크롤되게 처리한다. scrollTop()
 			var height = parseInt($("#chatMessageArea").height())
 			mx += height+20
 			$("#chatArea").scrollTop(mx)
@@ -77,8 +72,8 @@
 			}
 		})
 		function sendMsg(){
-			wsocket.send($("#id").val()+":"+$("#msg").val())
-			$("${emem.auth}").val("")			
+			wsocket.send($("#pabeda").val()+": "+$("#msg").val())
+			$("#msg").val("")			
 		}
 	});
 	
@@ -112,7 +107,7 @@
 	text-align: left;
 	
 	margin: auto;
-	padding-right: 15px;
+	padding-right: 25px;
 }
 
 .frogfeet{
@@ -138,7 +133,7 @@
 				<%@ include file="/WEB-INF/views/a00_module/a03_topBar.jsp"%>
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
-
+				<input type="hidden" id="pabeda" value="${emem.ename}" />
 				<div class="col-xl-4 frm" id="frm"> <!-- 메신저 박스의 width는 여기에서 관리 -->
 					<div class="card shadow mb-4">
 						<!-- Card Header - Dropdown -->
