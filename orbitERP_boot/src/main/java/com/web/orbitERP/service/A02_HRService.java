@@ -425,5 +425,9 @@ public class A02_HRService {
 	public int checkOut(String work_date, String empno) {
 		return dao.checkOut(work_date, empno);
 	}
+	
+	public List<Employee> getEmpListModel(){
+		return dao.getEmpListModel();
+	}
 
 }
