@@ -212,10 +212,6 @@ public class A02_HRController {
 		return service.getEmpnoList();
 	}
 	
-	@ModelAttribute("empListModel")
-	public List<Employee> getEmpListModel(){
-		return service.getEmpListModel();
-	}
 	
 	@RequestMapping("checkIn")
 	public ResponseEntity<?> checkIn(@RequestParam("empno") String empno) {
@@ -233,10 +229,7 @@ public class A02_HRController {
 		
 	}
 	
-	@RequestMapping("sendEmail")
-	public String sendEmain() {
-		return "a02_humanResource\\a10_sendEmail";
-	}
+
 	
 
 	

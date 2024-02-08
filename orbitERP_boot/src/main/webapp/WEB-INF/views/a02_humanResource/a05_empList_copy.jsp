@@ -552,9 +552,17 @@
 
 				</div>
 			</div>
+					<!-- Footer -->
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
 		</div>
 	</div>
-	<!-- 모달창 종료 -->
+
 
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> <i

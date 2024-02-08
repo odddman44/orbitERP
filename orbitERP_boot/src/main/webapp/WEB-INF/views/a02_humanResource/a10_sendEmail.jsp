@@ -106,9 +106,9 @@
 										<span class="input-group-text  justify-content-center">
 											수신자</span>
 									</div>
-									<select>
+									<select name="receiver" class="form-control">
 									<c:forEach var="emp" items="${empListModel}">
-										<option>{emp.email}({emp.ename})</option>
+										<option value="${emp.email}">${emp.email}(${emp.ename}/부서번호:${emp.deptno})</option>
 									</c:forEach>
 									</select>
 									
