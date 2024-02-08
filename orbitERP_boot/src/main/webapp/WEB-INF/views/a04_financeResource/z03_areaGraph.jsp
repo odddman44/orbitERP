@@ -5,6 +5,7 @@
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
 <script>
+/*
 	$(document).ready(function() {
 		// 기본 연도 설정
         var defaultYear = 2024;
@@ -78,6 +79,7 @@
 			console.log("차트 생성 완료"); // 차트 생성 확인
 		}
 	});
+*/
 </script>
 <div class="col-xl-6 col-lg-6">
 	<div class="card shadow mb-4">
