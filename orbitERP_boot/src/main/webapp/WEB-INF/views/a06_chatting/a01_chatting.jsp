@@ -33,7 +33,7 @@ $(document).ready(function(){
 		var wsocket = null;
 		var idVal = $("#pabeda").val()
 		wsocket = new WebSocket(
-			"ws:localhost:4444/chat"	// 서버 4444 / 5050 여부 잘 확인할 것
+			"ws:192.168.10.114:4444/chat"	// 서버 4444 / 5050 여부 잘 확인할 것 // IP 주소가 localhost이면 나만 사용할 수 있다. 192.168.10.114는 여기 ip 주소
 		)	
 		wsocket.onopen = function(evt){
 			console.log(evt)
