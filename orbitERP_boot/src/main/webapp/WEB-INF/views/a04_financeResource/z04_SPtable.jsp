@@ -12,16 +12,15 @@
 	        var endDate = $('input[name="endDate"]').val();
 	        var deptno = $('#deptno').val(); // 부서 번호
 
+	        fetchData(deptno, startDate, endDate);
+		});
+		
+		function fetchData(deptno, startDate, endDate) {
 	        $.ajax({
-	            url: '${path}/grossProfit',
+	            url: '/grossProfit?deptno=' + deptno + '&startDate=' + startDate + '&endDate=' + endDate,
 	            method: 'GET',
-	            data: {
-	                deptno: deptno,
-	                startDate: startDate,
-	                endDate: endDate
-	            },
-	            dataType: 'json',
 	            success: function(data) {
+	            	console.log(data)
 	                updateTableHeaders(startDate, endDate);
 	                updateTableBody(data);
 	            },
@@ -29,46 +28,49 @@
 	                console.error("Error fetching data: ", error);
 	            }
 	        });
-		});
-
+	    }
+		
 		// 테이블 헤더 업데이트 함수
 	    function updateTableHeaders(startDate, endDate) {
-	        var months = generateMonths(startDate, endDate);
+	    	var months = generateMonths(startDate, endDate);
 	        var headerHtml = '<th>부서</th><th>거래명</th>'; // 기본 컬럼
+
+	        // 월별 컬럼 추가
 	        months.forEach(function(month) {
 	            headerHtml += `<th>${month}</th>`;
 	        });
+
 	        headerHtml += '<th>집계</th>'; // 집계 컬럼 추가
-	        $("#gpHeader tr").html(headerHtml);
+	        $("#gpHeader").html(headerHtml); // 테이블 헤더 업데이트
 	    }
 
 		// 테이블 본문 업데이트 함수
 		function updateTableBody(data) {
-			var bodyHtml = "";
-		    var currentTransCname = "";
-		    var totalProfit = 0;
-
-		    data.forEach(function(item, index) {
-		        // 거래처명이 바뀔 때마다 새로운 행 시작
-		        if (currentTransCname !== item.transCname) {
-		            // 새로운 거래처명이 시작되기 전에, 이전 거래처의 집계를 표시
-		            if (index > 0) {
-		                bodyHtml += `<td>${totalProfit.toLocaleString()}</td></tr>`;
-		                totalProfit = 0; // 집계 초기화
-		            }
-		            bodyHtml += `<tr><td>${item.deptno}</td><td>${item.transCname}</td>`;
-		            currentTransCname = item.transCname;
-		        }
-		        // 매출총이익을 해당 월에 표시
-		        bodyHtml += `<td>${item.netSalesProfit.toLocaleString()}</td>`;
-		        totalProfit += item.netSalesProfit; // 집계 업데이트
-		    });
-
-		    // 마지막 거래처의 집계를 표시
-		    bodyHtml += `<td>${totalProfit.toLocaleString()}</td></tr>`;
-		    $("#gpBody").html(bodyHtml);
-		}
+		    // 각 거래처명 및 월별 매출총이익을 테이블에 표시하는 로직
+		    var bodyHtml = '';
+		    
+		    data.forEach(function(item) {
+		        // 테이블의 각 행을 동적으로 생성
+		        bodyHtml += `<tr>
+		                        <td>${item.deptno}</td>
+		                        <td>${item.trans_cname}</td>`;
 		
+		        // 'generateMonths' 함수를 사용하여 생성된 월 범위에 따라 셀 추가
+		        var months = generateMonths($('input[name="startDate"]').val(), $('input[name="endDate"]').val());
+		        months.forEach(function(month) {
+		            if (month === item.yearMonth) {
+		                bodyHtml += `<td>${item.netSalesProfit.toLocaleString()}</td>`; // 해당 월에 매출총이익 표시
+		            } else {
+		                bodyHtml += `<td></td>`; // 해당 월이 아닌 경우 빈 셀 추가
+		            }
+		        });
+		
+		        bodyHtml += '</tr>';
+		    });
+		
+		    $("#gpBody").html(bodyHtml); // 생성된 HTML을 테이블 본문에 삽입
+		}
+				
 		// 시작 날짜와 종료 날짜 사이의 모든 월을 배열로 생성하는 함수
 	    function generateMonths(startDate, endDate) {
 	        var start = new Date(startDate);
