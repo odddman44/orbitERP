@@ -25,8 +25,6 @@ public class A03_PRService {
 		return dao.getLecture(lecno);
 	}
 	public LectureTch getTch(int lecno) {
-		System.out.println(lecno);
-		System.out.println(dao.getTch(lecno));
 		return dao.getTch(lecno);
 	}
 	public List<LectureStu> getStuList(int lecno){
@@ -76,6 +74,11 @@ public class A03_PRService {
 	public List<String> getSubjects(){
 		return dao.getSubjects();
 	}
+	// 강사 세션 확인
+	public int sessCk(String empno) {
+		return dao.sessCk(empno);
+	}
+	
 	
 	
 	/*--캘린더 서비스----------------------------------------*/

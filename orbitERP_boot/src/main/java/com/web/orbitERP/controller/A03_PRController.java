@@ -102,7 +102,12 @@ public class A03_PRController {
 	public List<String> getSubjects(){
 		return service.getSubjects();
 	}
-	
+	// 강사 세션 확인
+	@RequestMapping("sessCk")
+	public ResponseEntity<?> sessCk(String empno){
+		System.out.println(empno);
+		return ResponseEntity.ok(service.sessCk(empno));
+	}
 	
 	/*--강의 캘린더*------------------------------------------------------------------*/
 	//http://localhost:4444/lectureCalendar

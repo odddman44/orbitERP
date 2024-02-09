@@ -57,7 +57,6 @@
 		lec_teacher=#{lec_teacher}
 		WHERE lecno=#{lecno}
 	</update>
-
 	
 	<!-- 강의테이블 삭제 -->
 	<delete id="deleteLecture" parameterType="int">
@@ -69,8 +68,6 @@
 	</delete>
 	
 	
-	
-	
 	<!-- 학생 데이터 조회 -->
 	<select id="getStus" resultType="lectureStu" parameterType="lectureStu">
 		SELECT sno,name,to_char(birth,'yyyy-mm-dd') birth,final_degree,phone,address
@@ -80,7 +77,6 @@
 		'%'||#{name}||'%'
 		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
 	</select>
-	
 	<!-- 강사 데이터 조회 -->
 	<select id="schTch" resultType="lectureTch" parameterType="lectureTch">
 		SELECT * FROM EMPLOYEE
@@ -88,7 +84,12 @@
 		AND (ENAME LIKE '%'||#{ename}||'%' AND SUBJECT LIKE '%'||#{subject}||'%')
 	</select>
 	
-	
+	<!-- 강사 세션값 처리하는.. -->
+	<select id="sessCk" resultType="int" parameterType="String">
+		SELECT COUNT(*)  FROM ERPMEM e
+		JOIN EMPLOYEE e2 ON e.EMPNO = e2.EMPNO 
+		WHERE JOB LIKE '강사' AND e.EMPNO LIKE #{empno}
+	</select>
 	
 	
 	

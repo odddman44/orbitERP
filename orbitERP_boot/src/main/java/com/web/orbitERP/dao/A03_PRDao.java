@@ -31,19 +31,19 @@ public interface A03_PRDao {
 	int deleteLecture(@Param("lecno") int lecno);
 	int deleteEnroll(@Param("lecno") int lecno);
 	
-	
 	//학생정보 불러오기	
 	List<LectureStu> getStus(LectureStu sch);
 	//int totStudent(LectureStu sch);
 	//강사정보 불러오기	
 	List<LectureTch> schTch(LectureTch sch);
-	//강사 과목리스트
+	//등록된 강사 과목리스트
 	@Select("SELECT  DISTINCT subject\r\n"
 			+ "FROM EMPLOYEE\r\n"
 			+ "WHERE JOB LIKE '강사'\r\n"
 			+ "ORDER BY subject")
 	List<String> getSubjects();
-	
+	//강사 세션확인
+	int sessCk(@Param("empno") String empno);
 	
 	/*--캘린더 dao-------------------------------------------------------------*/
 	List<Calendar> getCalList();

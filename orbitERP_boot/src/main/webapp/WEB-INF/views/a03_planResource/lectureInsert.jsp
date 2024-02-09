@@ -54,7 +54,12 @@
 	  	}
 	});	
 $(document).ready(function() {
-    			searchStu()
+				var sessionCk="${emem.auth}"
+				if(sessionCk !== "총괄관리자" && sessionCk!=="계획관리자"){
+					alert('강의등록은 계획관리자에게 요청하세요.')
+					window.location.href = "lectureList"
+				}
+    			searchStu()//학생 초기검색
     			 // 숫자에 콤마를 추가하는 함수
 		       function addCommas(nStr) {
 		           nStr += '';
