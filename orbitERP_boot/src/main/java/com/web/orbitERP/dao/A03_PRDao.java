@@ -43,7 +43,7 @@ public interface A03_PRDao {
 			+ "ORDER BY subject")
 	List<String> getSubjects();
 	//강사 세션확인
-	int sessCk(@Param("empno") String empno);
+	//int sessCk(@Param("empno") String empno);
 	
 	/*--캘린더 dao-------------------------------------------------------------*/
 	List<Calendar> getCalList();

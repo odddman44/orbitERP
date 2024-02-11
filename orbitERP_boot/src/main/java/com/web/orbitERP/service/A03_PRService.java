@@ -75,9 +75,9 @@ public class A03_PRService {
 		return dao.getSubjects();
 	}
 	// 강사 세션 확인
-	public int sessCk(String empno) {
-		return dao.sessCk(empno);
-	}
+	//public int sessCk(String empno) {
+	//	return dao.sessCk(empno);
+	//}
 	
 	
 	
