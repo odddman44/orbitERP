@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.Lecture;
+import com.web.orbitERP.vo.LectureCalendar;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
 @Mapper
@@ -43,7 +44,7 @@ public interface A03_PRDao {
 			+ "ORDER BY subject")
 	List<String> getSubjects();
 	//강사 세션확인
-	int sessCk(@Param("empno") String empno);
+	//int sessCk(@Param("empno") String empno);
 	
 	/*--캘린더 dao-------------------------------------------------------------*/
 	List<Calendar> getCalList();
@@ -51,4 +52,7 @@ public interface A03_PRDao {
 	int updateCalendar(Calendar upt);
 	@Delete("delete from calendar where id = #{id}")
 	int deleteCalendar(int id);
+	/*--강의캘린더 dao-------------------------------------------------------------*/
+	List<LectureCalendar> lecCalList();
+	//int insertCalendar(Calendar ins);
 }

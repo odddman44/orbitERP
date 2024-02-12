@@ -53,8 +53,8 @@ width:70%;
 			$("#delBtn").hide()
 			$("#mainBtn").hide()
 			$("#schTch").hide()
-			$("#schStu1").hide()
-			$("#schStu2").show()
+			$("#schStu1").hide() //학생변경하는 모달창
+			//$("#schStu2").show() 학생조회하는 테이블
 			$("#gradeStu").hide()
 		}
 		console.log("${lecture.lecno}")
@@ -106,18 +106,18 @@ width:70%;
 	    endDateInput.change(checkDateValidity);
 	    
 	$("#uptBtn").click(function(){
-			var inputField = $('#tuition_fee');
-	        var valueWithCommas = inputField.val();
-	        // 콤마를 제거합니다.
-	        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-	        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
-	        inputField.val(valueWithoutCommas);
-			 var inputField = $('#textbook_fee');
-	        var valueWithCommas = inputField.val();
-	        // 콤마를 제거합니다.
-	        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-	        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
-	        inputField.val(valueWithoutCommas);
+		var inputField = $('#tuition_fee');
+        var valueWithCommas = inputField.val();
+        // 콤마를 제거합니다.
+        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+        inputField.val(valueWithoutCommas);
+		 var inputField = $('#textbook_fee');
+        var valueWithCommas = inputField.val();
+        // 콤마를 제거합니다.
+        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+        inputField.val(valueWithoutCommas);
 	        
 			if($("[name=lec_name]").val()==""){
 				alert("강의명을 입력하세요")
@@ -154,7 +154,7 @@ width:70%;
 				$.ajax({
 		            type: "POST",
 		            url: "/lectureUpdate",
-		            data: $("#info").serialize(),
+		            data: $("#mainform").serialize(),
 		            dataType: "json",
 		            success: function (data) {
 		            	alert(data.msg)
@@ -176,7 +176,7 @@ width:70%;
 			$.ajax({
 	            type: "POST",
 	            url: "/lectureDelete",
-	            data: $("#info").serialize(),
+	            data: $("#mainform").serialize(),
 	            dataType: "json",
 	            success: function (data) {
 	            	alert(data.msg+","+data.msg2)
@@ -437,7 +437,7 @@ width:70%;
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div id="text">
-							<form id="info">
+							<form id="mainform">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
@@ -503,8 +503,8 @@ width:70%;
 									<input name="lec_snum" class="form-control" value="${lecture.lec_snum}" readonly/> 
 									<input type="button" class="btn btn-dark" value="학생변경"
 									data-toggle="modal" data-target="#stuModal" id="schStu1" />
-									<input class="btn btn-dark" value="학생조회"
-									data-toggle="modal" data-target="#stuModal" id="schStu2" type="hidden"/>
+							<!--	<input class="btn btn-dark" value="학생조회"
+									data-toggle="modal" data-target="#stuModal" id="schStu2" type="hidden"/> -->
 									<input type="button" class="btn btn-dark" value="성적등록"
 									data-toggle="modal" data-target="#stuGradeModal" id="gradeStu" />
 								</div>
@@ -514,15 +514,18 @@ width:70%;
 									<span class="input-group-text  justify-content-center">
 										강의료</span>
 								</div>
-								<input id="tuition_fee" name="tuition_fee" class="form-control"
-								value='﻿<fmt:formatNumber value="${lecture.tuition_fee}" pattern="#,###"/>'/>
+								<input name="tuition_fee" id="tuition_fee" class="form-control" 
+								value="${lecture.tuition_fee}"/>
+						<!--에러남	
+						value='﻿<fmt:formatNumber value="${lecture.tuition_fee}" pattern="#,###"/>'/> 
+						-->
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
 										교재비</span>
 								</div>
 								<div class="input_value">
-								<input id="textbook_fee" name="textbook_fee" class="form-control"
-								value='﻿<fmt:formatNumber value="${lecture.textbook_fee}" pattern="#,###"/>'>
+								<input name="textbook_fee" id="textbook_fee" class="form-control"
+								value="${lecture.textbook_fee}"/>
 								</div>
 							</div>
 							<div class="input-group mb-3">

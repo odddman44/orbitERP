@@ -127,4 +127,23 @@
 		URL =#{urlLink}
 		WHERE ID =#{id}
 	</update>
+	
+	
+	
+	
+	
+	<!-- 강의 캘린더 mapper -->
+	<resultMap type="lectureCalendar" id="lecCalRst">
+		<result column="start_date" property="start"/>
+		<result column="end_date" property="end"/>
+		<result column="lec_name" property="title"/>
+	</resultMap>
+	<select id="lecCalList" resultMap="lecCalRst">
+		SELECT t.id,t.backgroundcolor,t.textcolor, 
+		l.LECNO ,l.LEC_CODE ,l.LEC_NAME ,l.START_DATE ,l.END_DATE ,
+		l.LEC_SNUM ,l.LEC_NUM ,l.LEC_TEACHER
+		FROM testCalendar t
+		JOIN LECTURE l ON t.lecno=l.LECNO
+	</select>
+	<insert id=""></insert>
 </mapper>

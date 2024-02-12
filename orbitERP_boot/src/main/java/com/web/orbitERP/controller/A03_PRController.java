@@ -43,10 +43,10 @@ public class A03_PRController {
 	public String insertLecture(Lecture ins, Model d) {
 		d.addAttribute("msg", 
 				service.insertLecture(ins)>0?"등록완료":"등록실패");
-		d.addAttribute("lecno",service.getlecno());
+		d.addAttribute("lecno",service.getlecno()); //수강테이블에 등록할 강의번호
 		return "pageJsonReport";
 	}
-	//수강테이블
+	//수강테이블 등록
 	@RequestMapping("insertEnroll")
 	public ResponseEntity<?> insertEnroll(Enrollment ins){
 		return ResponseEntity.ok(service.insertEnroll(ins));
@@ -63,6 +63,11 @@ public class A03_PRController {
 	//강의수정
 	@RequestMapping("lectureUpdate")
 	public String lectureUpdate(Lecture upt, Model d) {
+		System.out.println(service.updateLecture(upt));
+		System.out.println(service.updateLecture(upt));
+		System.out.println(service.updateLecture(upt));
+		System.out.println(service.updateLecture(upt));
+		System.out.println(service.updateLecture(upt));
 		d.addAttribute("msg", 
 				service.updateLecture(upt)>0?"수정완료":"수정실패");
 		d.addAttribute("msg2", 
@@ -103,11 +108,11 @@ public class A03_PRController {
 		return service.getSubjects();
 	}
 	// 강사 세션 확인
-	@RequestMapping("sessCk")
-	public ResponseEntity<?> sessCk(String empno){
-		System.out.println(empno);
-		return ResponseEntity.ok(service.sessCk(empno));
-	}
+	//@RequestMapping("sessCk")
+	//public ResponseEntity<?> sessCk(String empno){
+	//	System.out.println(empno);
+	//	return ResponseEntity.ok(service.sessCk(empno));
+	//}
 	
 	/*--강의 캘린더*------------------------------------------------------------------*/
 	//http://localhost:4444/lectureCalendar
@@ -116,7 +121,13 @@ public class A03_PRController {
 	public String lectureCalendar() {
 		return"a03_planResource\\lectureCalendar";
 	}
-	
+	//일정리스트
+		//http://localhost:4444/lecCalList
+		@GetMapping("lecCalList")
+		public String lecCalList(Model d) {
+			d.addAttribute("lecCalList",service.lecCalList());
+			return "pageJsonReport";
+		}
 	
 	
 	
