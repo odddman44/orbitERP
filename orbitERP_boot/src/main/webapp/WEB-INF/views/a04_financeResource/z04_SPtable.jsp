@@ -6,7 +6,6 @@
 <fmt:requestEncoding value="utf-8" />
 <script>
 	$(document).ready(function() {
-		fetchData(deptno, startDate, endDate);
 		// '검색' 버튼 클릭 이벤트
 		$("#schBtn").click(function() {
 			var startDate = $('#gpStart').val() || '';
