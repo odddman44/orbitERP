@@ -121,7 +121,13 @@ public class A03_PRController {
 	public String lectureCalendar() {
 		return"a03_planResource\\lectureCalendar";
 	}
-	
+	//일정리스트
+		//http://localhost:4444/lecCalList
+		@GetMapping("lecCalList")
+		public String lecCalList(Model d) {
+			d.addAttribute("lecCalList",service.lecCalList());
+			return "pageJsonReport";
+		}
 	
 	
 	

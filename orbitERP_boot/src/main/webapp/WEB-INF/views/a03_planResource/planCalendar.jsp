@@ -69,7 +69,6 @@ body {
 						var todayTitle = today.toISOString().split("T")[0];
 
 						var calendar = new FullCalendar.Calendar(calendarEl, {
-									timeZone: 'UTC', // 타임존 설정
 									locale : 'ko', // 한글로 변경
 									//한글 '일'표시 없애기
 									dayCellContent : function(info) {

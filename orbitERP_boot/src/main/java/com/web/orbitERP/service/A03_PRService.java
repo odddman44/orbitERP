@@ -9,6 +9,7 @@ import com.web.orbitERP.dao.A03_PRDao;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.Lecture;
+import com.web.orbitERP.vo.LectureCalendar;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
 
@@ -93,6 +94,10 @@ public class A03_PRService {
 	}
 	public String deleteCalendar(int id) {
 		return dao.deleteCalendar(id)>0?"삭제성공":"삭제실패";
+	}
+	/*--캘린더 서비스----------------------------------------*/
+	public List<LectureCalendar> lecCalList() {
+		return dao.lecCalList();
 	}
 	
 }
