@@ -6,6 +6,7 @@
 <fmt:requestEncoding value="utf-8" />
 <script>
 	$(document).ready(function() {
+		fetchData(deptno, startDate, endDate);
 		// '검색' 버튼 클릭 이벤트
 		$("#schBtn").click(function() {
 			var startDate = $('#gpStart').val() || '';
@@ -130,14 +131,15 @@
 		<form id="frm01" class="form" method="GET">
 			<div class="form-row align-items-center">
 				<div class="col-auto">
-					시작날짜 : <input type="month" id="gpStart" name="startDate" value="" />~
+					시작날짜 : <input type="month" id="gpStart" name="startDate" value="2023-01" />~
 				</div>
 				<div class="col-auto">
-					마지막날짜 :<input type="month" id="gpEnd" name="endDate" value=""/>
+					마지막날짜 :<input type="month" id="gpEnd" name="endDate" value="2024-01"/>
 				</div>
 				<label for="accName">부서명</label>
 				<div class="col-auto">
 			        <select id="deptno" name="deptno" class="form-control">
+			        		<option value="0">전체</option>
 			        	<c:forEach var="dept" items="${dlist}">
 			        		<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
 			        	</c:forEach>

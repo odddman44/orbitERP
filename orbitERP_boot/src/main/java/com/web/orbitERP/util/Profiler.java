@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 // 컨테이너에서 사용할 수행 시간 측정 프로파일러 advice
-// a02_aop.advice.Profiler
 @Aspect		// advice로 해당 포인트 컷으로 실행 시점을 정의해서 처리할 수 있게 처리..
 @Component	// 객체가 container에 등록
 public class Profiler {
@@ -34,5 +33,5 @@ public class Profiler {
 		}
 		return obj;
 	}
-	// ~ 12:40
+	
 }
