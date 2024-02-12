@@ -55,4 +55,5 @@ public interface A03_PRDao {
 	/*--강의캘린더 dao-------------------------------------------------------------*/
 	List<LectureCalendar> lecCalList();
 	//int insertCalendar(Calendar ins);
+	int delLecCal(@Param("lecno") int lecno);
 }

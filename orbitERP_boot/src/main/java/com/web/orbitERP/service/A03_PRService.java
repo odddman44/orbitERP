@@ -47,13 +47,13 @@ public class A03_PRService {
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
-	
-	// 수강, 강의 삭제
-	public int deleteLecture(int lecno) {
-		return dao.deleteLecture(lecno);
-	}
+	// 수강삭제
 	public int deleteEnroll(int lecno) {
 		return dao.deleteEnroll(lecno);
+	}
+	// 강의 삭제
+	public int deleteLecture(int lecno) {
+		return dao.deleteLecture(lecno);
 	}
 	
 	
@@ -95,9 +95,12 @@ public class A03_PRService {
 	public String deleteCalendar(int id) {
 		return dao.deleteCalendar(id)>0?"삭제성공":"삭제실패";
 	}
-	/*--캘린더 서비스----------------------------------------*/
+	/*--강의 캘린더 서비스----------------------------------------*/
 	public List<LectureCalendar> lecCalList() {
 		return dao.lecCalList();
+	}
+	public int delLecCal(int lecno) {
+		return dao.delLecCal(lecno);
 	}
 	
 }

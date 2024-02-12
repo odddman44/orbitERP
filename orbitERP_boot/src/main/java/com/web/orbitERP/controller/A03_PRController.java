@@ -63,11 +63,6 @@ public class A03_PRController {
 	//강의수정
 	@RequestMapping("lectureUpdate")
 	public String lectureUpdate(Lecture upt, Model d) {
-		System.out.println(service.updateLecture(upt));
-		System.out.println(service.updateLecture(upt));
-		System.out.println(service.updateLecture(upt));
-		System.out.println(service.updateLecture(upt));
-		System.out.println(service.updateLecture(upt));
 		d.addAttribute("msg", 
 				service.updateLecture(upt)>0?"수정완료":"수정실패");
 		d.addAttribute("msg2", 
@@ -80,8 +75,10 @@ public class A03_PRController {
 	public String lectureDelete(@RequestParam("lecno") int lecno, Model d) {
 		d.addAttribute("msg2", 
 				service.deleteEnroll(lecno)>0?"수강삭제":"삭제실패");
+		d.addAttribute("msg3",
+				service.delLecCal(lecno)>0?"강의스케줄삭제":"강의스케줄삭제실패");
 		d.addAttribute("msg", 
-				service.deleteLecture(lecno)>0?"강의삭제":"삭제실패");
+				service.deleteLecture(lecno)>0?"강의삭제완료":"삭제실패");
 		return "pageJsonReport";
 	}
 	
@@ -122,12 +119,12 @@ public class A03_PRController {
 		return"a03_planResource\\lectureCalendar";
 	}
 	//일정리스트
-		//http://localhost:4444/lecCalList
-		@GetMapping("lecCalList")
-		public String lecCalList(Model d) {
-			d.addAttribute("lecCalList",service.lecCalList());
-			return "pageJsonReport";
-		}
+	//http://localhost:4444/lecCalList
+	@GetMapping("lecCalList")
+	public String lecCalList(Model d) {
+		d.addAttribute("lecCalList",service.lecCalList());
+		return "pageJsonReport";
+	}
 	
 	
 	
