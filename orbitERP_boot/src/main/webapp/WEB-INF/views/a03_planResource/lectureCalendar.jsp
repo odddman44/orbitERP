@@ -150,9 +150,6 @@ body {
 
 						//일정 클릭했을 때 해당 일정 정보를 표시하는
 						function addForm(evt) {
-							// evt.속성 : 기본적으로 fullcalendar에서 사용하는 속성 
-							// evt.extendedProps.속성 : 기본속성이 아닌 추가적으로 
-							//		상세화면에 출력시 사용되는 속성
 							$("[name=id]").val(evt.id)
 							$("[name=title]").val(evt.title)
 							$("#start").val(evt.start.toLocaleString())

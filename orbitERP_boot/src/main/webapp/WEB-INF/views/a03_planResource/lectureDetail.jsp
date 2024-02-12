@@ -179,7 +179,7 @@ width:70%;
 	            data: $("#mainform").serialize(),
 	            dataType: "json",
 	            success: function (data) {
-	            	alert(data.msg+","+data.msg2)
+	            	alert(data.msg)
 	            	location.href="lectureList"
 	            },
 	            error: function (err) {
@@ -268,7 +268,7 @@ width:70%;
 	function table(id){
 		$("#"+id).DataTable({
 	    	//"paging": true,        // 페이지 나누기 기능 사용
-	    	"pageLength": 10, 
+	    	"pageLength": 5, 
 	        "lengthChange": false, // 한 페이지에 표시되는 행 수 변경 가능
 	        "searching": false, // 검색 기능 사용
 	        "ordering": true, // 정렬 기능 사용
@@ -501,10 +501,10 @@ width:70%;
 								</div>
 								<div class="input_value">
 									<input name="lec_snum" class="form-control" value="${lecture.lec_snum}" readonly/> 
-									<input type="button" class="btn btn-dark" value="학생변경"
-									data-toggle="modal" data-target="#stuModal" id="schStu1" />
 							<!--	<input class="btn btn-dark" value="학생조회"
 									data-toggle="modal" data-target="#stuModal" id="schStu2" type="hidden"/> -->
+									<input type="button" class="btn btn-dark" value="학생변경"
+									data-toggle="modal" data-target="#stuModal" id="schStu1" />
 									<input type="button" class="btn btn-dark" value="성적등록"
 									data-toggle="modal" data-target="#stuGradeModal" id="gradeStu" />
 								</div>
@@ -627,7 +627,7 @@ width:70%;
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title">학생등록</h5>
+							<h5 class="modal-title">학생변경</h5>
 							<button type="button" class="close" data-dismiss="modal"
 								aria-label="Close">
 								<span aria-hidden="true">&times;</span>
@@ -687,7 +687,6 @@ width:70%;
 											</tr>
 											<script>
 										        snoList.push("${stu.sno}");
-										        
 										    </script>
 										</c:forEach>
 									</tbody>
@@ -723,7 +722,7 @@ width:70%;
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary" id="insertStu">학생등록</button>
+							<button type="button" class="btn btn-primary" id="insertStu">학생변경</button>
 						</div>
 					</div>
 				</div>
