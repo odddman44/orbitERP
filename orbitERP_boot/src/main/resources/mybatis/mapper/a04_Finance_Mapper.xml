@@ -190,7 +190,7 @@
         FROM voucher
         WHERE VOUCHER_TYPE = '매출전표' OR VOUCHER_TYPE = '매입전표'
   		  AND TO_CHAR(voucher_date, 'YYYY-MM') BETWEEN #{startDate} AND #{endDate}
-          AND deptno = #{deptno}
+          AND (#{deptno} = 0 OR deptno = #{deptno})
         GROUP BY deptno, trans_cname, TO_CHAR(voucher_date, 'YYYY-MM')
         ORDER BY yearMonth, deptno, trans_cname
     </select>

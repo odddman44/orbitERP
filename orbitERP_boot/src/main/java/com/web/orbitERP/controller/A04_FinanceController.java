@@ -183,10 +183,10 @@ public class A04_FinanceController {
     										@RequestParam(value="endDate", required = false) String endDate) {
     	// 기본 날짜값 설정
         if (startDate == null || startDate.isEmpty()) {
-            startDate = "1900-01"; // 최소한의 기본 시작 날짜
+            startDate = "2023-01"; // 최소한의 기본 시작 날짜
         }
         if (endDate == null || endDate.isEmpty()) {
-            endDate = "9999-12"; // 최대한의 기본 종료 날짜
+            endDate = "2024-01"; // 최대한의 기본 종료 날짜
         }
     	List<GrossProfit> grossProfits = service.getGrossProfit(deptno, startDate, endDate);
     	return ResponseEntity.ok(grossProfits);
