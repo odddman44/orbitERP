@@ -17,6 +17,7 @@
 		<typeAlias alias="student" type="com.web.orbitERP.vo.Student"/>
 		<typeAlias alias="stuProfile" type="com.web.orbitERP.vo.StuProfile"/>
 		<typeAlias alias="calendar" type="com.web.orbitERP.vo.Calendar"/>
+		<typeAlias alias="lectureCalendar" type="com.web.orbitERP.vo.LectureCalendar"/>
 		<typeAlias alias="voucher" type="com.web.orbitERP.vo.Voucher"/>
 		<typeAlias alias="journalizing" type="com.web.orbitERP.vo.Journalizing"/>
 		<typeAlias alias="voucherDetail" type="com.web.orbitERP.vo.VoucherDetail"/>

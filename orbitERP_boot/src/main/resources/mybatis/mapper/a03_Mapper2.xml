@@ -243,7 +243,8 @@
 		ARR_TIME) * 24) - 1, 'FM00') || '시간 ' ||
 		TO_CHAR(ROUND(MOD((DEP_TIME -
 		ARR_TIME) * 24 * 60, 60)), 'FM00') ||
-		'분' AS tot_workhours
+		'분'
+		AS tot_workhours
 		FROM
 		ATTENDANCE a
 		INNER JOIN EMPLOYEE e ON a.EMPNO =
@@ -252,13 +253,14 @@
 		DEPT d
 		ON e.DEPTNO = d.DEPTNO
 		where 1=1
-		and a.empno = #{empno}
+		and a.empno =
+		#{empno}
 		<if
 			test="start_date != null and end_date != null and start_date != '' and end_date != ''">
 			AND a.WORK_DATE BETWEEN #{start_date} AND #{end_date}
 		</if>
-		
-		
+
+
 	</select>
 
 	<insert id="insertErpmem" parameterType="erpmem">
@@ -277,6 +279,42 @@
 		DELETE FROM ERPMEM e
 		WHERE empno = #{empno}
 	</delete>
+
+	<update id="updateErpmem" parameterType="erpmem">
+		UPDATE erpmem SET
+		pwd = #{pwd}
+		WHERE empno = #{empno}
+	</update>
+
+	<delete id="deleteAtt" parameterType="string">
+		DELETE FROM ATTENDANCE a
+		WHERE empno = #{empno}
+	</delete>
+
+	<insert id="checkIn" parameterType="string">
+		INSERT INTO attendance
+		(empno, work_date, arr_time)
+		VALUES (#{empno}, TRUNC(sysdate), sysdate)
+	</insert>
+
+	<select id="isExitsCheckIn" resultType="int">
+		SELECT count(*) FROM
+		ATTENDANCE
+		WHERE WORK_DATE = TO_DATE(#{work_date}, 'YYYY-MM-DD')
+		AND
+		empno = #{empno}
+	</select>
+
+	<update id="checkOut">
+		UPDATE ATTENDANCE SET
+		DEP_TIME = SYSDATE
+		WHERE empno = #{empno}
+		AND WORK_DATE = TO_DATE(#{work_date}, 'YYYY-MM-DD')
+	</update>
+	
+	<select id="getEmpListModel" resultType="employee">
+		select * from employee
+	</select>
 
 
 

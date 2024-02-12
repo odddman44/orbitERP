@@ -66,26 +66,31 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	
 	$(document).ready(function() {
 		var empno = "${emem.empno}"
 		// 현재 URL에서 empno 값 가져오기
 		var urlParams = new URLSearchParams(window.location.search);
 		var empnoFromURL = urlParams.get('empno');
-		
-		if(empnoFromURL!==empno){
+
+		if (empnoFromURL !== empno) {
 			alert("올바르지 않은 접근입니다.")
-			window.location.href="${path}/main"
+			window.location.href = "${path}/main"
 		}
 
 		// 메인으로 이동
 		$("#goListBtn").click(function() {
 			location.href = "${path}/main"
 		})
-		
-		$("#uptBtn").click(function(){
-			$("form").attr("action", "${path}/empUpdate");
-			$("#frm01").submit();
+
+		$("#uptBtn").click(function() {
+			if ($("#pwd").val() !== $("#pwdconfirm").val()) {
+				alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.")
+				$("input[name='pwd']").focus(); // input 요소에 직접 접근하여 focus() 메서드를 호출합니다.
+				return;
+			} else {
+				$("form").attr("action", "${path}/empUpdate");
+				$("#frm01").submit();
+			}
 		})
 
 		$('#frm01').submit(function(event) {
@@ -231,17 +236,35 @@
 							</div>
 						</div>
 						<br>
-						<c:if test="${employee.deptno == 50}">
-							<div class="row justify-content-left align-items-left">
+
+						<div class="row justify-content-left align-items-left">
+							<label for="pwd" class="col-sm-1 col-form-label">비밀번호</label>
+							<div class="col-sm-3">
+								<input type="password" class="form-control form-control-user"
+									id="pwd" name="pwd">
+							</div>
+							<label for="pwd" class="col-sm-1 col-form-label">비밀번호 확인</label>
+							<div class="col-sm-3">
+								<input type="password" id="pwdconfirm"
+									class="form-control form-control-user">
+							</div>
+
+
+						</div>
+						<br>
+						<div class="row justify-content-left align-items-left">
+
+							<c:if test="${employee.deptno == 50}">
 								<label for="subject" class="col-sm-1 col-form-label">담당과목</label>
 								<div class="col-sm-3">
 									<input type="text" class="form-control form-control-user"
 										readonly name="subject"
 										value="${empty employee.subject ? '없음' : employee.subject}">
 								</div>
-							</div>
-							<br>
-						</c:if>
+							</c:if>
+
+						</div>
+
 
 						<div class="row justify-content-left align-items-left">
 							<label for="phone" class="col-sm-1 col-form-label">H.P</label>
@@ -288,8 +311,8 @@
 						<div class="row justify-content-left">
 							<div class="col-auto">
 								<input type="button" class="btn btn-info" value="메인화면"
-									id="goListBtn" />
-								<input type="button" class="btn btn-success" id="uptBtn" value="수정">
+									id="goListBtn" /> <input type="button" class="btn btn-success"
+									id="uptBtn" value="수정">
 							</div>
 						</div>
 					</form>

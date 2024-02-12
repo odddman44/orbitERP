@@ -69,6 +69,8 @@
         WHERE TRUNC(V.voucher_date) 
         	BETWEEN TO_DATE(#{startDate}, 'yyyy-MM-dd') 
         	AND TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        	AND V.voucher_type LIKE '%'||#{voucher_type}||'%'
+        ORDER BY V.voucher_date DESC
 	</select>
 	<!-- 전표 상세 조회 -->
 	<resultMap id="voucherDetailMap" type="voucherDetail">
@@ -169,4 +171,27 @@
 	    GROUP BY EXTRACT(MONTH FROM VOUCHER_DATE)
 	    ORDER BY month
 	</select>
+	
+	<!-- 매출총이익 조회 테이블용 -->
+	<select id="getGrossProfit" resultType="com.web.orbitERP.vo.GrossProfit">
+        SELECT deptno, trans_cname, TO_CHAR(voucher_date, 'YYYY-MM') AS yearMonth,
+          SUM(
+            CASE 
+              WHEN voucher_type = '매출전표' THEN total_amount
+              ELSE 0
+            END
+          ) -
+          SUM(
+            CASE 
+              WHEN voucher_type = '매입전표' THEN total_amount
+              ELSE 0
+            END
+          ) AS netSalesProfit
+        FROM voucher
+        WHERE VOUCHER_TYPE = '매출전표' OR VOUCHER_TYPE = '매입전표'
+  		  AND TO_CHAR(voucher_date, 'YYYY-MM') BETWEEN #{startDate} AND #{endDate}
+          AND (#{deptno} = 0 OR deptno = #{deptno})
+        GROUP BY deptno, trans_cname, TO_CHAR(voucher_date, 'YYYY-MM')
+        ORDER BY yearMonth, deptno, trans_cname
+    </select>
 </mapper>	

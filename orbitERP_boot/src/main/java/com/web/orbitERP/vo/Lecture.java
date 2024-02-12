@@ -1,21 +1,5 @@
 package com.web.orbitERP.vo;
 
-/*
- CREATE TABLE LECTURE (
-	lecno VARCHAR2(50) PRIMARY KEY NOT NULL,
-	lec_name VARCHAR2(100) NOT NULL,
-	start_date DATE	NOT NULL,
-	end_date DATE NOT NULL,
-	lec_snum NUMBER,
-	lec_num	NUMBER NOT NULL,
-	tuition_fee NUMBER NOT NULL,
-	textbook_fee NUMBER	NOT NULL,
-	lec_content CLOB NOT NULL,
-	lec_teacher VARCHAR2(50)
-); 
-  
- */
-
 public class Lecture {
 
 	private int lecno;

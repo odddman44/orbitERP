@@ -36,9 +36,30 @@ width:70%;
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+		// form 하위에 있는 모든 요소객체들을  enter키 입력시, submit
+		// 되는 기본 이벤트 속성이 있다. ajax처리시 충돌되는 이 이벤트 속성을
+		// 아래의 코드로 방지 처리..
+		document.addEventListener('keydown', function(event) {
+		  	if (event.key === "Enter") {
+		    	event.preventDefault();
+		  	}
+		});	
+		var snoList=[] //등록처리된 sno들
+		
 	$(document).ready(function() {
+		var sessionCk="${emem.auth}"//로그인된 session값
+		if(sessionCk!=='총괄관리자' && sessionCk!=='계획관리자'){
+			$("#uptBtn").hide()
+			$("#delBtn").hide()
+			$("#mainBtn").hide()
+			$("#schTch").hide()
+			$("#schStu1").hide() //학생변경하는 모달창
+			//$("#schStu2").show() 학생조회하는 테이블
+			$("#gradeStu").hide()
+		}
 		console.log("${lecture.lecno}")
 		searchStu()
+		
 		// 등록된 강사 색상 바꾸기
 		 $("#color").find("tr").css("background-color", "#f4d03f");
 		// 숫자에 콤마를 추가하는 함수
@@ -85,18 +106,18 @@ width:70%;
 	    endDateInput.change(checkDateValidity);
 	    
 	$("#uptBtn").click(function(){
-			var inputField = $('#tuition_fee');
-	        var valueWithCommas = inputField.val();
-	        // 콤마를 제거합니다.
-	        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-	        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
-	        inputField.val(valueWithoutCommas);
-			 var inputField = $('#textbook_fee');
-	        var valueWithCommas = inputField.val();
-	        // 콤마를 제거합니다.
-	        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-	        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
-	        inputField.val(valueWithoutCommas);
+		var inputField = $('#tuition_fee');
+        var valueWithCommas = inputField.val();
+        // 콤마를 제거합니다.
+        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+        inputField.val(valueWithoutCommas);
+		 var inputField = $('#textbook_fee');
+        var valueWithCommas = inputField.val();
+        // 콤마를 제거합니다.
+        var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+        // 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
+        inputField.val(valueWithoutCommas);
 	        
 			if($("[name=lec_name]").val()==""){
 				alert("강의명을 입력하세요")
@@ -130,33 +151,51 @@ width:70%;
 			}
 			
 			if(confirm("수정하시겠습니까?")){
-	        $("form").attr("action", "lectureUpdate");
-	        $("form").submit();
+				$.ajax({
+		            type: "POST",
+		            url: "/lectureUpdate",
+		            data: $("#mainform").serialize(),
+		            dataType: "json",
+		            success: function (data) {
+		            	alert(data.msg)
+		                snoList.forEach(function (sno) {
+		                    insertEnroll(sno, $("[name=lecno]").val(), $("[name=empno]").val());
+		                });
+		                window.location.reload();
+		            },
+		            error: function (err) {
+		                console.log(err);
+		                // Handle form submission error here
+		            }
+		        })
 		}
 		
 	})
 	$("#delBtn").click(function(){
 		if(confirm("${lecture.lec_code}${lecture.lecno}를 삭제하시겠습니까?")){
-			$("form").attr("action", "lectureDelete");
-	        $("form").submit();
+			$.ajax({
+	            type: "POST",
+	            url: "/lectureDelete",
+	            data: $("#mainform").serialize(),
+	            dataType: "json",
+	            success: function (data) {
+	            	alert(data.msg)
+	            	location.href="lectureList"
+	            },
+	            error: function (err) {
+	                console.log(err);
+	                // Handle form submission error here
+	            }
+	        })
 		}
 	
 	})
-	
-	var msg = "${msg}"
-	if(msg!=""){
-		alert(msg)
-		if(msg="삭제완료"){
-			location.href="lectureList"
-		}
-	}
 	
 	$("#schTBtn").click(function(){ //강사 모달창 검색
 		searchTch()
 	})
 	$("#schTch").click(function(){ // 강사변경 클릭시
 		$("[name=subject]").val($("[name=lec_code]").val());
-		console.log($("[name=subject]").val())
 	    searchTch() 
 	});
 	
@@ -171,20 +210,72 @@ width:70%;
 		if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
 		searchStu()
 	})
+	$("[name=ename],[name=subject]").keyup(function(){
+		if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
+		searchTch()
+	})
+	$("#tot").text('수강학생('+snoList.length+')') // 초기화면 총 수 나타내기
 	
+	$("#insertStu").click(function(){
+	    $("[name=lec_snum]").val(snoList.length);
+	    $("#frm02")[0].reset() //검색값 리셋
+	    searchStu() //다시 학생조회했을 때 전체출력
+	    $("#stuModal").modal("hide");//모달 닫기
+	    $(".modal-backdrop").remove();//뒷배경 제거
+	});
 });
+	// 강사 세션확인
+	<%--function sessCk(empno){
+		$.ajax({
+			type: "POST",
+			url: "/sessCk",
+			data : {
+				empno: empno
+			},
+			dataType: "text",
+			success: function (data) {
+				if (data) {
+					tch="강사";
+					console.log(tch); //여기는 강사
+	            } 
+			},
+			error: function (err) {
+				console.log(err)
+			}
+		})
+	}--%>
+	//수강테이블 insert
+	function insertEnroll(sno,lecno,empno) {
+		$.ajax({
+		   //type: "POST",
+		   url: "/insertEnroll",
+		   data: {
+		     sno: sno,
+		     lecno:lecno,
+		     empno: empno
+		   },
+		   dataType: "text",
+		   success: function (data) {
+		   	console.log("수강 "+data)
+		   },
+		     error: function (err) {
+		       console.log(err)
+		   }
+		});
+	}
 	
 	//테이블 페이징처리
 	function table(id){
 		$("#"+id).DataTable({
 	    	//"paging": true,        // 페이지 나누기 기능 사용
-	    	"pageLength": 10, 
+	    	"pageLength": 5, 
 	        "lengthChange": false, // 한 페이지에 표시되는 행 수 변경 가능
 	        "searching": false, // 검색 기능 사용
 	        "ordering": true, // 정렬 기능 사용
 	        "info": true, // 표시 건수 및 현재 페이지 표시
 	        "autoWidth": false, // 컬럼 너비 자동 조절 해제
 	        "language" : {
+	        	 "emptyTable" : "검색한 데이터가 없습니다.",
 	        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
 	        	 "paginate": {
 	        		  	"next": "다음",
@@ -261,7 +352,6 @@ width:70%;
 	    });
 	}
 	
-	var snoList=[] //등록처리된 sno들
 	function addStu(sno, name, final_degree,phone) {	
 		//이미 등록된 학생 중복X
 		//snoList의 값들과 sno를 비교하는 코드
@@ -282,6 +372,7 @@ width:70%;
 
 	    $("#add").append(row);
 	    $("#tot").text('수강학생('+snoList.length+')') //등록시 총 수 변경
+	    console.log(snoList)
 	}
 
 	function deleteStu(button) {
@@ -295,6 +386,7 @@ width:70%;
 	        snoList.splice(index, 1);
 	    }
 	    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
+	    console.log(snoList)
 	}
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -345,7 +437,7 @@ width:70%;
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div id="text">
-							<form>
+							<form id="mainform">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
@@ -409,9 +501,12 @@ width:70%;
 								</div>
 								<div class="input_value">
 									<input name="lec_snum" class="form-control" value="${lecture.lec_snum}" readonly/> 
+							<!--	<input class="btn btn-dark" value="학생조회"
+									data-toggle="modal" data-target="#stuModal" id="schStu2" type="hidden"/> -->
 									<input type="button" class="btn btn-dark" value="학생변경"
-									data-toggle="modal" data-target="#stuModal" id="schStu" />
-									<input type="button" class="btn btn-dark" value="성적등록" id="gradeStu" />
+									data-toggle="modal" data-target="#stuModal" id="schStu1" />
+									<input type="button" class="btn btn-dark" value="성적등록"
+									data-toggle="modal" data-target="#stuGradeModal" id="gradeStu" />
 								</div>
 							</div>
 							<div class="input-group mb-3">
@@ -419,15 +514,18 @@ width:70%;
 									<span class="input-group-text  justify-content-center">
 										강의료</span>
 								</div>
-								<input id="tuition_fee" name="tuition_fee" class="form-control"
-									value="${lecture.tuition_fee}"/>
+								<input name="tuition_fee" id="tuition_fee" class="form-control" 
+								value="${lecture.tuition_fee}"/>
+						<!--에러남	
+						value='﻿<fmt:formatNumber value="${lecture.tuition_fee}" pattern="#,###"/>'/> 
+						-->
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
 										교재비</span>
 								</div>
 								<div class="input_value">
-								<input id="textbook_fee" name="textbook_fee" class="form-control"
-									value="${lecture.textbook_fee}" />
+								<input name="textbook_fee" id="textbook_fee" class="form-control"
+								value="${lecture.textbook_fee}"/>
 								</div>
 							</div>
 							<div class="input-group mb-3">
@@ -502,11 +600,11 @@ width:70%;
 									</thead>
 									<tbody id="color">
 										<tr>
-												<td>강사번호</td>
-												<td>양현수</td>
-												<td>담당과목</td>
-												<td>이메일</td>
-												<td>기존등록</td>
+											<td><c:out value="${tch.empno }"></c:out></td>
+											<td><c:out value="${tch.ename }"></c:out></td>
+											<td><c:out value="${tch.subject }"></c:out></td>
+											<td><c:out value="${tch.email }"></c:out></td>
+											<td>기존등록</td>
 										</tr>
 									</tbody>
 									<tbody id="tch">
@@ -529,7 +627,7 @@ width:70%;
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title">학생등록</h5>
+							<h5 class="modal-title">학생변경</h5>
 							<button type="button" class="close" data-dismiss="modal"
 								aria-label="Close">
 								<span aria-hidden="true">&times;</span>
@@ -560,7 +658,7 @@ width:70%;
 							</form>
 						</div>
 						<div class="card-body">
-							<h5 id="tot">수강학생</h5>
+							<h5 id="tot"></h5>
 							<span>더블클릭시, 학생 상세정보 페이지로 이동합니다.</span>
 							<div class="table-responsive">
 								<table class="table table-bordered">
@@ -579,6 +677,18 @@ width:70%;
 										</tr>
 									</thead>
 									<tbody id="add">
+										<c:forEach var="stu" items="${stuList}">
+											<tr>
+											<td>${stu.sno}</td>
+											<td>${stu.name}</td>
+											<td>${stu.final_degree}</td>
+											<td>${stu.phone}</td>
+											<td><button class='btn btn-danger' type='button' onclick='deleteStu(this)'>삭제</td>
+											</tr>
+											<script>
+										        snoList.push("${stu.sno}");
+										    </script>
+										</c:forEach>
 									</tbody>
 								</table>
 							</div>
@@ -612,12 +722,73 @@ width:70%;
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary" id="insertStu">학생등록</button>
+							<button type="button" class="btn btn-primary" id="insertStu">학생변경</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+			<!-- start 성적등록 modal -->
+			<div class="modal" id="stuGradeModal" >
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">성적등록</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+						<div class="card shadow mb-4">
+						<div class="card-header py-3">
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="dataTable2">
+								<col width="15%">
+							    <col width="20%">
+							    <col width="25%">
+							    <col width="20%">
+							    <col width="20%">
+									<thead>
+										<tr>
+											<th>학생번호</th>
+											<th>이름</th>
+											<th>학년</th>
+											<th>전화번호</th>
+											<th>점수</th>
+											<th>등급</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="stu" items="${stuList}">
+											<tr>
+											<td>${stu.sno}</td>
+											<td>${stu.name}</td>
+											<td>${stu.final_degree}</td>
+											<td>${stu.phone}</td>
+											<td><input/></td>
+											<td>${stu.grade}</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+							</div>
+							<hr>
+						</div>
+					</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">닫기</button>
+							<button type="button" class="btn btn-primary" id="insertGrade">성적등록</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 				<!-- Footer -->
 				<footer class="sticky-footer bg-white">
 					<div class="container my-auto">
@@ -628,10 +799,8 @@ width:70%;
 				</footer>
 				<!-- End of Footer -->
 
-			</div>
 			<!-- End of Content Wrapper -->
 
-		</div>
 		<!-- End of Page Wrapper -->
 
 		<!-- Scroll to Top Button-->

@@ -9,10 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A02_HRService;
+import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
@@ -209,6 +211,26 @@ public class A02_HRController {
 	public List<String> getEmpnoList(){
 		return service.getEmpnoList();
 	}
+	
+	
+	@RequestMapping("checkIn")
+	public ResponseEntity<?> checkIn(@RequestParam("empno") String empno) {
+		return ResponseEntity.ok(service.checkIn(empno));
+	}
+	
+	@RequestMapping("isExitsCheckIn")
+	public ResponseEntity<?> isExitsCheckIn(@RequestParam("work_date") String work_date, @RequestParam("empno") String empno) {
+		return ResponseEntity.ok(service.isExitsCheckIn(work_date, empno));
+	}
+	
+	@RequestMapping("checkOut")
+	public ResponseEntity<?> checkOut(@RequestParam("work_date") String work_date, @RequestParam("empno") String empno) {
+		return ResponseEntity.ok(service.checkOut(work_date, empno));
+		
+	}
+
+	
+
 	
 
 	

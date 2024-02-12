@@ -9,6 +9,7 @@ import com.web.orbitERP.dao.A03_PRDao;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.Lecture;
+import com.web.orbitERP.vo.LectureCalendar;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
 
@@ -24,17 +25,33 @@ public class A03_PRService {
 	public Lecture getLecture(int lecno) {
 		return dao.getLecture(lecno);
 	}
+	public LectureTch getTch(int lecno) {
+		return dao.getTch(lecno);
+	}
+	public List<LectureStu> getStuList(int lecno){
+		return dao.getStuList(lecno);
+	}
 	public int insertLecture(Lecture ins) {
 		return dao.insertLecture(ins);
+	}
+	//수강테이블
+	public String insertEnroll(Enrollment ins) {
+		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
 	}
 	//강의번호 추출
 	public int getlecno() {
 		return dao.getlecno();
 	}
 	
+	//강의 수정
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
+	// 수강삭제
+	public int deleteEnroll(int lecno) {
+		return dao.deleteEnroll(lecno);
+	}
+	// 강의 삭제
 	public int deleteLecture(int lecno) {
 		return dao.deleteLecture(lecno);
 	}
@@ -44,8 +61,8 @@ public class A03_PRService {
 	public List<LectureStu> getStus(LectureStu sch){
 		if(sch.getName()==null) sch.setName("");
 		if(sch.getFinal_degree()==null) sch.setFinal_degree("");
-		int count=dao.totStudent(sch);
-		sch.setCount(count);
+		//int count=dao.totStudent(sch);
+		//sch.setCount(count);
 		return dao.getStus(sch);
 	}
 	//강사 불러오기
@@ -58,10 +75,11 @@ public class A03_PRService {
 	public List<String> getSubjects(){
 		return dao.getSubjects();
 	}
-	//수강테이블
-	public String insertEnroll(Enrollment ins) {
-		return dao.insertEnroll(ins)>0?"등록성공":"등록실패";
-	}
+	// 강사 세션 확인
+	//public int sessCk(String empno) {
+	//	return dao.sessCk(empno);
+	//}
+	
 	
 	
 	/*--캘린더 서비스----------------------------------------*/
@@ -76,6 +94,13 @@ public class A03_PRService {
 	}
 	public String deleteCalendar(int id) {
 		return dao.deleteCalendar(id)>0?"삭제성공":"삭제실패";
+	}
+	/*--강의 캘린더 서비스----------------------------------------*/
+	public List<LectureCalendar> lecCalList() {
+		return dao.lecCalList();
+	}
+	public int delLecCal(int lecno) {
+		return dao.delLecCal(lecno);
 	}
 	
 }

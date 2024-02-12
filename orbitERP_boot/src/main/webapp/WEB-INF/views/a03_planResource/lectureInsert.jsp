@@ -45,8 +45,21 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
+	// form 하위에 있는 모든 요소객체들을  enter키 입력시, submit
+	// 되는 기본 이벤트 속성이 있다. ajax처리시 충돌되는 이 이벤트 속성을
+	// 아래의 코드로 방지 처리..
+	document.addEventListener('keydown', function(event) {
+	  	if (event.key === "Enter") {
+	    	event.preventDefault();
+	  	}
+	});	
 $(document).ready(function() {
-    			searchStu()
+				var sessionCk="${emem.auth}"
+				if(sessionCk !== "총괄관리자" && sessionCk!=="계획관리자"){
+					alert('강의등록은 계획관리자에게 요청하세요.')
+					window.location.href = "lectureList"
+				}
+    			searchStu()//학생 초기검색
     			 // 숫자에 콤마를 추가하는 함수
 		       function addCommas(nStr) {
 		           nStr += '';
@@ -69,13 +82,6 @@ $(document).ready(function() {
 		       });
 
     			
-				var msg = "${msg}"
-				if (msg != "") {
-					if (!confirm(msg + "\n계속 등록하시겠습니까?")) {
-						location.href = "lectureList"
-					}
-					$("form")[0].reset()
-				}
 				$("#schBtn").click(function(){ //학생 모달창 검색
 					//$("[name=subject]").val($("[name=lec_code]").text());
 					searchStu()
@@ -85,7 +91,12 @@ $(document).ready(function() {
 				})
 				$("[name=name],[name=final_degree]").keyup(function(){
 			    	  if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
+			    	  //엔터 입력시 검색
 			    	  searchStu()
+			      })
+				$("[name=ename],[name=subject]").keyup(function(){
+			    	  if(event.keyCode==13) // 없으면 실시간으로 조회 처리해줌
+			    	  searchTch()
 			      })
 				
 				$("#insBtn").click(
@@ -146,6 +157,11 @@ $(document).ready(function() {
 							                snoList.forEach(function (sno) {
 							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });
+							            	if (!confirm(data.msg + "\n계속 등록하시겠습니까?")) {
+							                    location.href = "lectureList";
+							                } else {
+							                    window.location.reload();
+							                }
 							            },
 							            error: function (err) {
 							                console.log(err);
@@ -250,6 +266,7 @@ function table(id){
         "info": true, // 표시 건수 및 현재 페이지 표시
         "autoWidth": false, // 컬럼 너비 자동 조절 해제
         "language" : {
+        	 "emptyTable" : "검색한 데이터가 없습니다.",
         	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
         	 "paginate": {
         		  	"next": "다음",

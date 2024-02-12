@@ -42,7 +42,6 @@ body {
 	margin: 0 auto;
 }
 
-
 .ko_holiday {
     color: #ffffff;
   }
@@ -62,9 +61,7 @@ body {
 
 
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
+	$(document).ready(function() {
 
 						var calendarEl = document.getElementById('calendar');
 						var today = new Date();
@@ -103,50 +100,19 @@ body {
 									navLinks : true, // can click day/week names to navigate views
 									selectable : true,
 									selectMirror : true,
-									select : function(arg) {
-										// 날짜 클릭시 등록처리되는 이벤트
-										// form name값에 기본데이터를 넣어 등록하기위해 초기화 처리
-										$("#frm01")[0].reset()
-										// 모달창을 같이 쓰기 때문에 타이틀 변경
-										$("#calTitle").text("일정등록")
-
-										$("#start").val(
-												arg.start.toLocaleString())
-										$("[name=start]").val(arg.startStr)
-										$("#end").val(arg.end.toLocaleString())
-										$("[name=end]").val(arg.endStr)
-										$("[name=allDay]").val(
-												arg.allDay ? 1 : 0)
-
-										$("#regBtn").show()
-										$("#uptBtn").hide()
-										$("#delBtn").hide()
-										// 모달창 로딩을 위해 강제 클릭
-										$("#calModal").click()
-
-										calendar.unselect()
-									},
+									select : false, // 날짜 클릭시 일정등록 못하게 막음(상세조회 및 조회용)
+									//계획관리자가 눌렀을 떄 강의등록으로 갈지말지 생각
 									eventClick : function(arg) {
 										// 일정을 클릭했을 때
 										$("#frm01")[0].reset()
 										addForm(arg.event)
-
-										$("#calTitle").text("일정상세")
-										$("#regBtn").hide()
-										$("#uptBtn").show()
-										$("#delBtn").show()
+										var lec_code= arg.event.extendedProps.lec_code
+										var lecno= arg.event.extendedProps.lecno
+										$("#calTitle").text("["+lec_code+lecno+"]")
+										$("#regBtn").show() // 강의 상세보러가기
 
 										$("#calModal").click()
 									},
-									eventDrop : function(arg) {
-										addForm(arg.event)
-										ajaxFunc("updateCalendar", "post")
-									},
-									eventResize : function(arg) {
-										addForm(arg.event)
-										ajaxFunc("updateCalendar", "post")
-									},
-
 									// 맨 마지막 한 주 없애기
 									fixedWeekCount : false,
 
@@ -162,12 +128,13 @@ body {
 									events : function(info, successCallback,
 											failureCallBack) {
 										$.ajax({
-											url : "${path}/calList",
+											url : "${path}/lecCalList",
 											dataType : "json",
 											success : function(data) {
 												// 서버단에서 받은 json데이터를
 												// calendar api에 할당 처리..
-												successCallback(data.callist)
+												//console.log(data.lecCalList)
+												successCallback(data.lecCalList)
 											},
 											error : function(err) {
 												console.log(err)
@@ -181,65 +148,30 @@ body {
 
 						calendar.render();
 
-						$("#regBtn").click(function() {
-							ajaxFunc("insertCalendar", "post")
-						})
-						$("#uptBtn").click(function() {
-							if (confirm("일정을 수정하시겠습니까?")) {
-								ajaxFunc("updateCalendar", "post")
-							}
-						})
-						$("#delBtn").click(function() {
-							if (confirm("일정을 삭제하시겠습니까?")) {
-								ajaxFunc("deleteCalendar", "post")
-							}
-						})
-
-						function ajaxFunc(url, type) {
-							$.ajax({
-								type : type,
-								url : "${path}/" + url,
-								data : $("#frm01").serialize(),
-								// 데이터를 입력하고 요청데이터 서버에 전송
-								dataType : "json",
-
-								success : function(data) {
-									alert(data.msg) // 등록성공/등록실패
-									$("#clsBtn").click() // 등록 모달창 닫기..
-									// 기존일정 삭제(full api에 등록된 데이터 삭제 js) 
-									calendar.removeAllEvents();
-									calendar.render();
-									// 새로운 일정 추가..(서버에서 controller로 넘겨온 데이터)
-									// 다시 추가 처리..
-									calendar.addEventSource(data.callist)
-								},
-								error : function(err) {
-									console.log(err)
-								}
-							})
-
-						}
 						//일정 클릭했을 때 해당 일정 정보를 표시하는
 						function addForm(evt) {
-							// evt.속성 : 기본적으로 fullcalendar에서 사용하는 속성 
-							// evt.extendedProps.속성 : 기본속성이 아닌 추가적으로 
-							//		상세화면에 출력시 사용되는 속성
 							$("[name=id]").val(evt.id)
 							$("[name=title]").val(evt.title)
-							$("[name=writer]").val(evt.extendedProps.writer)
 							$("#start").val(evt.start.toLocaleString())
 							$("[name=start]").val(evt.startStr)
 							$("#end").val(evt.end.toLocaleString())
 							$("[name=end]").val(evt.endStr)
+							$("[name=lec_snum]").val(evt.extendedProps.lec_snum)
+							$("[name=lec_num]").val(evt.extendedProps.lec_num)
+							$("[name=lec_teacher]").val(evt.extendedProps.lec_teacher)
 
-							$("[name=backgroundColor]")
-									.val(evt.backgroundColor)
+							$("[name=backgroundColor]").val(evt.backgroundColor)
 							$("[name=textColor]").val(evt.textColor)
-							$("[name=content]").val(evt.extendedProps.content)
-							$("[name=urlLink]").val(evt.extendedProps.urlLink)
-							$("[name=allDay]").val(evt.allDay ? 1 : 0)
+							$("#detailBtn").click(function() { // 상세페이지 이동
+								showDetails(evt.extendedProps.lecno)
+							})
 						}
 					});
+	
+	function showDetails(lecno){
+		location.href="/lectureDetail?lecno="+lecno
+	}
+				
 </script>
 <!-- Custom fonts for this template-->
 <link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
@@ -283,11 +215,7 @@ body {
 					<div class="modal-dialog modal-dialog-centered" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<!-- 
-
-				
-				 -->
-								<h5 class="modal-title" id="calTitle">일정등록</h5>
+								<h5 class="modal-title" id="calTitle"></h5>
 								<button type="button" class="close" data-dismiss="modal"
 									aria-label="Close">
 									<span aria-hidden="true">&times;</span>
@@ -299,14 +227,14 @@ body {
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
-												제목</span>
+												강의명</span>
 										</div>
-										<input type="text" name="title" class="form-control" value="" />
+										<input type="text" name="title" class="form-control" readonly/>
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
-												시작일</span>
+												개강일자</span>
 										</div>
 										<input type="text" id="start" readonly class="form-control" />
 										<input type="hidden" name="start" />
@@ -314,7 +242,7 @@ body {
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
-												종료일</span>
+												종강일자</span>
 										</div>
 										<input type="text" id="end" readonly class="form-control" />
 										<input type="hidden" name="end" />
@@ -322,16 +250,23 @@ body {
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
-												작성자</span>
+												강의실</span>
 										</div>
-										<input name="writer" class="form-control" value="" />
+										<input name="lec_num" class="form-control" readonly/>
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
-												내용</span>
+												강사명</span>
 										</div>
-										<textarea name="content" id="chatArea" class="form-control"></textarea>
+										<input name="lec_teacher" class="form-control" readonly/>
+									</div>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend ">
+											<span class="input-group-text  justify-content-center">
+												학생수</span>
+										</div>
+										<input name="lec_snum" class="form-control" readonly/>
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
@@ -349,32 +284,11 @@ body {
 										<input type="color" name="textColor" class="form-control"
 											value="#ccffff" />
 									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												종일여부</span>
-										</div>
-
-										<select name="allDay" class="form-control">
-											<option value="1">종일</option>
-											<option value="0">시간</option>
-										</select>
-									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												참고 link</span>
-										</div>
-										<input type="text" name="urlLink" class="form-control"
-											value="" />
-									</div>
 								</form>
 							</div>
 							<div class="modal-footer">
 								<!-- -->
-								<button type="button" id="regBtn" class="btn btn-primary">일정등록</button>
-								<button type="button" id="uptBtn" class="btn btn-info">일정수정</button>
-								<button type="button" id="delBtn" class="btn btn-warning">일정삭제</button>
+								<button type="button" id="detailBtn" class="btn btn-primary">강의상세조회</button>
 								<button type="button" id="clsBtn" class="btn btn-secondary"
 									data-dismiss="modal">Close</button>
 							</div>

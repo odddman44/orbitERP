@@ -12,6 +12,7 @@ import com.web.orbitERP.dao.A04_FinanceDao;
 import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.FinanceSummary;
+import com.web.orbitERP.vo.GrossProfit;
 import com.web.orbitERP.vo.Journalizing;
 import com.web.orbitERP.vo.Voucher;
 import com.web.orbitERP.vo.VoucherDetail;
@@ -95,7 +96,7 @@ public class A04_FinanceService {
 	/*
 	 * 2. 전표 조회 관련
 	 * */
-	public List<Voucher> voucherList(String startDate, String endDate){
+	public List<Voucher> voucherList(String startDate, String endDate, String voucher_type){
 		// 현재 날짜를 'YYYY-MM-DD' 형식의 문자열로 변환
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    String currentDate = sdf.format(new Date());
@@ -109,12 +110,15 @@ public class A04_FinanceService {
 	    if (endDate == null || endDate.isEmpty()) {
 	        endDate = currentDate;
 	    }
-	    return dao.voucherList(startDate, endDate);
+	    if(voucher_type == null) voucher_type = "";
+	    
+	    return dao.voucherList(startDate, endDate, voucher_type);
 	}
 	
 	
 	// 전표 상세조회
 	public VoucherDetail getVoucherDetail(int voucher_id) {
+		System.out.println("조회:"+dao.getVoucherDetail(voucher_id));
         return dao.getVoucherDetail(voucher_id);
     }
 	
@@ -153,10 +157,16 @@ public class A04_FinanceService {
 	/*
 	 * 3. 경영자보고서 관련
 	 * */
+    // 매출매입 그래프
     public List<FinanceSummary> getSalesAndPurchasesSummaryByYear(int year) {
     	List<FinanceSummary> summary = dao.getSalesAndPurchasesSummaryByYear(year);
     	System.out.println("조회된 금융 요약 데이터: " + summary);
         return summary;
+    }
+    
+    // 매출총이익 테이블
+    public List<GrossProfit> getGrossProfit(int deptno, String startDate, String endDate){
+    	return dao.getGrossProfit(deptno, startDate, endDate);
     }
     
 }

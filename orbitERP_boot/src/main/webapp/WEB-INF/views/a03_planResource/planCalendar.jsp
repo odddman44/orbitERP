@@ -62,16 +62,14 @@ body {
 
 
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
+	$(document).ready(function() {
 
 						var calendarEl = document.getElementById('calendar');
 						var today = new Date();
 						var todayTitle = today.toISOString().split("T")[0];
 
-						var calendar = new FullCalendar.Calendar(calendarEl,
-								{
+						var calendar = new FullCalendar.Calendar(calendarEl, {
+									locale : 'ko', // 한글로 변경
 									//한글 '일'표시 없애기
 									dayCellContent : function(info) {
 										var number = document
@@ -92,13 +90,11 @@ body {
 									},
 									googleCalendarApiKey: String,
 									googleCalendarApiKey : 'AIzaSyCKX_iGgeWAxLr-yT3njsCdlIT-IK_Slnw',
-									headerToolbar : {
+									headerToolbar : { // 헤더에 표시할 툴 바
 										left : 'prev,next today',
 										center : 'title',
 										right : 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
 									},
-									// 한글로 변경
-									locale : 'ko',
 									initialDate : todayTitle,
 									navLinks : true, // can click day/week names to navigate views
 									selectable : true,
