@@ -6,6 +6,9 @@
 <fmt:requestEncoding value="utf-8" />
 <script>
 	$(document).ready(function() {
+		 // 페이지 로드 시 자동으로 데이터 조회
+	    fetchData($('#deptno').val(), $('#gpStart').val(), $('#gpEnd').val());
+		
 		// '검색' 버튼 클릭 이벤트
 		$("#schBtn").click(function() {
 			var startDate = $('#gpStart').val() || '';
@@ -89,7 +92,10 @@
 	        Object.keys(groupedData).forEach(function(key) {
 	            var items = groupedData[key];
 	            var totalProfit = 0;
+	            var shouldDisplayRow = false; // 행을 표시할지 여부
+	            
 	            var rowHtml = '<tr><td>' + items[0].deptno + '</td><td>' + items[0].trans_cname + '</td>';
+	            
 	            months.forEach(function(month) {
 	                var monthProfit = 0;
 	                items.forEach(function(item) {
@@ -97,13 +103,19 @@
 	                        monthProfit += item.netSalesProfit;
 	                    }
 	                });
+	                if (monthProfit !== 0) {
+	                    shouldDisplayRow = true; // 이 행에 유효한 데이터가 있으므로 표시
+	                }
 	                //console.log("월별profit:"+monthProfit)
 	                rowHtml += '<td>' + (monthProfit ? monthProfit.toLocaleString() : '0') + '</td>';
 	                totalProfit += monthProfit;
 	            });
 
 	            rowHtml += '<td>' + totalProfit.toLocaleString() + '</td></tr>'; // 집계 컬럼 추가
-	            bodyHtml += rowHtml;
+	         	// 데이터가 있는 경우에만 행 추가
+	            if (shouldDisplayRow) {
+	                bodyHtml += rowHtml;
+	            }
 	        });
 
 	        $("#gpBody").html(bodyHtml);
@@ -124,46 +136,48 @@
 	});
 </script>
 <!-- 테이블 -->
-<div class="card shadow mb-4">
-	<div class="card-header py-3">
-		<h6 class="m-0 font-weight-bold text-primary">월별 매출총이익 조회</h6>
-		<form id="frm01" class="form" method="GET">
-			<div class="form-row align-items-center">
-				<div class="col-auto">
-					시작날짜 : <input type="month" id="gpStart" name="startDate" value="2023-01" />~
+<div class="col-xl-12 col-lg-12">
+	<div class="card shadow">
+		<div class="card-header">
+			<h6 class="m-0 font-weight-bold text-primary">월별 매출총이익 조회</h6>
+			<form id="frm01" class="form" method="GET">
+				<div class="form-row align-items-center">
+					<div class="col-auto">
+						시작날짜 : <input type="month" id="gpStart" name="startDate" value="2023-01" />~
+					</div>
+					<div class="col-auto">
+						마지막날짜 :<input type="month" id="gpEnd" name="endDate" value="2024-01"/>
+					</div>
+					<label for="accName">부서명</label>
+					<div class="col-auto">
+				        <select id="deptno" name="deptno" class="form-control">
+				        		<option value="0">전체</option>
+				        	<c:forEach var="dept" items="${dlist}">
+				        		<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
+				        	</c:forEach>
+				        </select>
+				    </div>
+					<div class="col-auto">
+						<button type="button" id="schBtn" class="btn btn-secondary">검색</button>
+					</div>
 				</div>
-				<div class="col-auto">
-					마지막날짜 :<input type="month" id="gpEnd" name="endDate" value="2024-01"/>
-				</div>
-				<label for="accName">부서명</label>
-				<div class="col-auto">
-			        <select id="deptno" name="deptno" class="form-control">
-			        		<option value="0">전체</option>
-			        	<c:forEach var="dept" items="${dlist}">
-			        		<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
-			        	</c:forEach>
-			        </select>
-			    </div>
-				<div class="col-auto">
-					<button type="button" id="schBtn" class="btn btn-secondary">검색</button>
-				</div>
+			</form>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-bordered" id="dataTable">
+					<thead id="gpHeader">
+						<tr>
+							<!-- 비워놓기? -->
+						</tr>
+					</thead>
+					<tbody id="gpBody">
+						<tr>
+							<!-- 비워놓기? -->
+						</tr>
+					</tbody>
+				</table>
 			</div>
-		</form>
-	</div>
-	<div class="card-body">
-		<div class="table-responsive">
-			<table class="table table-bordered" id="dataTable">
-				<thead id="gpHeader">
-					<tr>
-						<!-- 비워놓기? -->
-					</tr>
-				</thead>
-				<tbody id="gpBody">
-					<tr>
-						<!-- 비워놓기? -->
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	</div>
 </div>
