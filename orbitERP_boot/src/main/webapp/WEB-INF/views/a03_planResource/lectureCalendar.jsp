@@ -62,7 +62,11 @@ body {
 
 <script type="text/javascript">
 	$(document).ready(function() {
-
+				var sessionCk="${emem.auth}"//로그인된 session값
+					if(sessionCk!=='총괄관리자' && sessionCk!=='계획관리자'){
+						$("#textColor").hide()
+						$("#backgroundColor").hide()
+					}
 						var calendarEl = document.getElementById('calendar');
 						var today = new Date();
 						var todayTitle = today.toISOString().split("T")[0];
@@ -90,9 +94,9 @@ body {
 									googleCalendarApiKey: String,
 									googleCalendarApiKey : 'AIzaSyCKX_iGgeWAxLr-yT3njsCdlIT-IK_Slnw',
 									headerToolbar : {
-										left : 'prev,next today',
+										left : 'prev',
 										center : 'title',
-										right : 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+										right : 'next'
 									},
 									// 한글로 변경
 									locale : 'ko',
@@ -152,9 +156,10 @@ body {
 						function addForm(evt) {
 							$("[name=id]").val(evt.id)
 							$("[name=title]").val(evt.title)
-							$("#start").val(evt.start.toLocaleString())
+							$("#start").val(evt.startStr)
 							$("[name=start]").val(evt.startStr)
-							$("#end").val(evt.end.toLocaleString())
+							$("#end").val(evt.endStr)
+							//$("#end").val(evt.end.toLocaleString())
 							$("[name=end]").val(evt.endStr)
 							$("[name=lec_snum]").val(evt.extendedProps.lec_snum)
 							$("[name=lec_num]").val(evt.extendedProps.lec_num)
@@ -205,6 +210,7 @@ body {
 				<!-- End of Topbar -->
 				<div class="card shadow mb-4">
 				<div class="card-body">
+				<h3 style="text-align: center; background-color: #87CEEB;">[ 강의 스케줄 ]</h3>
 				<div id='calendar'></div>
 				<button id="calModal" class="btn btn-success d-none"
 					data-toggle="modal" data-target="#exampleModalCenter" type="button">등록</button>
@@ -268,7 +274,7 @@ body {
 										</div>
 										<input name="lec_snum" class="form-control" readonly/>
 									</div>
-									<div class="input-group mb-3">
+									<div class="input-group mb-3" id="backgroundColor">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
 												배경색상</span>
@@ -276,7 +282,7 @@ body {
 										<input type="color" name="backgroundColor"
 											class="form-control" value="#0099cc" />
 									</div>
-									<div class="input-group mb-3">
+									<div class="input-group mb-3" id="textColor">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
 												글자색상</span>

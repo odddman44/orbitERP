@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.web.orbitERP.service.A03_PRService;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
+import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
@@ -125,7 +126,12 @@ public class A03_PRController {
 		d.addAttribute("lecCalList",service.lecCalList());
 		return "pageJsonReport";
 	}
-	
+	//캘린더에 강의등록
+	@RequestMapping("insLecCal")
+	public String insLecCal(InsertLecCal ins,Model d) {
+		d.addAttribute("msg",service.insLecCal(ins));
+		return "pageJsonReport";
+	}
 	
 	
 	

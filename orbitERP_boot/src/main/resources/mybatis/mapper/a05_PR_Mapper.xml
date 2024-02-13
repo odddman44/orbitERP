@@ -147,4 +147,7 @@
 	<delete id="delLecCal" parameterType="int">
 		DELETE FROM TESTCALENDAR WHERE LECNO = #{lecno}
 	</delete>
+	<insert id="insLecCal" parameterType="com.web.orbitERP.vo.InsertLecCal">
+		INSERT INTO TESTCALENDAR values(testcal_seq.nextval,#{lecno},#{backgroundColor},'#000000',1)
+	</insert>
 </mapper>

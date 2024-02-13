@@ -54,12 +54,15 @@ width:70%;
 			$("#mainBtn").hide()
 			$("#schTch").hide()
 			$("#schStu1").hide() //학생변경하는 모달창
-			//$("#schStu2").show() 학생조회하는 테이블
 			$("#gradeStu").hide()
+			$("#insertGrade").hide()
+			$(".score").hide() //id값은 중복될 수 없지만 class는 해당요소에 모두 적용가능하다!
+			$(".modal-title").text("수강학생조회");
+		}else{
+			$("#schStu2").hide() //학생조회하는 테이블
 		}
 		console.log("${lecture.lecno}")
 		searchStu()
-		
 		// 등록된 강사 색상 바꾸기
 		 $("#color").find("tr").css("background-color", "#f4d03f");
 		// 숫자에 콤마를 추가하는 함수
@@ -501,8 +504,8 @@ width:70%;
 								</div>
 								<div class="input_value">
 									<input name="lec_snum" class="form-control" value="${lecture.lec_snum}" readonly/> 
-							<!--	<input class="btn btn-dark" value="학생조회"
-									data-toggle="modal" data-target="#stuModal" id="schStu2" type="hidden"/> -->
+									<input type="button" class="btn btn-dark" value="학생조회"
+									data-toggle="modal" data-target="#stuGradeModal" id="schStu2" />
 									<input type="button" class="btn btn-dark" value="학생변경"
 									data-toggle="modal" data-target="#stuModal" id="schStu1" />
 									<input type="button" class="btn btn-dark" value="성적등록"
@@ -728,7 +731,7 @@ width:70%;
 				</div>
 			</div>
 		</div>
-			<!-- start 성적등록 modal -->
+			<!-- start 성적등록, 학생조회 modal -->
 			<div class="modal" id="stuGradeModal" >
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 					<div class="modal-content">
@@ -746,29 +749,26 @@ width:70%;
 						<div class="card-body">
 							<div class="table-responsive">
 								<table class="table table-bordered" id="dataTable2">
-								<col width="15%">
-							    <col width="20%">
-							    <col width="25%">
-							    <col width="20%">
-							    <col width="20%">
 									<thead>
 										<tr>
-											<th>학생번호</th>
+											<th>no</th>
 											<th>이름</th>
+											<th>학생번호</th>
 											<th>학년</th>
 											<th>전화번호</th>
-											<th>점수</th>
+											<th class="score">점수</th>
 											<th>등급</th>
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="stu" items="${stuList}">
+										<c:forEach var="stu" items="${stuList}" varStatus="no">
 											<tr>
-											<td>${stu.sno}</td>
+											<td>${no.index+1}</td>
 											<td>${stu.name}</td>
+											<td>${stu.sno}</td>
 											<td>${stu.final_degree}</td>
 											<td>${stu.phone}</td>
-											<td><input/></td>
+											<td class="score"><input/></td>
 											<td>${stu.grade}</td>
 											</tr>
 										</c:forEach>
