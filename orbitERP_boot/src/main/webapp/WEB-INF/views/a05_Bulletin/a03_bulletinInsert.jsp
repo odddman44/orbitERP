@@ -127,7 +127,7 @@ button {
 							</div>
 							<div class="col-md-11">
 								<input type="file" class="form-control form-control-user"
-									multiple="multiple" value="" name="report" />
+									multiple="multiple" value="" name="reports" />
 							</div>
 						</div>
 						<br>
