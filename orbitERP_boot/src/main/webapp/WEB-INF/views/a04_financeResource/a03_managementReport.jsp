@@ -71,6 +71,17 @@
 					<div class="row">
 						<%@ include file="/WEB-INF/views/a04_financeResource/z04_SPtable.jsp" %>
 					</div>
+					
+					<br>
+					<br>
+					<!-- Page Heading -->
+					<div class="d-sm-flex align-items-center justify-content-between mb-4">
+						<h1 class="h3 mb-0 text-gray-800">※ 월별 손익 계산서</h1>
+					</div>
+					<!-- Content Row -->
+					<div class="row">
+						<%@ include file="/WEB-INF/views/a04_financeResource/z05_incomeStmt.jsp" %>
+					</div>
 
 				</div>
 				<!-- /.container-fluid (페이지 내용 종료) -->
