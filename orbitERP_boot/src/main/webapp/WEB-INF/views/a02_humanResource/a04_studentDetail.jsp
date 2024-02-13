@@ -50,6 +50,13 @@
 
 	$(document).ready(function() {
 		var sno = $("[name=sno]").val();
+		
+		// 로그인된 세션 
+		var auth="${emem.auth}"
+		if(auth!=="인사관리자" && auth!=="총괄관리자"){
+			$("#delBtn").hide()
+			$("#uptBtn").hide()
+			}
 
 		// 부서리스트로 화면으로 이동
 		// 부서리스트로 화면으로 이동

@@ -11,10 +11,24 @@
 <script type="text/javascript">
    $(document).ready(function() {
 	   var sessionCk="${emem.auth}"
+	   var sessionDeptno = "${emem.deptno}"
 	   if(sessionCk !== "총괄관리자" && sessionCk!=="계획관리자"){
 		   $("#session1").hide()
 		   $("#session2").hide()
 	   }
+	   
+	  var hrmenu =  $('#collapseThree').find('.collapse-item');
+	  if(sessionCk !== "총괄관리자" && sessionDeptno!=="10"){
+		  
+		  hrmenu.each(function() {
+	            $(this).click(function(event) {
+	                // 기본 클릭 동작을 막습니다.
+	                event.preventDefault();
+	                // 클릭되지 않음을 알리는 메시지를 표시합니다.
+	                alert('인사팀 소속 직원 혹은 총괄관리지만 접근할 수 있는 항목입니다.');
+	            });
+	        });
+	  }
    });
 
    function goMypage(empno) {

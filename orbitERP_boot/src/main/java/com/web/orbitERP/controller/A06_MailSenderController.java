@@ -3,10 +3,12 @@ package com.web.orbitERP.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.service.MailSenderService;
@@ -36,4 +38,19 @@ public class A06_MailSenderController {
 		}
 		return "a02_humanResource\\a10_sendEmail";
 	}
+	
+	@RequestMapping("mailToPasswordFrm")
+	public String mailToPasswordFrm() {
+	    return "a01_main\\z01_forgot-password";
+	}
+	
+	@RequestMapping("mailToPassword")
+	public ResponseEntity<String> sendMailtoPassword(@RequestParam("empno") String empno, Model d) {
+	    return ResponseEntity.ok(service.sendMailtoPassword(empno));
+	   
+	}
+	
+	
+	
+
 }

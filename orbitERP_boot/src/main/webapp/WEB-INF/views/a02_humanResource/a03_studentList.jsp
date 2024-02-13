@@ -24,6 +24,11 @@
 		location.href="${path}/studentList"
 	}
 	$(document).ready(function() {
+		// 로그인된 세션 
+		var auth="${emem.auth}"
+		if(auth!=="인사관리자" && auth!=="총괄관리자"){
+			$("#regBtn").hide()
+			}
 		$("#regFrmBtn").click(function(){
 			if($("#frm02 [name=name]").val()==""){
 				alert("학생명을 입력하세요")
