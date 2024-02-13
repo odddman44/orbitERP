@@ -67,6 +67,8 @@
 <script type="text/javascript">
 	var proc = "${proc}";
 	var msg = "${msg}";
+	
+	
 
 	if (msg != "") {
 		if (proc == "upt" || proc == "del") {
@@ -90,8 +92,17 @@
 	}
 
 	$(document).ready(
+		
+			
 			function() {
 				console.log("받아온 정보:" + "${employee}");
+				
+				// 로그인된 세션 
+				var auth="${emem.auth}"
+				if(auth!=="인사관리자" && auth!=="총괄관리자"){
+					$("#delBtn").hide()
+					$("#uptBtn").hide()
+					}
 
 				// 사원 리스트로 이동
 				$("#goListBtn").click(function() {

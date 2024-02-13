@@ -15,29 +15,39 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 
 <script type="text/javascript">
-	var id = "${erpmem.empno}"
-	var sessId = "${emem.empno}"
-	console.log("요청값1:" + id)
-	if (id != "") {
-		console.log("요청값2:" + id)
-		if (sessId != "") {
-			console.log("요청값3:" + sessId)
-			alert("${emem.ename}님 반갑습니다!\r\n 로그인 되었습니다.")
-			location.href = "${path}/main"
-		} else {
-			alert("로그인 실패! \n다시 로그인하세요..")
-		}
-	}
-	
 	$(document).ready(function() {
-		// 이전화면에서 요청된 내용을 선택하게 하게, 선택할 때, 서버에 언어 선택 내용 전달.
-		$("#selectLan").val("${param.lang}").change(function() {
-			var chVal = $(this).val()
-			if (chVal != '') {
-				location.href = "${path}/multiLang?lang=" + chVal
-			}
+		$('#regBtn').click(function() {
+			var empno = $("[name=empno]").val()
+			$.ajax({
+				url : "${path}/checkEmpno",
+				type : "get",
+				data : "empno=" + empno,
+				dataType : "json",
+				success : function(cnt) {
+					//alert(cnt+":"+typeof(cnt))
+					if (cnt <= 0) {
+						alert("존재하지 않는 사원 번호입니다.")
+					} else {
+						$.ajax({
+							url:"${path}/mailToPassword",
+							type:"get",
+							data:"empno="+empno,
+							dataType:"text",
+							success:function(data){
+								alert(data)
+								location.href="${path}/login"
+
+							},
+							error:function(err){
+								console.log(err)
+							}
+
+						})
+					}
+				}
+			})
 		})
-	});
+	})
 </script>
 
 <!-- Custom fonts for this template-->
@@ -71,45 +81,23 @@
 							<div class="col-lg-6">
 								<div class="p-5">
 									<div class="text-center">
-										<h1 class="h4 text-gray-900 mb-4">Orbit ERP <spring:message code="log"/></h1>
+										<h1 class="h4 text-gray-900 mb-4">Orbit ERP 임시비밀번호 전송</h1>
 									</div>
 									<form class="user" method="post">
 										<div class="form-group">
 											<input type="text" name="empno"
 												class="form-control form-control-user" id="empno"
-												name="empno" aria-describedby="emailHelp"
-												placeholder='<spring:message code="empno"/>'>
+												name="empno" placeholder='사원번호를 입력하십시오.'>
 										</div>
-										<div class="form-group">
-											<input type="password" name="pwd"
-												class="form-control form-control-user" id="pwd" name="pwd"
-												placeholder='<spring:message code="pwd"/>'>
-										</div>
-										<div class="form-group">
-											<div class="custom-control custom-checkbox small">
-												<input type="checkbox" class="custom-control-input"
-													id="customCheck"> <label
-													class="custom-control-label" for="customCheck"><spring:message code="memory"/></label>
-											</div>
-										</div>
-										<button type="submit"
-											class="btn btn-primary btn-user btn-block"><spring:message code="log"/></button>
+
+										<button type="button" id="regBtn"
+											class="btn btn-primary btn-user btn-block">임시 비밀번호
+											전송</button>
 										<hr>
 									</form>
-									<hr>
-									<div class="text-center">
-										<a class="small" href="${path}/mailToPasswordFrm"><spring:message code="amnesia" /></a>
-									</div>
-									<div class="text-center">
-										<a class="small" href="register.html"><spring:message code="reg" /></a>
-									</div>
-									<div class="text-center">
-										<select class="small" id="selectLan">
-											<option value=""><spring:message code="seleclang" /></option>
-											<option value="ko"><spring:message code="ko" /></option>
-											<option value="en"><spring:message code="en" /></option>
-										</select>
-									</div>
+
+
+
 								</div>
 							</div>
 						</div>
