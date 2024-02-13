@@ -76,14 +76,14 @@ public class A05_BulletinController {
 	      
 	      @GetMapping("fileupload01")
 	      public String fileupload01Frm() {
-	         return "z02_bulletinUploads";
+	         return "a05_Bulletin\\z01_bulFileUpload";
 	      }
 	      
 	      @PostMapping("fileupload01")
-	         public String fileupload01(@RequestParam("report") MultipartFile[] reports, Model d) {
-	            if (reports != null && reports.length > 0) {
+	         public String fileupload01(@RequestParam("report") MultipartFile[] GECK, Model d) {
+	            if (GECK != null && GECK.length > 0) {
 	               try {
-	                  for (MultipartFile mf : reports) {
+	                  for (MultipartFile mf : GECK) {
 	                     String fname = mf.getOriginalFilename();
 	                     if (fname != null && !fname.equals("")) {
 	                        mf.transferTo(new File(path + fname));
@@ -100,7 +100,7 @@ public class A05_BulletinController {
 	            } else {
 	               d.addAttribute("msg", "파일등록 실패");
 	            }
-	         return "z02_bulletinUploads";
+	         return "a05_Bulletin\\z01_bulFileUpload";
 	      }
 
 	   // 업로드 파일 다운로드

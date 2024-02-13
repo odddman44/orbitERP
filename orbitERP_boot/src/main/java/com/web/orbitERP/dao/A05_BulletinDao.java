@@ -42,7 +42,7 @@ public interface A05_BulletinDao {
 
 	   // 파일 업로드, 공개, 삭제
 	     @Insert("INSERT INTO bulletinFile\r\n" +
-	     "VALUES(bulletinFile_seq.currval, #{fname}, #{path}, sysdate, sysdate, #{etc})"
+	     "VALUES(bulletin_seq.currval, #{fname}, #{path}, sysdate, sysdate, #{etc})"
 	     ) int insertBulletinFile(BulletinFile ins);
 	     
 	     @Select("SELECT fname FROM bulletinFile WHERE NO = #{no}") List<String>
