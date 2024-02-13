@@ -90,9 +90,9 @@ body {
 									googleCalendarApiKey: String,
 									googleCalendarApiKey : 'AIzaSyCKX_iGgeWAxLr-yT3njsCdlIT-IK_Slnw',
 									headerToolbar : {
-										left : 'prev,next today',
+										left : 'prev',
 										center : 'title',
-										right : 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+										right : 'next'
 									},
 									// 한글로 변경
 									locale : 'ko',
@@ -152,9 +152,10 @@ body {
 						function addForm(evt) {
 							$("[name=id]").val(evt.id)
 							$("[name=title]").val(evt.title)
-							$("#start").val(evt.start.toLocaleString())
+							$("#start").val(evt.startStr)
 							$("[name=start]").val(evt.startStr)
-							$("#end").val(evt.end.toLocaleString())
+							$("#end").val(evt.endStr)
+							//$("#end").val(evt.end.toLocaleString())
 							$("[name=end]").val(evt.endStr)
 							$("[name=lec_snum]").val(evt.extendedProps.lec_snum)
 							$("[name=lec_num]").val(evt.extendedProps.lec_num)
@@ -205,6 +206,7 @@ body {
 				<!-- End of Topbar -->
 				<div class="card shadow mb-4">
 				<div class="card-body">
+				<h3 style="text-align: center; background-color: #87CEEB;">[ 강의 스케줄 ]</h3>
 				<div id='calendar'></div>
 				<button id="calModal" class="btn btn-success d-none"
 					data-toggle="modal" data-target="#exampleModalCenter" type="button">등록</button>

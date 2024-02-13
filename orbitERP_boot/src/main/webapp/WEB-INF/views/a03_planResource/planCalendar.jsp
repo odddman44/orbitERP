@@ -269,6 +269,7 @@ body {
 				<!-- End of Topbar -->
 				<div class="card shadow mb-4">
 				<div class="card-body">
+				<h3 style="text-align: center; background-color: #87CEEB;">[ 연간 학원 스케줄 ]</h3>
 				<div id='calendar'></div>
 				<button id="calModal" class="btn btn-success d-none"
 					data-toggle="modal" data-target="#exampleModalCenter" type="button">등록</button>
