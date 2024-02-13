@@ -57,13 +57,12 @@ width:70%;
 			$("#gradeStu").hide()
 			$("#insertGrade").hide()
 			$(".score").hide() //id값은 중복될 수 없지만 class는 해당요소에 모두 적용가능하다!
-			$(".modal-title").text("학생조회");
+			$(".modal-title").text("수강학생조회");
 		}else{
 			$("#schStu2").hide() //학생조회하는 테이블
 		}
 		console.log("${lecture.lecno}")
 		searchStu()
-		
 		// 등록된 강사 색상 바꾸기
 		 $("#color").find("tr").css("background-color", "#f4d03f");
 		// 숫자에 콤마를 추가하는 함수
@@ -732,7 +731,7 @@ width:70%;
 				</div>
 			</div>
 		</div>
-			<!-- start 성적등록 modal -->
+			<!-- start 성적등록, 학생조회 modal -->
 			<div class="modal" id="stuGradeModal" >
 				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 					<div class="modal-content">

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.web.orbitERP.dao.A03_PRDao;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
+import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureCalendar;
 import com.web.orbitERP.vo.LectureStu;
@@ -101,6 +102,10 @@ public class A03_PRService {
 	}
 	public int delLecCal(int lecno) {
 		return dao.delLecCal(lecno);
+	}
+	public String insLecCal(InsertLecCal ins) {
+		return dao.insLecCal(ins)>0?"캘린더 등록완료":"등록실패";
+		
 	}
 	
 }

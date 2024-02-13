@@ -62,7 +62,11 @@ body {
 
 <script type="text/javascript">
 	$(document).ready(function() {
-
+				var sessionCk="${emem.auth}"//로그인된 session값
+					if(sessionCk!=='총괄관리자' && sessionCk!=='계획관리자'){
+						$("#textColor").hide()
+						$("#backgroundColor").hide()
+					}
 						var calendarEl = document.getElementById('calendar');
 						var today = new Date();
 						var todayTitle = today.toISOString().split("T")[0];
@@ -270,7 +274,7 @@ body {
 										</div>
 										<input name="lec_snum" class="form-control" readonly/>
 									</div>
-									<div class="input-group mb-3">
+									<div class="input-group mb-3" id="backgroundColor">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
 												배경색상</span>
@@ -278,7 +282,7 @@ body {
 										<input type="color" name="backgroundColor"
 											class="form-control" value="#0099cc" />
 									</div>
-									<div class="input-group mb-3">
+									<div class="input-group mb-3" id="textColor">
 										<div class="input-group-prepend ">
 											<span class="input-group-text  justify-content-center">
 												글자색상</span>

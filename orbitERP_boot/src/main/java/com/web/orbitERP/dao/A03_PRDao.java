@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
+import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureCalendar;
 import com.web.orbitERP.vo.LectureStu;
@@ -54,6 +55,6 @@ public interface A03_PRDao {
 	int deleteCalendar(int id);
 	/*--강의캘린더 dao-------------------------------------------------------------*/
 	List<LectureCalendar> lecCalList();
-	//int insertCalendar(Calendar ins);
+	int insLecCal(InsertLecCal ins);
 	int delLecCal(@Param("lecno") int lecno);
 }
