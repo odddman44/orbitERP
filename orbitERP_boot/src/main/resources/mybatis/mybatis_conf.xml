@@ -30,5 +30,7 @@
 		<typeAlias alias="lectureTch" type="com.web.orbitERP.vo.LectureTch"/>
 		<typeAlias alias="enrollment" type="com.web.orbitERP.vo.Enrollment"/>
 		<typeAlias alias="financeSummary" type="com.web.orbitERP.vo.FinanceSummary"/>
+		<typeAlias alias="grossProfit" type="com.web.orbitERP.vo.GrossProfit"/>
+		<typeAlias alias="incomeStatement" type="com.web.orbitERP.vo.IncomeStatement"/>
 	</typeAliases>
 </configuration>

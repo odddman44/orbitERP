@@ -173,7 +173,7 @@
 	</select>
 	
 	<!-- 매출총이익 조회 테이블용 -->
-	<select id="getGrossProfit" resultType="com.web.orbitERP.vo.GrossProfit">
+	<select id="getGrossProfit" resultType="grossProfit">
         SELECT deptno, trans_cname, TO_CHAR(voucher_date, 'YYYY-MM') AS yearMonth,
           SUM(
             CASE 
@@ -196,7 +196,7 @@
     </select>
     
     <!-- 손익계산서 com.web.orbitERP.vo.IncomeStatement -->
-    <select id="getIncomeStatements" resultType="com.web.orbitERP.vo.IncomeStatement" >
+    <select id="getIncomeStatements" resultType="incomeStatement" >
         SELECT
             j.acc_code,
             SUM(CASE WHEN EXTRACT(YEAR FROM v.voucher_date) = #{basicYear} THEN -NVL(j.debit_amount, 0) + NVL(j.credit_amount, 0) ELSE 0 END) AS basicYearSum,
