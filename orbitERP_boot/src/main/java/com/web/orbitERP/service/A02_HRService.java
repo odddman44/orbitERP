@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -17,6 +18,7 @@ import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
 import com.web.orbitERP.vo.StudentSch;
@@ -433,6 +435,47 @@ public class A02_HRService {
 
 	public List<Employee> getEmpListModel() {
 		return dao.getEmpListModel();
+	}
+	
+	public List<SalarySch> getSalaryList(SalarySch sch){
+		
+		// 페이징 처리
+				int tot = dao.totSalary(sch);
+				// 전체 학생 수
+				sch.setCount(tot);
+				if (sch.getPageSize() == 0)
+					sch.setPageSize(10);
+				// 3. 총페이지수 [1][2][3][4][5][6]
+				sch.setPageCount((int) Math.ceil(sch.getCount() / (double) sch.getPageSize()));
+				// 4. 클릭한 현재 페이지 번호(초기화면에는 default로 1로 설정)
+				// 마지막페이지에서 next를 눌렀을 때, 더이상 curpage가 증가하지 않게 처리
+				if (sch.getCurPage() > sch.getPageCount())
+					sch.setCurPage(sch.getPageCount());
+				if (sch.getCurPage() == 0)
+					sch.setCurPage(1);
+				// 5. 페이지의 마지막 번호는 현재 클릭한 페이지번호 * 페이지당 보일 데이터 건수
+				sch.setEnd(sch.getCurPage() * sch.getPageSize());
+				if (sch.getEnd() > sch.getCount()) {
+					sch.setEnd(sch.getCount());
+				}
+				// 6. 페이지의 시작 번호는 (현재클릭한 페이지번호 -1) * 페이지당 보일 데이터건수 +1
+				sch.setStart((sch.getCurPage() - 1) * sch.getPageSize() + 1);
+
+				// 7. 블럭사이즈 지정(고정)
+				sch.setBlockSize(5);
+				// 8. 클릭한 현재 페이지번호 기준으로 블럭번호 처리
+				int blockNum = (int) Math.ceil((double) sch.getCurPage() / sch.getBlockSize());
+				// 9. 마지막 블럭번호
+				sch.setEndBlock(blockNum * sch.getBlockSize());
+				if (sch.getEndBlock() > sch.getPageCount()) {
+					sch.setEndBlock(sch.getPageCount());
+				}
+				// 10. 시작블럭번호
+				sch.setStartBlock((blockNum - 1) * sch.getBlockSize() + 1);
+
+				
+		
+		return dao.getSalaryList(sch);
 	}
 
 }

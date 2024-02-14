@@ -25,6 +25,23 @@ public class Employee {
 	public Employee() {
 		
 	}
+	
+	public Employee(String empno, int deptno, String ename, String job, String hiredate, String email, String phone,
+			String address, String account, String ssnum) {
+		this.empno = empno;
+		this.deptno = deptno;
+		this.ename = ename;
+		this.job = job;
+		this.hiredate = hiredate;
+		this.email = email;
+		this.phone = phone;
+		this.address = address;
+		this.account = account;
+		this.ssnum = ssnum;
+		
+	}
+	
+	
 
 	public Employee(String empno, int deptno, String ename, String job, String hiredate, String email, String phone,
 			String address, String account, String ssnum, int salary) {

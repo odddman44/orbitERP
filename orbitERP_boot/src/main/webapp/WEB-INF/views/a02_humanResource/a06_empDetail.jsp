@@ -178,7 +178,7 @@
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">${employee.ename}사원상세정보</h1>
+					<h1 class="h3 mb-4 text-gray-800">${employee.ename} 사원 상세정보</h1>
 					<br> <br>
 					<div class="d-flex justify-content-left">
 						<!--  <img id="profile" src="${profile}" width="100px" height="100px" alt="사진" /> -->
@@ -235,14 +235,8 @@
 									<option>강사</option>
 								</select>
 							</div>
-							<label for="salary" class="col-sm-1 col-form-label">연봉</label>
-							<div class="col-sm-3">
-
-								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
-								<input class="form-control form-control-user" name="salary"
-									id="sal"
-									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
-							</div>
+				
+							
 
 						</div>
 						<br>
