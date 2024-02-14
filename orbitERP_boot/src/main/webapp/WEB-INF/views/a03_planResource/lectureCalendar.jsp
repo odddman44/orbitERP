@@ -38,14 +38,21 @@ body {
 }
 
 #calendar {
-	max-width: 1100px;
+	max-width: 1000px;
 	margin: 0 auto;
 }
+
+.fc-day-mon a {color:#000000;}
+.fc-day-tue a {color:#000000;}
+.fc-day-wed a {color:#000000;}
+.fc-day-thu a {color:#000000;}
+.fc-day-fri a {color:#000000;}
+.fc-day-sun a {color:#e31b23;}
+.fc-day-sat a {color:#007dc3;}
 
 .ko_holiday {
     color: #ffffff;
   }
-
 </style>
 <%--
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -94,28 +101,35 @@ body {
 									googleCalendarApiKey: String,
 									googleCalendarApiKey : 'AIzaSyCKX_iGgeWAxLr-yT3njsCdlIT-IK_Slnw',
 									headerToolbar : {
-										left : 'prev',
+										left : 'prev,today',
 										center : 'title',
 										right : 'next'
 									},
 									// 한글로 변경
 									locale : 'ko',
+									eventResize : false,
+									eventDrop : false,
+									editable: false, // 수정 가능
+									droppable: false,
+									eventChange : false,
+									gotoDate : false,
 									initialDate : todayTitle,
-									navLinks : true, // can click day/week names to navigate views
-									selectable : true,
+									navLinks : false, // 날짜를 선택하면 Day 캘린더나 Week 캘린더로 링크
+									selectable : false, // 달력 일자 드래그 설정가능
 									selectMirror : true,
 									select : false, // 날짜 클릭시 일정등록 못하게 막음(상세조회 및 조회용)
 									//계획관리자가 눌렀을 떄 강의등록으로 갈지말지 생각
-									eventClick : function(arg) {
+									eventClick : function(arg,jsEvent, view) {
 										// 일정을 클릭했을 때
 										$("#frm01")[0].reset()
-										addForm(arg.event)
+										addForm(arg.event)//모달창에 데이터 넣기
 										var lec_code= arg.event.extendedProps.lec_code
 										var lecno= arg.event.extendedProps.lecno
 										$("#calTitle").text("["+lec_code+lecno+"]")
 										$("#regBtn").show() // 강의 상세보러가기
 
-										$("#calModal").click()
+										$("#calModal").click() //모달창열기
+										return false;
 									},
 									// 맨 마지막 한 주 없애기
 									fixedWeekCount : false,
@@ -154,13 +168,12 @@ body {
 
 						//일정 클릭했을 때 해당 일정 정보를 표시하는
 						function addForm(evt) {
+							var title = evt.title.match(/\[(.*?)\]/)[1]
 							$("[name=id]").val(evt.id)
-							$("[name=title]").val(evt.title)
+							$("[name=title]").val(title)
 							$("#start").val(evt.startStr)
-							$("[name=start]").val(evt.startStr)
 							$("#end").val(evt.endStr)
 							//$("#end").val(evt.end.toLocaleString())
-							$("[name=end]").val(evt.endStr)
 							$("[name=lec_snum]").val(evt.extendedProps.lec_snum)
 							$("[name=lec_num]").val(evt.extendedProps.lec_num)
 							$("[name=lec_teacher]").val(evt.extendedProps.lec_teacher)
@@ -243,7 +256,6 @@ body {
 												개강일자</span>
 										</div>
 										<input type="text" id="start" readonly class="form-control" />
-										<input type="hidden" name="start" />
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">
@@ -251,7 +263,6 @@ body {
 												종강일자</span>
 										</div>
 										<input type="text" id="end" readonly class="form-control" />
-										<input type="hidden" name="end" />
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">

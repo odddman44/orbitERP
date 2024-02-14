@@ -38,14 +38,21 @@ body {
 }
 
 #calendar {
-	max-width: 1100px;
+	max-width: 1000px;
 	margin: 0 auto;
 }
-
 
 .ko_holiday {
     color: #ffffff;
   }
+.fc-day-mon a {color:#000000;}
+.fc-day-tue a {color:#000000;}
+.fc-day-wed a {color:#000000;}
+.fc-day-thu a {color:#000000;}
+.fc-day-fri a {color:#000000;}
+.fc-day-sun a {color:#e31b23;}
+.fc-day-sat a {color:#007dc3;}
+
 
 </style>
 <%--
@@ -152,7 +159,7 @@ body {
 										className : 'ko_holiday',
 										overlap: true,
 								        display: 'background',
-								        backgroundColor: "#ff1111"
+								        backgroundColor: "#e31b23"
 									} ],
 									
 									events : function(info, successCallback,
