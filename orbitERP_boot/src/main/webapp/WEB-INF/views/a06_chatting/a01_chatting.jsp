@@ -37,7 +37,7 @@ $(document).ready(function(){
 		)	
 		wsocket.onopen = function(evt){
 			console.log(evt)
-			wsocket.send(idVal+"님이 접속했습니다!") // ':'가 사용자명과 메시지를 갈라놓은 뒤 사용자명을 누락시킴 ":접속하셨습니다!" 사용자명 누락 + 왼쪽 출력
+			wsocket.send() // ':'가 사용자명과 메시지를 갈라놓은 뒤 사용자명을 누락시킴 ":접속하셨습니다!" 사용자명 누락 + 왼쪽 출력
 			console.log(idVal)
 		}
 		wsocket.onmessage = function(evt){
@@ -54,8 +54,14 @@ $(document).ready(function(){
 				alignOpt = "right"
 				msg = msgArr[1] 
 			}
-			var msgObj = $("<div></div>").text(msg).attr("align",
-					alignOpt).css("width",$("#chatArea").width())
+			
+			var msgObj = $("<div class='text-container'></div>")
+		    .append($("<span></span>").text(msg))
+		    .attr("align", alignOpt)
+		    .css({
+		    	"width": $("#chatArea").width()
+		    });
+			
 			$("#chatMessageArea").append(msgObj);
 			var height = parseInt($("#chatMessageArea").height())
 			mx += height+20
@@ -67,6 +73,10 @@ $(document).ready(function(){
 			sendMsg()	
 		})
 		$("#msg").keyup(function(){
+			if($("#msg").val()==""){
+				return;
+			}
+			
 			if(event.keyCode==13){
 				sendMsg()
 			}
@@ -110,8 +120,18 @@ $(document).ready(function(){
 	padding-right: 25px;
 }
 
-.frogfeet{
-	height: 3%;
+
+.text-container {
+    margin-bottom: 10px;
+}
+
+.text-container span {
+    display: inline-block;
+    background-color: #4e73df;
+    padding: 3%;
+    border-radius: 10px;
+    color: #f8f9fc;
+    max-width: 50%;  
 }
 
 </style>
@@ -157,7 +177,6 @@ $(document).ready(function(){
 						</div>
 					</div>
 				</div>
-
 
 
 			</div>
