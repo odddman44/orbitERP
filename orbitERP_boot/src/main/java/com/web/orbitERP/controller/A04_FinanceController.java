@@ -25,6 +25,8 @@ import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.GrossProfit;
+import com.web.orbitERP.vo.IcStmtSch;
+import com.web.orbitERP.vo.IncomeStatement;
 import com.web.orbitERP.vo.VoucherDetail;
 
 @Controller
@@ -191,5 +193,29 @@ public class A04_FinanceController {
     	List<GrossProfit> grossProfits = service.getGrossProfit(deptno, startDate, endDate);
     	return ResponseEntity.ok(grossProfits);
     }
-
+    
+    // 손익계산서
+    // json 타입으로 보낼 때
+    // http://localhost:4444/incomeStatement?basicYear=2024&compYear=2023
+    // http://localhost:4444/incomeStatement
+    @PostMapping("incomeStatement")
+    public ResponseEntity<?> getIncomeStatements(@RequestBody IcStmtSch sch){
+    	String basicYear = sch.getBasicYear();
+        String compYear = sch.getCompYear();
+    	List<IncomeStatement> incomeStatements = service.getIncomeStatements(basicYear, compYear);
+    	return ResponseEntity.ok(incomeStatements);
+    }
+    /****
+    @GetMapping("/incomeStatement")
+    public String getIncomeStatements(@RequestParam(value="basicYear", required = false, defaultValue="2024") String basicYear,
+                                      @RequestParam(value="compYear", required = false, defaultValue="2023") String compYear,
+                                      Model d) { // Model 객체를 메서드 시그니처에 추가
+        // 기본값은 메서드 내에서 설정하지 않고, @RequestParam의 defaultValue로 설정
+    	Map<Integer, IncomeStatement> structuredData = service.getIncomeStatements(basicYear, compYear);
+        d.addAttribute("icStmt", structuredData); // 모델에 데이터 추가
+        d.addAttribute("basicYear", basicYear); // 조회한 기준년도 추가
+        d.addAttribute("compYear", compYear); // 조회한 비교년도 추가
+        return "z05_incomeStmt"; 
+    }
+    ****/
 }
