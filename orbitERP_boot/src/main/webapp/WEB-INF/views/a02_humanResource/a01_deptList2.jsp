@@ -251,8 +251,10 @@ table {
 			<!-- Content Row -->
 
 			<div style="text-align: right;">
+			<c:if test="${emem.auth eq '인사관리자'}">
 				<input data-toggle="modal" data-target="#exampleModalCenter"
-					type="button" class="btn btn-info" value="부서등록" id="refBtn" />
+					type="button" class="btn btn-success" value="부서등록" id="refBtn" />
+			</c:if>
 			</div>
 
 			<!-- Content Row -->

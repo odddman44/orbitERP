@@ -93,7 +93,7 @@
             <h6 class="collapse-header">직원관리:</h6>
             <a class="collapse-item" href="empList">직원정보관리</a> <a
                class="collapse-item" href="attendanceList">직원근태정보관리</a> <a
-               class="collapse-item" href="#">급여정보관리</a>
+               class="collapse-item" href="salaryManage">급여정보관리</a>
          </div>
       </div></li>
 

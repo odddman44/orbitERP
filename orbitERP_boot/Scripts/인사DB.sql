@@ -281,6 +281,77 @@ SELECT * FROM ERPMEM e ;
 UPDATE ERPMEM SET pwd = '5555' WHERE EMPNO = 'HR0001';
 
 SELECT * FROM ERPMEM e ;
+
+SELECT * FROM EMPLOYEE e ;
+
+-- 사원 테이블에서 급여 컬럼 삭제
+ALTER TABLE employee
+DROP COLUMN salary;
+
+-- 급여 테이블 만들기
+CREATE TABLE salary (
+    payment_date DATE, -- 지급일
+    empno VARCHAR2(20), -- 사원번호
+    base_salary NUMBER, -- 기본급
+    allowance NUMBER, -- 수당
+    deduction NUMBER, -- 공제
+    net_pay NUMBER, -- 실수령약
+    -- 공제
+    start_date DATE, -- 업무시작일
+    end_date DATE, -- 업무 종료일
+    deptno NUMBER(2,0),
+    CONSTRAINT fk_empno2 FOREIGN KEY (empno) REFERENCES employee(empno),
+    CONSTRAINT fk_deptno2 FOREIGN KEY (deptno) REFERENCES dept(deptno),
+    CONSTRAINT pk_payment_empno PRIMARY KEY (payment_date, empno)
+);
+
+DROP TABLE salary;
+
+SELECT * FROM salary;
+
+CREATE OR REPLACE TRIGGER calculate_net_pay
+BEFORE INSERT OR UPDATE OF base_salary, allowance, deduction ON salary
+FOR EACH ROW
+BEGIN
+    :NEW.net_pay := :NEW.base_salary + :NEW.allowance - :NEW.deduction;
+END;
+
+-- 급여 항목 insert
+INSERT INTO salary (payment_date, empno, base_salary, allowance, deduction, start_date, end_date, deptno)
+VALUES (
+    TO_DATE('2024-02-10', 'YYYY-MM-DD'),
+    'FM0001',
+    500000,
+    18000,
+    80000,
+    TO_DATE('2023-01-01', 'YYYY-MM-DD'),
+    TO_DATE('2023-01-31', 'YYYY-MM-DD'),
+    20
+);
+
+DELETE FROM salary WHERE empno = 'FM0001';
+SELECT * FROM salary;
+
+	SELECT COUNT(*)
+		FROM salary
+		WHERE 1=1
+		AND deptno = 10
+		AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02';
+	
+		SELECT *
+		FROM (
+		SELECT ROWNUM cnt, s.*, d.dname
+		FROM
+		salary s, DEPT d
+		WHERE 1=1
+		AND s.DEPTNO = d.DEPTNO
+		AND s.deptno = 10
+		AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02'
+		) WHERE cnt BETWEEN 1 AND 10;
+
+	
+
+
     
 
 

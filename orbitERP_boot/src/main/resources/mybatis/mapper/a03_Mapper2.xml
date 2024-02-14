@@ -124,8 +124,7 @@
 		empno, deptno, ename, job, to_char(hiredate,
 		'YYYY-MM-DD') AS
 		HIREDATE,
-		EMAIL, PHONE, ADDRESS, ACCOUNT, SSNUM,
-		SALARY, subject
+		EMAIL, PHONE, ADDRESS, ACCOUNT, SSNUM,subject
 		FROM EMPLOYEE
 		WHERE EMPNO = #{empno}
 	</select>
@@ -136,7 +135,6 @@
 		ename =
 		#{ename},
 		job = #{job},
-		SALARY = #{salary},
 		ssnum = #{ssnum},
 		deptno =
 		#{deptno},
@@ -162,7 +160,7 @@
 		'YYYY-MM-DD'),
 		#{email}, #{phone}, #{address},
 		#{account}, #{ssnum},
-		#{salary}, #{subject}
+		#{subject}
 		)
 	</insert>
 
@@ -282,7 +280,8 @@
 
 	<update id="updateErpmem" parameterType="erpmem">
 		UPDATE erpmem SET
-		pwd = #{pwd}
+		pwd =
+		#{pwd}
 		WHERE empno = #{empno}
 	</update>
 
@@ -308,12 +307,42 @@
 	<update id="checkOut">
 		UPDATE ATTENDANCE SET
 		DEP_TIME = SYSDATE
-		WHERE empno = #{empno}
+		WHERE empno =
+		#{empno}
 		AND WORK_DATE = TO_DATE(#{work_date}, 'YYYY-MM-DD')
 	</update>
-	
+
 	<select id="getEmpListModel" resultType="employee">
 		select * from employee
+	</select>
+
+	<select id="totSalary" resultType="int" parameterType="salarySch">
+		SELECT COUNT(*)
+		FROM salary
+		WHERE 1=1
+		<if test="deptno != null and deptno !=0">
+			AND deptno = #{deptno}
+		</if>
+		<if test="payment_dateStr != null and payment_dateStr != ''">
+			AND TO_CHAR(payment_date, 'YYYY-MM') = #{payment_dateStr}
+		</if>
+	</select>
+
+	<select id="getSalaryList" resultType="salarySch" parameterType="salarySch">
+		SELECT *
+		FROM (
+		SELECT ROWNUM cnt, s.*, d.dname
+		FROM
+		salary s, DEPT d
+		WHERE 1=1
+		AND s.DEPTNO = d.DEPTNO
+		<if test="deptno != null and deptno !=0">
+			AND s.deptno = #{deptno}
+		</if>
+		<if test="payment_dateStr != null and payment_dateStr != ''">
+			AND TO_CHAR(payment_date, 'YYYY-MM') = #{payment_dateStr}
+		</if>
+		) WHERE cnt BETWEEN #{start} AND #{end}
 	</select>
 
 

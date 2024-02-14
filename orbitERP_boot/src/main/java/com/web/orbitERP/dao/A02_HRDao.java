@@ -8,13 +8,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
 import com.web.orbitERP.vo.StudentSch;
@@ -121,6 +121,10 @@ public interface A02_HRDao {
 	int checkOut(@Param("work_date") String work_date, @Param("empno") String empno);
 	
 	List<Employee> getEmpListModel();
+	
+	int totSalary(SalarySch sch);
+	
+	List<SalarySch> getSalaryList(SalarySch sch);
 	
 	
 	
