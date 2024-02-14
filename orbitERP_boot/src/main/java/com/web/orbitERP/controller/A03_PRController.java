@@ -185,4 +185,14 @@ public class A03_PRController {
 		}
 		
 		
+		
+		
+		
+		
+		
+		//http://localhost:4444/alram
+		@GetMapping("alram")
+		public String alram() {
+			return"a03_planResource\\alram";
+		}
 }
