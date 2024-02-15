@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.orbitERP.dao.A03_PRDao;
+import com.web.orbitERP.vo.Alram;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.InsertLecCal;
@@ -107,5 +108,8 @@ public class A03_PRService {
 		return dao.insLecCal(ins)>0?"캘린더 등록완료":"등록실패";
 		
 	}
-	
+	/*--알림 서비스----------------------------------------*/
+	public List<Alram> alList(String empno) {
+		return dao.alList(empno);
+	}
 }

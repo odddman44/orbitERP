@@ -16,6 +16,9 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
+ <style>
+ 
+ </style>
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
@@ -56,80 +59,41 @@
 					<div class="d-sm-flex align-items-center justify-content-between mb-4">
 						<h1 class="h3 mb-0 text-gray-800">☆ 알림</h1>
 						<div style="text-align: right;">
-								<input type="button" class="btn btn-info" value="강의등록" id="uptBtn" />
-								<input type="button" class="btn btn-info" value="강의과목등록" id="subBtn" />
+								<input type="button" class="btn btn-info" value="알림보내기" id="subBtn" />
 							</div>
 					</div>
-							
-						<div class="card shadow mb-4">
-						<div class="card-body">	
-						
-						<header class="logo-bar con-min-width">
-  <div class="com text-align-center">
-    <a href="./" class="logo">
-      <i class="fab fa-jenkins"></i>
-      <span>Developers</span>
-    </a>
-  </div>
-</header>
+					
+				<div class="card shadow mb-4">
+					<div class="card-body">
+					<!-- 메뉴바 -->
+					<nav class="navbar">
+				      <ul class="nav_menu">
+				        <li><a href="">전체 알람</a></li>
+				        <li><a href="">조회 안한 알람</a></li>
+				        <li><a href="">조회 한 알람</a></li>
+				        <li><a href="">보낸 알람</a></li>
+				      </ul>
+				    </nav>
+				    <!-- 알람출력 -->
+								<c:forEach var="lec" items="${lecList}">
+								</c:forEach>
+								<a class="dropdown-item d-flex align-items-center" href="#">
+									<div class="mr-3">
+										<div class="icon-circle bg-primary">
+											<i class="fas fa-file-alt text-white"></i>
+										</div>
+									</div>
+									<div>
+										<div class="small text-gray-500">December 12, 2019</div>
+										<span class="font-weight-bold">A new monthly report is
+											ready to download!</span>
+									</div>
+								</a>
 
-<header class="menu-bar con-min-width">
-  <div class="con">
-    <nav class="menu-bar__menu-1">
-      <ul class="float-gird">
-        <li>
-          <a href="#" class="block">
-            <i class="fas fa-home"></i>
-            <span>HOME</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="block">
-            <i class="fas fa-list"></i>
-            <span>ARTICLES</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="block">
-            <i class="fas fa-link"></i>
-            <span>LINK</span>
-          </a>
-          
-        </li>
-        <li>
-          <a href="#" class="block">
-            <i class="fas fa-chart-pie"></i>
-            <span>STATISTICS</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</header>
-						
-						
-						
-						</div>
-						</div>
-							
+					</div>
+					</div>
 					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-				</div>
+		</div>
 				<!-- /.container-fluid (페이지 내용 종료) -->
 
 			</div>

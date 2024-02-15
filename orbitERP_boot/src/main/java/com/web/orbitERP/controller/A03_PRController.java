@@ -189,10 +189,11 @@ public class A03_PRController {
 		
 		
 		
-		
+		//알람조회
 		//http://localhost:4444/alram
 		@GetMapping("alram")
-		public String alram() {
+		public String alram(String empno,Model d) {
+			d.addAttribute("alList",service.alList(empno));
 			return"a03_planResource\\alram";
 		}
 }

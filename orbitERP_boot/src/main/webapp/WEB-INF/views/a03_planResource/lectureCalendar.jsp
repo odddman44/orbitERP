@@ -160,7 +160,7 @@ body {
 											}
 										})
 									},
-									editable : true,
+									editable : false,
 									dayMaxEvents : true,
 								});
 
