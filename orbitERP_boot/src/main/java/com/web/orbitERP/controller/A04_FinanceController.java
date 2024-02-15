@@ -205,6 +205,7 @@ public class A04_FinanceController {
     	List<IncomeStatement> incomeStatements = service.getIncomeStatements(basicYear, compYear);
     	return ResponseEntity.ok(incomeStatements);
     }
+    
     /****
     @GetMapping("/incomeStatement")
     public String getIncomeStatements(@RequestParam(value="basicYear", required = false, defaultValue="2024") String basicYear,
