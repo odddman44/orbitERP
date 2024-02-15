@@ -59,5 +59,5 @@ public interface A03_PRDao {
 	int insLecCal(InsertLecCal ins);
 	int delLecCal(@Param("lecno") int lecno);
 	/*--알람 dao-------------------------------------------------------------*/
-	List<Alram> alList(@Param("sender")String empno);
+	List<Alram> alList(@Param("receiver")String receiver);
 }

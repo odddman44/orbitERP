@@ -147,16 +147,18 @@
 	<delete id="delLecCal" parameterType="int">
 		DELETE FROM TESTCALENDAR WHERE LECNO = #{lecno}
 	</delete>
-	<insert id="insLecCal" parameterType="com.web.orbitERP.vo.InsertLecCal">
+	<insert id="insLecCal" parameterType="insertLecCal">
 		INSERT INTO TESTCALENDAR values(testcal_seq.nextval,#{lecno},#{backgroundColor},'#000000',1)
 	</insert>
 	
 	
 	
 	<!-- 알람 -->
-	<select id="alList" parameterType="String" resultType="com.web.orbitERP.vo.Alram">
-		SELECT SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE
-		FROM ALARM
-		WHERE SENDER =#{sender}
+	<select id="alList" parameterType="String" resultType="alram">
+		SELECT e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE
+		FROM ALARM a
+		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+		WHERE RECEIVER =#{receiver}
+		ORDER BY CREATE_DATE DESC
 	</select>
 </mapper>
