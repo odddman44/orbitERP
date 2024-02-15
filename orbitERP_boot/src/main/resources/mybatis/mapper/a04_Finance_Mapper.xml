@@ -206,7 +206,7 @@
         JOIN
             voucher v ON j.voucher_id = v.voucher_id
         WHERE
-            j.acc_code IN (SELECT acc_code FROM accsub WHERE acc_type = '손익')
+            j.acc_code IN (SELECT acc_code FROM accsub WHERE acc_type = '손익' OR acc_type = '원가')
             AND EXTRACT(YEAR FROM v.voucher_date) IN (#{basicYear}, #{compYear})
         GROUP BY
             j.acc_code
