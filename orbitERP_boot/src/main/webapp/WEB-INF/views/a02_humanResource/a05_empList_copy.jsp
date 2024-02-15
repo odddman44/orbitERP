@@ -63,7 +63,7 @@
 					}
 				})
 
-				$('#frm02').submit(function(event) {
+				/*$('#frm02').submit(function(event) {
 					// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
 					var inputField = $('#sal');
 					var valueWithCommas = inputField.val();
@@ -71,7 +71,7 @@
 					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
 					// 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
 					inputField.val(valueWithoutCommas);
-				});
+				});*/
 
 				$("#regFrmBtn").click(
 						function() {
@@ -117,10 +117,7 @@
 								alert("직급을 입력하세요")
 								return;
 							}
-							if ($("#frm02 [name=salary]").val() == "") {
-								alert("연봉을 입력하세요")
-								return;
-							}
+					
 							if ($("#frm02 [name=email]").val() == "") {
 								alert("이메일을 입력하세요")
 								return;
@@ -531,14 +528,7 @@
 							</div>
 
 						</div>
-						<br>
-						<div class="row justify-content-left align-items-left">
-							<label for="salary" class="col-sm-3 col-form-label">연봉</label>
-							<div class="col-sm-9">
-								<input type="text" id="sal"
-									class="form-control form-control-user" name="salary">
-							</div>
-						</div>
+					
 					</form>
 				</div>
 				<hr style="border-color: #46bcf2;">

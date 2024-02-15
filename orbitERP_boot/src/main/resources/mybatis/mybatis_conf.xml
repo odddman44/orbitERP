@@ -9,6 +9,8 @@
 		<typeAlias alias="erpmem" type="com.web.orbitERP.vo.Erpmem"/>
 		<typeAlias alias="dept" type="com.web.orbitERP.vo.Dept"/>
 		<typeAlias alias="attendance" type="com.web.orbitERP.vo.Attendance"/>
+		<typeAlias alias="salary" type="com.web.orbitERP.vo.Salary"/>
+		<typeAlias alias="salarySch" type="com.web.orbitERP.vo.SalarySch"/>
 		<typeAlias alias="attendanceSch" type="com.web.orbitERP.vo.AttendanceSch"/>
 		<typeAlias alias="accsub" type="com.web.orbitERP.vo.Accsub"/>
 		<typeAlias alias="accsubSch" type="com.web.orbitERP.vo.AccsubSch"/>
@@ -28,5 +30,7 @@
 		<typeAlias alias="lectureTch" type="com.web.orbitERP.vo.LectureTch"/>
 		<typeAlias alias="enrollment" type="com.web.orbitERP.vo.Enrollment"/>
 		<typeAlias alias="financeSummary" type="com.web.orbitERP.vo.FinanceSummary"/>
+		<typeAlias alias="grossProfit" type="com.web.orbitERP.vo.GrossProfit"/>
+		<typeAlias alias="incomeStatement" type="com.web.orbitERP.vo.IncomeStatement"/>
 	</typeAliases>
 </configuration>

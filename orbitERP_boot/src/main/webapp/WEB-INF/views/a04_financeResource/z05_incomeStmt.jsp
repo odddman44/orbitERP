@@ -4,11 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
-<script>
-	$(document).ready(function() {
-	
-	});
-</script>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
     #isSheet {
         width: 100%;
@@ -29,50 +26,50 @@
 <div class="col-xl-12 col-lg-12">
 	<div class="card shadow">
 		<div class="card-header">
-			<form id="frm01" class="form" method="GET">
+			<form id="frm03" class="form">
 				<div class="form-row align-items-center">
 					<div class="col-auto">
-						기준년도 : <input type="year" class="form-control" id="basicYear" name="basicYear" value="2024" />
+						기준년도 : <input type="text" class="form-control" id="basicYear" name="basicYear" v-model="basicYear"/>
 					</div>
 					<div class="col-auto">
-						비교년도 :<input type="year" class="form-control" id="compYear" name="compYear" value="2023"/>
+						비교년도 :<input type="text" class="form-control" id="compYear" name="compYear" v-model="compYear"/>
 					</div>
 					<div class="col-auto">
-						<button type="button" id="schBtn" class="btn btn-secondary">조회</button>
+						<button type="submit" id="schBtn" class="btn btn-secondary">조회</button>
 					</div>
 				</div>
 			</form>
 		</div>
-		<div class="card-body">
+		<div class="card-body" id="app">
 			<h2>손익계산서</h2>
 		    <table id="isSheet">
 		        <thead>
 		            <tr>
 		                <th>재무제표표시명</th>
-		                <th>제 15 기 (기준)</th>
-		                <th>제 14 기 (비교)</th>
+		                <th>2024년 (기준)</th>
+		                <th>2023년 (비교)</th>
 		            </tr>
 		        </thead>
 		        <tbody>
 		            <tr>
 		                <td>1. 매   출</td>
-		                <td class="text-right">264,240,000</td>
-		                <td class="text-right">949,777,000</td>
-		            </tr>
-		            <tr>
-		                <td>&nbsp;&nbsp;상품매출 (4019)</td>
-		                <td class="text-right">402,507,000</td>
+		                <td class="text-right"></td>
 		                <td class="text-right"></td>
 		            </tr>
 		            <tr>
+		                <td>&nbsp;&nbsp;상품매출 (4019)</td>
+		                <td class="text-right">{{ getSum(4019).basicYearSum }}</td>
+		                <td class="text-right">{{ getSum(4019).compYearSum }}</td>
+		            </tr>
+		            <tr>
 		                <td>&nbsp;&nbsp;용역매출 (4119)</td>
-		                <td class="text-right">264,240,000</td>
-		                <td class="text-right">547,270,000</td>
+		                <td class="text-right">{{ getSum(4119).basicYearSum }}</td>
+		                <td class="text-right">{{ getSum(4119).compYearSum }}</td>
 		            </tr>
 		            <tr>
 		                <td>2. 매 출 원 가</td>
-		                <td class="text-right">73,800,000</td>
-		                <td class="text-right">392,992,000</td>
+		                <td class="text-right"></td>
+		                <td class="text-right"></td>
 		            </tr>
 		            <tr>
 		                <td>&nbsp;&nbsp;상품매출원가 (1469)</td>
@@ -174,3 +171,40 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	const { createApp } = Vue;
+	createApp({
+	    data() {
+	        return {
+	            basicYear: '2024',
+	            compYear: '2023',
+	            incomeStatements: []
+	        };
+	    },
+	    created() {
+	        this.fetchData();
+	    },
+	    methods: {
+	        fetchData() {
+	        	const url = '${path}/incomeStatement?basicYear='+this.basicYear+'&compYear='+this.compYear;
+	        	fetch(url)
+	                .then(response => response.json())
+	                .then(data => {
+	                    this.incomeStatements = data;
+	                })
+	                .catch(error => console.error('Error:', error));
+	        },
+	        getSum(accCode) {
+	        	const entry = this.incomeStatements.find(item => item.acc_code === accCode);
+	            if (entry) {
+	                return {
+	                    basicYearSum: entry.basicYearSum.toLocaleString(),
+	                    compYearSum: entry.compYearSum.toLocaleString()
+	                };
+	            } else {
+	                return { basicYearSum: 0, compYearSum: 0 };
+	            }
+	        }
+	    }
+	}).mount('#app');
+</script>

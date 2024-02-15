@@ -173,7 +173,7 @@
 	</select>
 	
 	<!-- 매출총이익 조회 테이블용 -->
-	<select id="getGrossProfit" resultType="com.web.orbitERP.vo.GrossProfit">
+	<select id="getGrossProfit" resultType="grossProfit">
         SELECT deptno, trans_cname, TO_CHAR(voucher_date, 'YYYY-MM') AS yearMonth,
           SUM(
             CASE 
@@ -193,5 +193,22 @@
           AND (#{deptno} = 0 OR deptno = #{deptno})
         GROUP BY deptno, trans_cname, TO_CHAR(voucher_date, 'YYYY-MM')
         ORDER BY yearMonth, deptno, trans_cname
+    </select>
+    
+    <!-- 손익계산서 com.web.orbitERP.vo.IncomeStatement -->
+    <select id="getIncomeStatements" resultType="incomeStatement" >
+        SELECT
+            j.acc_code,
+            SUM(CASE WHEN EXTRACT(YEAR FROM v.voucher_date) = #{basicYear} THEN -NVL(j.debit_amount, 0) + NVL(j.credit_amount, 0) ELSE 0 END) AS basicYearSum,
+            SUM(CASE WHEN EXTRACT(YEAR FROM v.voucher_date) = #{compYear} THEN -NVL(j.debit_amount, 0) + NVL(j.credit_amount, 0) ELSE 0 END) AS compYearSum
+        FROM
+            journalizing j
+        JOIN
+            voucher v ON j.voucher_id = v.voucher_id
+        WHERE
+            j.acc_code IN (SELECT acc_code FROM accsub WHERE acc_type = '손익')
+            AND EXTRACT(YEAR FROM v.voucher_date) IN (#{basicYear}, #{compYear})
+        GROUP BY
+            j.acc_code
     </select>
 </mapper>	

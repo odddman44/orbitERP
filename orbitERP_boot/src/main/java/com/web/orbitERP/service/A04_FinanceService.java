@@ -13,6 +13,7 @@ import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.GrossProfit;
+import com.web.orbitERP.vo.IncomeStatement;
 import com.web.orbitERP.vo.Journalizing;
 import com.web.orbitERP.vo.Voucher;
 import com.web.orbitERP.vo.VoucherDetail;
@@ -167,6 +168,11 @@ public class A04_FinanceService {
     // 매출총이익 테이블
     public List<GrossProfit> getGrossProfit(int deptno, String startDate, String endDate){
     	return dao.getGrossProfit(deptno, startDate, endDate);
+    }
+    
+    // 손익계산서
+    public List<IncomeStatement> getIncomeStatements(String basicYear, String compYear){
+    	return dao.getIncomeStatements(basicYear, compYear);
     }
     
 }
