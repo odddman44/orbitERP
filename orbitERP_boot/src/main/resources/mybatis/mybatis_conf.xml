@@ -32,5 +32,7 @@
 		<typeAlias alias="financeSummary" type="com.web.orbitERP.vo.FinanceSummary"/>
 		<typeAlias alias="grossProfit" type="com.web.orbitERP.vo.GrossProfit"/>
 		<typeAlias alias="incomeStatement" type="com.web.orbitERP.vo.IncomeStatement"/>
+		<typeAlias alias="insertLecCal" type="com.web.orbitERP.vo.InsertLecCal"/>
+		<typeAlias alias="alram" type="com.web.orbitERP.vo.Alram"/>
 	</typeAliases>
 </configuration>

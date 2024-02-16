@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import com.web.orbitERP.vo.Alram;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.InsertLecCal;
@@ -57,4 +58,6 @@ public interface A03_PRDao {
 	List<LectureCalendar> lecCalList();
 	int insLecCal(InsertLecCal ins);
 	int delLecCal(@Param("lecno") int lecno);
+	/*--알람 dao-------------------------------------------------------------*/
+	List<Alram> alList(@Param("receiver")String receiver);
 }

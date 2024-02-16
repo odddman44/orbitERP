@@ -120,7 +120,7 @@
 						Spending Alert: We've noticed unusually high spending for your
 						account.
 					</div>
-				</a> <a class="dropdown-item text-center small text-gray-500" href="#">Show
+				</a> <a class="dropdown-item text-center small text-gray-500" href="alram?receiver=${emem.empno}">Show
 					All Alerts</a>
 			</div></li>
 
