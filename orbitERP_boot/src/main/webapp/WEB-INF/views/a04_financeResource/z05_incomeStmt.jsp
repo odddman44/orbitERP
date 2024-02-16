@@ -28,10 +28,10 @@
 		<div class="card-header">
 			<div class="form-row align-items-center">
 				<div class="col-auto">
-					기준년도 : <input type="text" class="form-control" id="basicYear" name="basicYear" v-model="basicYear"/>
+					기준년도 : <input type="text" v-model="basicYear" class="form-control" id="basicYear" name="basicYear" />
 				</div>
 				<div class="col-auto">
-					비교년도 :<input type="text" class="form-control" id="compYear" name="compYear" v-model="compYear"/>
+					비교년도 :<input type="text" v-model="compYear" class="form-control" id="compYear" name="compYear" />
 				</div>
 			</div>
 		</div>
