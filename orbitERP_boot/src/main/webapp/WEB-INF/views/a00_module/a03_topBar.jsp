@@ -8,10 +8,25 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		var auth = "${emem.auth}";
+		var empno="${emem.empno}"
 	    if(auth==null || auth =="") {
 	    	alert("로그인이 필요한 페이지입니다.\n 로그인 화면으로 이동합니다.")
 	        window.location.href = "${path}/login";
 	    }
+	  //탑바로 정보 보내기
+		$.ajax({
+			type: "POST",
+            url: "/topAlram",
+            data: { receiver: empno },
+            dataType: "json",
+            success: function (data) {
+            		console.log(data)
+            },
+            error: function (err) {
+                console.log(err);
+                // Handle form submission error here
+            }
+		})
 	});
 </script>
 <style>

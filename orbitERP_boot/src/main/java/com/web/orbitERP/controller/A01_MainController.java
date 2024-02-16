@@ -1,7 +1,7 @@
 package com.web.orbitERP.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,9 +57,19 @@ public class A01_MainController {
 	// http://localhost:4444/main
 	// http://211.63.89.67:4444/main
 	@RequestMapping("main")
-	public String mainIndex(String receiver,Model d) {
-		d.addAttribute("alList",prService.alList(receiver));
+	public String mainIndex() {
 		return "a01_main\\a01_index";
+	}
+	//알람정보 보내기
+//	@RequestMapping("topAlram")
+//	public String topAlram(String receiver,Model d) {
+//		d.addAttribute("alList",prService.alList(receiver));
+//		System.out.println(prService.alList(receiver));
+//		return "pageJsonReport";
+//	}
+	@RequestMapping("topAlram")
+	public ResponseEntity<?> topAlram(String receiver) {
+		return ResponseEntity.ok(prService.alList(receiver));
 	}
 
 	// http://localhost:4444/mypage
