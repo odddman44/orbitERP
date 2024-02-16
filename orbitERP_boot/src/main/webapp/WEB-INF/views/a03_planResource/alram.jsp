@@ -80,9 +80,9 @@
 								onclick="setModalContent('${alram.sender}', '${alram.create_date}', '${alram.title}')">
 								<!-- 클릭시 모달창으로 상세정보 보여줄예정 -->
 									<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">
-										<div class="icon-circle bg-primary">
+										<div class="icon-circle bg-${alram.color}">
 										<!-- bg-secondary //색상-->
-											<i class="fas fa-bell text-white"></i>
+											<i class="fas fa-${alram.icon} text-white"></i>
 											<!-- fa-bell //안에 아이콘 -->
 										</div>
 									</div>

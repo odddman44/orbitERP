@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A01_MainService;
 import com.web.orbitERP.service.A02_HRService;
+import com.web.orbitERP.service.A03_PRService;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Erpmem;
 
@@ -24,6 +25,9 @@ public class A01_MainController {
 
 	@Autowired(required = false)
 	private A02_HRService hrService;
+	
+	@Autowired(required = false)
+	private A03_PRService prService;
 
 	/* 1. 로그인 창 */
 	// http://localhost:4444/login
@@ -34,11 +38,12 @@ public class A01_MainController {
 	}
 
 	@PostMapping("login")
-	public String login(Erpmem mem, HttpSession session) {
+	public String login(Erpmem mem, HttpSession session,Model d) {
 		Erpmem emem = service.login(mem);
 		if (emem != null) {
 			session.setAttribute("emem", emem);
 		}
+		d.addAttribute("alList",prService.alList(emem.getEmpno()));
 		return "a01_main\\a83_login";
 	}
 
@@ -52,7 +57,8 @@ public class A01_MainController {
 	// http://localhost:4444/main
 	// http://211.63.89.67:4444/main
 	@RequestMapping("main")
-	public String mainIndex() {
+	public String mainIndex(String receiver,Model d) {
+		d.addAttribute("alList",prService.alList(receiver));
 		return "a01_main\\a01_index";
 	}
 

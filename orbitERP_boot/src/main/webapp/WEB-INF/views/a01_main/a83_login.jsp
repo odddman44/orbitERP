@@ -23,7 +23,8 @@
 		if (sessId != "") {
 			console.log("요청값3:" + sessId)
 			alert("${emem.ename}님 반갑습니다!\r\n 로그인 되었습니다.")
-			location.href = "${path}/main"
+			var empno="${emem.empno}"
+			location.href = "${path}/main?receiver="+empno
 		} else {
 			alert("로그인 실패! \n다시 로그인하세요..")
 		}

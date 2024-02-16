@@ -15,17 +15,40 @@ public class Alram {
 	private String content;
 	private String title;
 	private String create_date;
+	private String color;
+	private String icon;
 	public Alram() {
 		// TODO Auto-generated constructor stub
 	}
-	public Alram(String sender, String receiver, String content, String title, String create_date) {
+	
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public Alram(String sender, String receiver, String content, String title, String create_date, String color,
+			String icon) {
 		super();
 		this.sender = sender;
 		this.receiver = receiver;
 		this.content = content;
 		this.title = title;
 		this.create_date = create_date;
+		this.color = color;
+		this.icon = icon;
 	}
+
 	public String getSender() {
 		return sender;
 	}

@@ -109,7 +109,7 @@ public class A03_PRService {
 		
 	}
 	/*--알림 서비스----------------------------------------*/
-	public List<Alram> alList(String empno) {
-		return dao.alList(empno);
+	public List<Alram> alList(String receiver) {
+		return dao.alList(receiver);
 	}
 }

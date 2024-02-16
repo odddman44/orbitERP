@@ -98,9 +98,9 @@
 		</dependency>
 		<!-- 채팅 웹소켓 -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-websocket</artifactId>
-		</dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-websocket</artifactId>
+	    </dependency>
 
 		<!-- 이메일 -->
 		<dependency>
