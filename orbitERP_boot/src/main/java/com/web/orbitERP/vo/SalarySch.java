@@ -5,6 +5,8 @@ import java.util.Date;
 public class SalarySch {
 	private Date payment_date;
 	private String payment_dateStr;
+	private String year;
+	private String month;
 	private String empno;
 	private int base_salary;
 	private int allowance;
@@ -197,6 +199,22 @@ public class SalarySch {
 
 	public void setPayment_dateStr(String payment_dateStr) {
 		this.payment_dateStr = payment_dateStr;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
 	}
 	
 	

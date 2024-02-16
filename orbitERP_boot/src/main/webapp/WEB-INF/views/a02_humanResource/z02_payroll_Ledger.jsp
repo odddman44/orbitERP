@@ -51,7 +51,7 @@ $(document).ready(function() {
 		</form>
 		<br>
 			<div class="table-responsive">
-				<table class="table table-bordered" id="dataTable">
+				<table class="table table-bordered">
 					<thead>
 						<tr>
 

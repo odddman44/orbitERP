@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.vo.AttendanceSch;
@@ -42,6 +43,14 @@ public class A02_HRController {
 	public List<Dept> getDeptList(){
 		return service.getDeptList(new Dept());
 	}
+	
+	// http://localhost:4444/elist
+	@GetMapping("elist")
+	public ResponseEntity<?> getEmpListByDeptno(int deptno){
+		System.out.println("전달받은 deptno"+deptno);
+		return ResponseEntity.ok(service.getEmpListByDeptno(deptno));
+	}
+
 
 	// 부서 상세 정보
 	// http://localhost:4444/deptDetail
