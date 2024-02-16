@@ -339,10 +339,21 @@
 		<if test="deptno != null and deptno !=0">
 			AND s.deptno = #{deptno}
 		</if>
-		<if test="payment_dateStr != null and payment_dateStr != ''">
-			AND TO_CHAR(payment_date, 'YYYY-MM') = #{payment_dateStr}
+		<if test="year != null and year != ''">
+			AND EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
+		</if>
+		<if test="month != null and month != ''">
+			AND EXTRACT(MONTH FROM PAYMENT_DATE) = #{month}
 		</if>
 		) WHERE cnt BETWEEN #{start} AND #{end}
+		order by payment_date DESC
+	</select>
+	
+	<select id="getEmpListByDeptno" resultType="employee" parameterType="int">
+		select * from employee
+		<if test="deptno != 0 and deptno != ''">
+			where deptno = #{deptno}
+		</if>
 	</select>
 
 

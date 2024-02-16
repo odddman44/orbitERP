@@ -79,7 +79,7 @@
 	}
 
 	// 숫자에 콤마를 추가하는 함수
-	function addCommas(nStr) {
+	/*function addCommas(nStr) {
 		nStr += '';
 		var x = nStr.split('.');
 		var x1 = x[0];
@@ -90,6 +90,7 @@
 		}
 		return x1 + x2;
 	}
+	*/
 
 	$(document).ready(
 		
@@ -123,12 +124,7 @@
 						});
 
 				// 콤마가 포함된 입력 필드의 값에서 콤마를 제거
-				$('#frm01').submit(function(event) {
-					var inputField = $('#sal');
-					var valueWithCommas = inputField.val();
-					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-					inputField.val(valueWithoutCommas);
-				});
+				
 
 				// 사원 삭제
 				$("#delBtn").click(function() {

@@ -126,6 +126,8 @@ public interface A02_HRDao {
 	
 	List<SalarySch> getSalaryList(SalarySch sch);
 	
+	List<Employee> getEmpListByDeptno(@Param("deptno") int deptno);
+	
 	
 	
 	
