@@ -8,10 +8,25 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		var auth = "${emem.auth}";
+		var empno="${emem.empno}"
 	    if(auth==null || auth =="") {
 	    	alert("로그인이 필요한 페이지입니다.\n 로그인 화면으로 이동합니다.")
 	        window.location.href = "${path}/login";
 	    }
+	  //탑바로 정보 보내기
+		$.ajax({
+			type: "POST",
+            url: "/topAlram",
+            data: { receiver: empno },
+            dataType: "json",
+            success: function (data) {
+            		console.log(data)
+            },
+            error: function (err) {
+                console.log(err);
+                // Handle form submission error here
+            }
+		})
 	});
 </script>
 <style>
@@ -82,46 +97,33 @@
 			class="nav-link dropdown-toggle" href="#" id="alertsDropdown"
 			role="button" data-toggle="dropdown" aria-haspopup="true"
 			aria-expanded="false"> <i class="fas fa-bell fa-fw"></i> <!-- Counter - Alerts -->
-				<span class="badge badge-danger badge-counter">3+</span>
+				<span class="badge badge-danger badge-counter">${alList.size()}</span>
 		</a> <!-- Dropdown - Alerts -->
 			<div
 				class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 				aria-labelledby="alertsDropdown">
-				<h6 class="dropdown-header">Alerts Center</h6>
-				<a class="dropdown-item d-flex align-items-center" href="#">
-					<div class="mr-3">
-						<div class="icon-circle bg-primary">
-							<i class="fas fa-file-alt text-white"></i>
-						</div>
-					</div>
-					<div>
-						<div class="small text-gray-500">December 12, 2019</div>
-						<span class="font-weight-bold">A new monthly report is
-							ready to download!</span>
-					</div>
-				</a> <a class="dropdown-item d-flex align-items-center" href="#">
-					<div class="mr-3">
-						<div class="icon-circle bg-success">
-							<i class="fas fa-donate text-white"></i>
-						</div>
-					</div>
-					<div>
-						<div class="small text-gray-500">December 7, 2019</div>
-						$290.29 has been deposited into your account!
-					</div>
-				</a> <a class="dropdown-item d-flex align-items-center" href="#">
-					<div class="mr-3">
-						<div class="icon-circle bg-warning">
-							<i class="fas fa-exclamation-triangle text-white"></i>
-						</div>
-					</div>
-					<div>
-						<div class="small text-gray-500">December 2, 2019</div>
-						Spending Alert: We've noticed unusually high spending for your
-						account.
-					</div>
-				</a> <a class="dropdown-item text-center small text-gray-500" href="alram?receiver=${emem.empno}">Show
-					All Alerts</a>
+				<h6 class="dropdown-header">알림</h6>
+					<c:forEach var="alram" items="${alList}">
+								<a class="dropdown-item d-flex align-items-center" href="#">
+								<!-- 클릭시 모달창으로 상세정보 보여줄예정 -->
+									<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">
+										<div class="icon-circle bg-${alram.color}">
+										<!-- bg-secondary //색상-->
+											<i class="fas fa-${alram.icon} text-white"></i>
+											<!-- fa-bell //안에 아이콘 -->
+										</div>
+									</div>
+									<div>
+									<div class="small text-gray-500">
+										${alram.sender }&nbsp;&nbsp;&nbsp;&nbsp;
+										${alram.create_date }
+									</div>
+										<span class="font-weight-bold">${alram.title }</span>
+									</div>
+								</a>
+				 </c:forEach>
+				<a class="dropdown-item text-center small text-gray-500" href="alram?receiver=${emem.empno}">
+					전체보기</a>
 			</div></li>
 
 		<!-- Nav Item - Messages -->

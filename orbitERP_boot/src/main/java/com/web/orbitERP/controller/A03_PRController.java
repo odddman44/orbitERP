@@ -194,6 +194,7 @@ public class A03_PRController {
 		@RequestMapping("alram")
 		public String alram(String receiver,Model d) {
 			d.addAttribute("alList",service.alList(receiver));
+			d.addAttribute("color","danger");
 			return"a03_planResource\\alram";
 		}
 }
