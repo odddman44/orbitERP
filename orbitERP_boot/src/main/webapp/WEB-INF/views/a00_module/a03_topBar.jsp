@@ -6,29 +6,92 @@
 <fmt:requestEncoding value="utf-8" />
 <%@ page import="jakarta.servlet.http.HttpSession"%>
 <script type="text/javascript">
+	var empno="${emem.empno}"
 	$(document).ready(function() {
 		var auth = "${emem.auth}";
-		var empno="${emem.empno}"
 	    if(auth==null || auth =="") {
 	    	alert("로그인이 필요한 페이지입니다.\n 로그인 화면으로 이동합니다.")
 	        window.location.href = "${path}/login";
 	    }
-	  //탑바로 정보 보내기
+		realram(empno)
+	});
+	
+	function realram(empno){
+		//탑바로 정보 보내기
 		$.ajax({
 			type: "POST",
             url: "/topAlram",
             data: { receiver: empno },
             dataType: "json",
             success: function (data) {
-            		console.log(data)
+            	var alList=data.alList
+            	$("#length").text(alList.length)
+            		var dropdownMenu = $("#alDropdown");
+            		var newAnchor = "";
+            		dropdownMenu.empty();
+            		if(alList.length==0){
+            			newAnchor +='<a class="dropdown-item d-flex align-items-center"><h6>알림이 없습니다.</h6></a>'
+            		}else{
+		            	$.each(alList, function (idx, alram) {
+		            		newAnchor += '<a class="dropdown-item d-flex align-items-center" onclick="checkUp(' + alram.idx + ')">'
+		            		newAnchor += '<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">'
+		            		newAnchor += '<div class="icon-circle bg-'+alram.color+'">'
+		            		newAnchor += '<i class="fas fa-'+alram.icon+'" text-white"></i></div></div>'
+		            		newAnchor += '<div><div class="small text-gray-500">'+alram.sender +'&nbsp;&nbsp;&nbsp;&nbsp;'+alram.create_date+'</div>'
+		            		newAnchor += '<span class="font-weight-bold">'+alram.title+'</span></div></a>'
+		                })
+            		}
+            		dropdownMenu.append(newAnchor);
             },
             error: function (err) {
                 console.log(err);
                 // Handle form submission error here
             }
 		})
-	});
+	}
+	function checkUp(idx){
+		$.ajax({
+			type:"POST",
+			url:"/checkUp",
+			data:{idx:idx},
+			success: function (data) {
+				//document.getElementById('ck1_'+idx).style.backgroundColor = '#f0f0f0';
+				//document.getElementById('ck2_'+idx).innerText = '읽음';
+				$("#ck1_"+idx).css('background-color', '#f0f0f0');
+				$("#ck2_"+idx).text('읽음')
+				realram(empno)
+				alDtail(idx)
+            },
+            error: function (err) {
+                console.log(err);
+        	}
+		})
+		
+	}
+	function alDtail(idx){
+		$.ajax({
+			type:"POST",
+			url:"/alDtail",
+			data:{idx:idx},
+			success: function (data) {
+				var alram=data.alram
+				//모달값 리셋
+				$("[name=title]").val(alram.title)
+				$("[name=sender]").val(alram.sender)
+				$("[name=title]").val(alram.title)
+				//$("[name=receiver]").val(alram.receiver)
+				$("[name=create_date]").val(alram.create_date)
+				$("[name=category]").val(alram.category)
+				$("[name=content]").val(alram.content)
+				$("#alarmModal").click()
+            },
+            error: function (err) {
+                console.log(err);
+        	}
+		})
+	}
 </script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <style>
 .custom-badge {
     padding: 0.25em 0.6em;
@@ -97,32 +160,14 @@
 			class="nav-link dropdown-toggle" href="#" id="alertsDropdown"
 			role="button" data-toggle="dropdown" aria-haspopup="true"
 			aria-expanded="false"> <i class="fas fa-bell fa-fw"></i> <!-- Counter - Alerts -->
-				<span class="badge badge-danger badge-counter">${alList.size()}</span>
+				<span class="badge badge-danger badge-counter" id="length"></span>
 		</a> <!-- Dropdown - Alerts -->
 			<div
 				class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 				aria-labelledby="alertsDropdown">
 				<h6 class="dropdown-header">알림</h6>
-					<c:forEach var="alram" items="${alList}">
-								<a class="dropdown-item d-flex align-items-center" href="#">
-								<!-- 클릭시 모달창으로 상세정보 보여줄예정 -->
-									<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">
-										<div class="icon-circle bg-${alram.color}">
-										<!-- bg-secondary //색상-->
-											<i class="fas fa-${alram.icon} text-white"></i>
-											<!-- fa-bell //안에 아이콘 -->
-										</div>
-									</div>
-									<div>
-									<div class="small text-gray-500">
-										${alram.sender }&nbsp;&nbsp;&nbsp;&nbsp;
-										${alram.create_date }
-									</div>
-										<span class="font-weight-bold">${alram.title }</span>
-									</div>
-								</a>
-				 </c:forEach>
-				<a class="dropdown-item text-center small text-gray-500" href="alram?receiver=${emem.empno}">
+					<div id="alDropdown"></div>
+				<a class="dropdown-item text-center small text-gray-500" href="alramAll?receiver=${emem.empno}">
 					전체보기</a>
 			</div></li>
 
@@ -229,5 +274,45 @@
 			</div></li>
 
 	</ul>
-
 </nav>
+
+	<!-- Modal -->
+<button id="alarmModal" class="btn btn-success d-none"
+					data-toggle="modal" data-target="#alModal" type="button">등록</button>
+<div class="modal fade" id="alModal" tabindex="-1" role="dialog" aria-labelledby="alarmModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background-color: #4E7CD9;">
+    <h5 class="modal-title" id="alarmModalLabel" >알림</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+     <div class="modal-body" id="detail">
+    <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" class="form-control" id="title" name="title" value="">
+    </div>
+    <div class="form-group">
+        <label for="sender">보낸사람</label>
+        <input type="text" class="form-control" id="sender" name="sender" value="">
+    </div>
+    <div class="form-group">
+        <label for="receiver">작성일</label>
+        <input type="text" class="form-control" id="create_date" name="create_date" value="">
+    </div>
+    <div class="form-group">
+        <label for="category">카테고리</label>
+        <input type="text" class="form-control" id="category" name="category" value="">
+    </div>
+    <div class="form-group">
+        <label for="content">내용</label>
+        <textarea class="form-control" id="content" name="content" rows="4"></textarea>
+    </div>
+</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

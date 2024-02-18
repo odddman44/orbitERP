@@ -112,4 +112,13 @@ public class A03_PRService {
 	public List<Alram> alList(String receiver) {
 		return dao.alList(receiver);
 	}
+	public List<Alram> alListAll(String receiver) {
+		return dao.alListAll(receiver);
+	}
+	public int checkUp(int idx) {
+		return dao.checkUp(idx);
+	}
+	public Alram alDtail(int idx) {
+		return dao.alDtail(idx);
+	}
 }

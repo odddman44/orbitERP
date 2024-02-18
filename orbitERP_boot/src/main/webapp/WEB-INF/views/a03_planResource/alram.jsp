@@ -77,9 +77,10 @@ function sendAlram(){
 				      </ul>
 				    </nav>-->
 				    <!-- 알람출력 -->
-							<c:forEach var="alram" items="${alList}">
-								<a class="dropdown-item d-flex align-items-center" data-toggle="modal" data-target="#alarmModal"
-								onclick="setModalContent('${alram.sender}', '${alram.create_date}', '${alram.title}')">
+							<c:forEach var="alram" items="${alListAll}">
+								<a class="dropdown-item d-flex align-items-center"
+								onclick="checkUp(${alram.idx})" id="ck1_${alram.idx }"
+								style="${alram.checked eq 'Y' ? 'background-color: #f0f0f0;' : ''}">
 								<!-- 클릭시 모달창으로 상세정보 보여줄예정 -->
 									<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">
 										<div class="icon-circle bg-${alram.color}">
@@ -91,41 +92,29 @@ function sendAlram(){
 									<div>
 									<div class="small text-gray-500">
 										${alram.sender }&nbsp;&nbsp;&nbsp;&nbsp;
-										${alram.create_date }
+										${alram.create_date }&nbsp;&nbsp;
+										<span class="badge badge-secondary ml-2" id="ck2_${alram.idx }">
+										 <c:choose>
+									        <c:when test="${alram.checked eq 'Y'}">
+									            읽음
+									        </c:when>
+									        <c:otherwise>
+									            안읽음
+									        </c:otherwise>
+									    </c:choose>
+										</span>
+										
 									</div>
 										<span class="font-weight-bold">${alram.title }</span>
 									</div>
 								</a>
 							</c:forEach>
-
 				</div>
 			</div>
 					
 		</div>
 				<!-- /.container-fluid (페이지 내용 종료) -->
 	</div>
-	<!-- Modal -->
-<div class="modal fade" id="alarmModal" tabindex="-1" role="dialog" aria-labelledby="alarmModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="alarmModalLabel">Alarm Details</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- Add content for displaying detailed information here -->
-        <div class="small text-gray-500" id="modalSenderDate"></div>
-        <div class="font-weight-bold" id="modalTitle"></div>
-        <!-- Add other details as needed -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 			<!-- End of Main Content -->
 
 			<!-- Footer -->
