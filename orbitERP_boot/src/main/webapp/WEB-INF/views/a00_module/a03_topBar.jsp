@@ -36,7 +36,7 @@
 		            		newAnchor += '<a class="dropdown-item d-flex align-items-center" onclick="checkUp(' + alram.idx + ')">'
 		            		newAnchor += '<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">'
 		            		newAnchor += '<div class="icon-circle bg-'+alram.color+'">'
-		            		newAnchor += '<i class="fas fa-'+alram.icon+'" text-white"></i></div></div>'
+		            		newAnchor += '<i class="text-white fas fa-'+alram.icon+'"></i></div></div>'
 		            		newAnchor += '<div><div class="small text-gray-500">'+alram.sender +'&nbsp;&nbsp;&nbsp;&nbsp;'+alram.create_date+'</div>'
 		            		newAnchor += '<span class="font-weight-bold">'+alram.title+'</span></div></a>'
 		                })
@@ -55,8 +55,6 @@
 			url:"/checkUp",
 			data:{idx:idx},
 			success: function (data) {
-				//document.getElementById('ck1_'+idx).style.backgroundColor = '#f0f0f0';
-				//document.getElementById('ck2_'+idx).innerText = '읽음';
 				$("#ck1_"+idx).css('background-color', '#f0f0f0');
 				$("#ck2_"+idx).text('읽음')
 				realram(empno)
@@ -79,7 +77,6 @@
 				$("[name=title]").val(alram.title)
 				$("[name=sender]").val(alram.sender)
 				$("[name=title]").val(alram.title)
-				//$("[name=receiver]").val(alram.receiver)
 				$("[name=create_date]").val(alram.create_date)
 				$("[name=category]").val(alram.category)
 				$("[name=content]").val(alram.content)
@@ -294,12 +291,13 @@
         <input type="text" class="form-control" id="title" name="title" value="">
     </div>
     <div class="form-group">
-        <label for="sender">보낸사람</label>
-        <input type="text" class="form-control" id="sender" name="sender" value="">
-    </div>
-    <div class="form-group">
-        <label for="receiver">작성일</label>
-        <input type="text" class="form-control" id="create_date" name="create_date" value="">
+        <label for="senderAndCreateDate">보낸사람&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일시</label>
+        <div class="d-flex">
+            <input type="text" class="form-control flex-grow-1 mr-2" id="sender" name="sender" value="">
+            <input type="text" class="form-control" id="create_date" name="create_date" value="">
+        </div>
     </div>
     <div class="form-group">
         <label for="category">카테고리</label>

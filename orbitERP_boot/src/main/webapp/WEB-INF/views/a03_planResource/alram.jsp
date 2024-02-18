@@ -85,7 +85,7 @@ function sendAlram(){
 									<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">
 										<div class="icon-circle bg-${alram.color}">
 										<!-- bg-secondary //색상-->
-											<i class="fas fa-${alram.icon} text-white"></i>
+											<i class="text-white fas fa-${alram.icon}"></i>
 											<!-- fa-bell //안에 아이콘 -->
 										</div>
 									</div>
