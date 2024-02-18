@@ -72,7 +72,7 @@
 
 					<!-- Content Row -->
 					<div class="row">
-						<%@ include file="/WEB-INF/views/a00_module/a06_main_row03.jsp"%>
+						<%@ include file="/WEB-INF/views/a04_financeResource/z02_barGraph.jsp"%>
 					</div>
 
 				</div>

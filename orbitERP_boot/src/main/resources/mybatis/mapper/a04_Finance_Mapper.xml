@@ -211,4 +211,21 @@
         GROUP BY
             j.acc_code
     </select>
+    <!-- 손익 선그래프 -->
+    <select id="getNetIncomeGraph" parameterType="int" resultType="financeSummary">
+    	SELECT
+		    EXTRACT(MONTH FROM v.voucher_date) AS month,
+		    SUM(NVL(j.credit_amount, 0) - NVL(j.debit_amount, 0)) AS NETINCOMES
+		FROM
+		    journalizing j
+		JOIN
+		    voucher v ON j.voucher_id = v.voucher_id
+		WHERE
+		    EXTRACT(YEAR FROM v.voucher_date) = #{year}
+		    AND j.acc_code IN (SELECT acc_code FROM accsub WHERE acc_type = '손익' OR acc_type = '원가')
+		GROUP BY
+		    EXTRACT(MONTH FROM v.voucher_date)
+		ORDER BY
+		    month;
+    </select>
 </mapper>	
