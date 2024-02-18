@@ -186,15 +186,21 @@ public class A03_PRController {
 		
 		
 		
-		
-		
-		
 		//알람조회
 		//http://localhost:4444/alram
-		@RequestMapping("alram")
-		public String alram(String receiver,Model d) {
-			d.addAttribute("alList",service.alList(receiver));
-			d.addAttribute("color","danger");
+		@RequestMapping("alramAll")
+		public String alramAll(String receiver,Model d) {
+			d.addAttribute("alListAll",service.alListAll(receiver));
 			return"a03_planResource\\alram";
 		}
+		@RequestMapping("checkUp")
+		public ResponseEntity<?> checkUp(int idx) {
+			return ResponseEntity.ok(service.checkUp(idx));
+		}
+		@RequestMapping("alDtail")
+		public String alDtail(int idx,Model d) {
+			d.addAttribute("alram",service.alDtail(idx));
+			return"pageJsonReport";
+		}
+		
 }

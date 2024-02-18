@@ -10,6 +10,7 @@ public class Alram {
 	title varchar2(200),
 	create_date date
  */
+	private int idx;
 	private String sender;
 	private String receiver;
 	private String content;
@@ -17,29 +18,18 @@ public class Alram {
 	private String create_date;
 	private String color;
 	private String icon;
+	private String checked;
+	private String category;
 	public Alram() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String getColor() {
-		return color;
-	}
 
-	public void setColor(String color) {
-		this.color = color;
-	}
 
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public Alram(String sender, String receiver, String content, String title, String create_date, String color,
-			String icon) {
+	public Alram(int idx, String sender, String receiver, String content, String title, String create_date,
+			String color, String icon, String checked, String category) {
 		super();
+		this.idx = idx;
 		this.sender = sender;
 		this.receiver = receiver;
 		this.content = content;
@@ -47,6 +37,58 @@ public class Alram {
 		this.create_date = create_date;
 		this.color = color;
 		this.icon = icon;
+		this.checked = checked;
+		this.category = category;
+	}
+
+
+
+	public String getChecked() {
+		return checked;
+	}
+
+
+
+	public void setChecked(String checked) {
+		this.checked = checked;
+	}
+
+
+
+	public String getCategory() {
+		return category;
+	}
+
+
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+
+
+	public String getColor() {
+		return color;
+	}
+	
+	public void setColor(String color) {
+		this.color = color;
+	}
+	
+	public String getIcon() {
+		return icon;
+	}
+	
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	
+	public int getIdx() {
+		return idx;
+	}
+
+	public void setIdx(int idx) {
+		this.idx = idx;
 	}
 
 	public String getSender() {

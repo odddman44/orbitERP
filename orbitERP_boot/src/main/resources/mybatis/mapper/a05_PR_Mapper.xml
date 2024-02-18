@@ -153,12 +153,31 @@
 	
 	
 	
-	<!-- 알람 -->
+	<!-- 탑바용 알람조회(안본것만 조회) -->
 	<select id="alList" parameterType="String" resultType="alram">
-		SELECT e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON,CHECKED,CATEGORY
+		FROM ALARM a
+		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+		WHERE RECEIVER =#{receiver} AND CHECKED ='N'
+		ORDER BY CREATE_DATE DESC
+	</select>
+	<!-- 알람페이지용 알람조회(전체 알람조회) -->
+	<select id="alListAll" parameterType="String" resultType="alram">
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON,CHECKED,CATEGORY
 		FROM ALARM a
 		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
 		WHERE RECEIVER =#{receiver}
-		ORDER BY CREATE_DATE DESC
+		ORDER BY a.CHECKED, a.CREATE_DATE DESC
+	</select>
+	<!-- 알람 조회처리 -->
+	<update id="checkUp" parameterType="int">
+		UPDATE ALARM SET CHECKED ='Y' WHERE IDX =${idx}
+	</update>
+	<!-- 알람 상세정보 -->
+	<select id="alDtail" parameterType="int" resultType="alram">
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON,CHECKED,CATEGORY
+		FROM ALARM a
+		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+		WHERE IDX=#{idx}
 	</select>
 </mapper>
