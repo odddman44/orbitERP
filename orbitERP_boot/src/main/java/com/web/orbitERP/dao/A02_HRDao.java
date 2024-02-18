@@ -14,6 +14,7 @@ import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.Salary;
 import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
@@ -127,6 +128,10 @@ public interface A02_HRDao {
 	List<SalarySch> getSalaryList(SalarySch sch);
 	
 	List<Employee> getEmpListByDeptno(@Param("deptno") int deptno);
+	
+	int insertSalary(Salary ins);
+	
+	Salary salaryDetail(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
 	
 	
 	

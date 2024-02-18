@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.Salary;
 import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
@@ -442,6 +444,7 @@ public class A02_HRService {
 				int tot = dao.totSalary(sch);
 				// 전체 학생 수
 				sch.setCount(tot);
+				sch.setCurPage(0);
 				if (sch.getPageSize() == 0)
 					sch.setPageSize(10);
 				// 3. 총페이지수 [1][2][3][4][5][6]
@@ -479,6 +482,14 @@ public class A02_HRService {
 	
 	public List<Employee> getEmpListByDeptno(int deptno) {
 		return dao.getEmpListByDeptno(deptno); 
+	}
+	
+	public int insertSalary(Salary ins) {
+		return dao.insertSalary(ins);
+	}
+	
+	public Salary salaryDetail(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr) {
+		return dao.salaryDetail(empno, payment_dateStr);
 	}
 
 }

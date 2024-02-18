@@ -329,6 +329,20 @@ VALUES (
     20
 );
 
+/*
+ INSERT INTO salary (payment_date, empno, base_salary, allowance, deduction, start_date, end_date, deptno)
+	VALUES (
+    TO_DATE(#{payment_dateStr}, 'YYYY-MM-DD'),
+    #{empno},
+    #{base_salary},
+    #{allowance},
+    #{deduction},
+    TO_DATE(#{start_dateStr}, 'YYYY-MM-DD'),
+    TO_DATE(#{end_dateStr}, 'YYYY-MM-DD'),
+    #{deptno}
+)
+ * */
+
 DELETE FROM salary WHERE empno = 'FM0001';
 SELECT * FROM salary;
 
@@ -348,6 +362,17 @@ SELECT * FROM salary;
 		AND s.deptno = 10
 		AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02'
 		) WHERE cnt BETWEEN 1 AND 10;
+	
+
+SELECT  TO_CHAR(payment_date, 'YYYY-MM-DD') AS PAYMENT_DATE,
+		TO_CHAR(end_date, 'YYYY-MM-DD') AS end_date,
+		TO_CHAR(start_date, 'YYYY-MM-DD') AS start_date,
+		empno, base_salary, allowance, deduction, net_pay
+		FROM salary
+WHERE empno = 'HR0001'
+AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02';
+
+SELECT * FROM SALARY s ;
 
 	
 

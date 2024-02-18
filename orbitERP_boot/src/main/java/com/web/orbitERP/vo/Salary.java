@@ -17,13 +17,12 @@ public class Salary {
 	private int deptno;
 	
 	public Salary() {
-		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public Salary(Date payment_date, String empno, int base_salary, int allowance, int deduction, int net_pay,
 			Date start_date, Date end_date, int deptno) {
-		super();
+		
 		this.payment_date = payment_date;
 		this.empno = empno;
 		this.base_salary = base_salary;
@@ -37,7 +36,7 @@ public class Salary {
 
 	public Salary(String payment_dateStr, String empno, int base_salary, int allowance, int deduction,
 			String start_dateStr, String end_dateStr, int deptno) {
-		super();
+		
 		this.payment_dateStr = payment_dateStr;
 		this.empno = empno;
 		this.base_salary = base_salary;
