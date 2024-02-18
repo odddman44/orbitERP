@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.vo.AttendanceSch;
@@ -19,6 +18,7 @@ import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
+import com.web.orbitERP.vo.Salary;
 import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
@@ -245,9 +245,19 @@ public class A02_HRController {
 	
 	// http://localhost:4444/salaryList
 	@RequestMapping("salaryList")
-	public ResponseEntity<?> SalaryList(SalarySch sch) {
+	public ResponseEntity<?> SalaryList(@ModelAttribute("sch") SalarySch sch) {
 		List<SalarySch> salary = service.getSalaryList(sch);
 		return ResponseEntity.ok(salary);
+	}
+	
+	@PostMapping("insertSalary")
+	public ResponseEntity<?> insertSalary(Salary ins){
+		return ResponseEntity.ok(service.insertSalary(ins));
+	}
+	
+	@RequestMapping("salaryDetail") 
+	public ResponseEntity<?> salaryDetail(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
+		return ResponseEntity.ok(service.salaryDetail(empno, payment_dateStr));
 	}
 
 	

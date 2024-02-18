@@ -316,7 +316,8 @@
 		select * from employee
 	</select>
 
-	<select id="totSalary" resultType="int" parameterType="salarySch">
+	<select id="totSalary" resultType="int"
+		parameterType="salarySch">
 		SELECT COUNT(*)
 		FROM salary
 		WHERE 1=1
@@ -328,7 +329,8 @@
 		</if>
 	</select>
 
-	<select id="getSalaryList" resultType="salarySch" parameterType="salarySch">
+	<select id="getSalaryList" resultType="salarySch"
+		parameterType="salarySch">
 		SELECT *
 		FROM (
 		SELECT ROWNUM cnt, s.*, d.dname
@@ -348,12 +350,37 @@
 		) WHERE cnt BETWEEN #{start} AND #{end}
 		order by payment_date DESC
 	</select>
-	
-	<select id="getEmpListByDeptno" resultType="employee" parameterType="int">
+
+	<select id="getEmpListByDeptno" resultType="employee"
+		parameterType="int">
 		select * from employee
 		<if test="deptno != 0 and deptno != ''">
 			where deptno = #{deptno}
 		</if>
+	</select>
+
+	<insert id="insertSalary" parameterType="salary">
+		INSERT INTO salary
+		(payment_date, empno, base_salary, allowance, deduction,
+		start_date,
+		end_date, deptno)
+		VALUES (
+		TO_DATE(#{payment_dateStr}, 'YYYY-MM-DD'),
+		#{empno},
+		#{base_salary},
+		#{allowance},
+		#{deduction},
+		TO_DATE(#{start_dateStr}, 'YYYY-MM-DD'),
+		TO_DATE(#{end_dateStr},
+		'YYYY-MM-DD'),
+		#{deptno}
+		)
+	</insert>
+
+	<select id="salaryDetail" resultType="salary">
+		SELECT * FROM salary
+		WHERE empno = #{empno}
+		AND TO_CHAR(payment_date, 'YYYY-MM') = #{payment_dateStr}
 	</select>
 
 
