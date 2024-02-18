@@ -291,6 +291,7 @@
 	// 신규 모달창 열기 함수
 	function openNewVoucherModal() {
 		$("#frm02")[0].reset();
+		$("#registerModalLabel").text("급여 정보 등록")
 		$('#registerModal').modal('show');
 	}
 
@@ -374,6 +375,7 @@
 			}
 		})
 		$('#registerModal').modal('show');
+		$("#registerModalLabel").text("급여 정보 상세")
 		$("#uptBtn").show();
 		$("#regFrmBtn").hide();
 	}
