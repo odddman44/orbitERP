@@ -382,6 +382,12 @@
 		WHERE empno = #{empno}
 		AND TO_CHAR(payment_date, 'YYYY-MM') = #{payment_dateStr}
 	</select>
+	
+	<select id="detailAttendance" resultType="attendance">
+		SELECT * FROM ATTENDANCE
+		WHERE EMPNO = #{empno}
+		AND work_date = to_date(#{work_date},'YYYY-MM-DD')
+	</select>
 
 
 

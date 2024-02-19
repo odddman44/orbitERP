@@ -2,6 +2,7 @@ package com.web.orbitERP.controller;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A02_HRService;
+import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
@@ -258,6 +260,12 @@ public class A02_HRController {
 	@RequestMapping("salaryDetail") 
 	public ResponseEntity<?> salaryDetail(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
 		return ResponseEntity.ok(service.salaryDetail(empno, payment_dateStr));
+	}
+	
+	@PostMapping("detailAttendance")
+	public ResponseEntity<?> detailAttendance(@RequestParam("work_date") String work_date,
+									@RequestParam("empno") String empno){
+		return ResponseEntity.ok(service.detailAttendance(work_date, empno));
 	}
 
 	

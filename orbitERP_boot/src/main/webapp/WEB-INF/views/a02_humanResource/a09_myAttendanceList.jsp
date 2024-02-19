@@ -114,6 +114,8 @@
 			}
 		})
 	}
+	
+
 </script>
 <!-- DB테이블 플러그인 추가 -->
 <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -173,9 +175,7 @@
 							
 						</div>
 						<div class="card-body">
-						<div class="text-right">
-								<a href="#" style="font-size: 1.2em;"><b>나의 연차 조회하기</b></a>
-							</div>
+					
 							<div class="table-responsive">
 								<table class="table table-bordered" id="dataTable">
 									<thead>
