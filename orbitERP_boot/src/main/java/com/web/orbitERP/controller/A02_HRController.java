@@ -267,6 +267,20 @@ public class A02_HRController {
 									@RequestParam("empno") String empno){
 		return ResponseEntity.ok(service.detailAttendance(work_date, empno));
 	}
+	
+	@PostMapping("updateSalary")
+	public ResponseEntity<?> updateSalary(Salary upt){
+		return ResponseEntity.ok(service.updateSalary(upt));
+	}
+	
+	@PostMapping("deleteSalary")
+	public ResponseEntity<?> deleteSalary(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
+		return ResponseEntity.ok(service.deleteSalary(empno, payment_dateStr));
+	}
+	
+	
+	
+	
 
 	
 

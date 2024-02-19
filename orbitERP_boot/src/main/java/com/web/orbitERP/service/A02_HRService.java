@@ -496,5 +496,13 @@ public class A02_HRService {
 	public Attendance detailAttendance(@Param("work_date") String work_date, @Param("empno") String empno) {
 		return dao.detailAttendance(work_date, empno);
 	}
+	
+	public int updateSalary(Salary upt) {
+		return dao.updateSalary(upt);
+	}
+	
+	public int deleteSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr) {
+		return dao.deleteSalary(empno, payment_dateStr);
+	}
 
 }
