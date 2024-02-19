@@ -5,7 +5,7 @@
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
 <style>
-	#dataTable_paginate {
+	#dataTable {
     text-align: center; /* 가운데 정렬 */
 }
 </style>
@@ -39,6 +39,7 @@
 						$("#newBtn").click(function() {
 							openNewVoucherModal();
 							$("#uptBtn").hide()
+							$("#delBtn").hide()
 						});
 
 						// 모달창에서 부서별로 사원번호 select값 나오게 하는 함수
@@ -236,6 +237,68 @@
 											}
 
 										})
+										$("#uptBtn").click(function(){
+											// alert($("#frm02").serialize());
+											 
+											if(confirm("급여 정보를 수정하시겠습니까?")){
+												removeComma(); // 콤마 제거하기
+										
+												
+												$.ajax({
+													url:"/updateSalary",
+													dataType:"json",
+													data:$("#frm02").serialize(),
+													type:"POST",
+													success:function(data){
+														if(data>0){
+															alert("급여 정보 수정 성공!")
+															$("#frm02")[0].reset();
+															window.location.reload();
+															$("#closeBtn").click()
+														
+														}else{
+															alert("급여 정보 수정 실패")
+														}
+													},
+													error:function(err){
+														console.log("급여 수정 중 에러 발생: "+err)
+													}
+												})
+											}
+											
+										})
+										
+										$("#delBtn").click(function(){
+											var empno = $("[name=empno]").val()
+											console.log(empno)
+											var payment_dateStr = $("[name=payment_dateStr]").val();
+											console.log(payment_dateStr)
+											if(confirm("급여 정보를 삭제하시겠습니까?")){
+												$.ajax({
+													url:"/deleteSalary",
+													dataType:"json",
+													data:{
+														empno:empno,
+														payment_dateStr:payment_dateStr
+													},
+													type:"POST",
+													success:function(data){
+														if(data>0){
+															alert("급여 정보 삭제 성공")
+															$("#frm02")[0].reset();
+															window.location.reload();
+															$("#closeBtn").click()
+														
+														}else{
+															alert("급여 정보 삭제 실패")
+														}
+													},
+													error:function(err){
+														console.log("급여 삭제 중 에러 발생: "+err)
+													}
+												})
+											}
+										})
 
 					})
 
@@ -367,8 +430,14 @@
 
 		
 				var payment_date = new Date(salary.payment_date)
+				console.log("급여 지급일"+salary.payment_date)
+				payment_date.setUTCHours(payment_date.getUTCHours() + 9);
 				var start_date = new Date(salary.start_date)
+				console.log("근무 시작일"+salary.start_date)
+				start_date.setUTCHours(start_date.getUTCHours() + 9);
 				var end_date = new Date(salary.end_date)
+				console.log("근무 종료일"+salary.end_date)
+				end_date.setUTCHours(end_date.getUTCHours() + 9);
 				
 				var payment_dateStr = payment_date.toISOString().split('T')[0];
 				var start_dateStr = start_date.toISOString().split('T')[0];
@@ -398,6 +467,7 @@
 		$('#registerModal').modal('show');
 		$("#registerModalLabel").text("급여 정보 상세")
 		$("#uptBtn").show();
+		$("#delBtn").show()
 		$("#regFrmBtn").hide();
 	}
 </script>
@@ -412,12 +482,15 @@ table {
 			class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 
 			<h6 class="m-0 font-weight-bold text-primary">직원별 급여 정보</h6>
+			<c:if test="${emem.auth eq '인사관리자' || emem.auth eq '총괄관리자'}">
 			<button type="button" id="newBtn"
 				class="btn btn-primary btn-icon-split">
 				<span class="icon text-white-50"><i class="fas fa-check"></i></span>
 				<span class="text">신규</span>
 			</button>
+		</c:if>
 		</div>
+		
 
 
 		<div class="card-body">
@@ -490,7 +563,7 @@ table {
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="registerModalLabel">직원별 급여정보 등록</h5>
-				<button type="button" class="close" data-dismiss="modal"
+				<button type="button" id="closeBtn" class="close" data-dismiss="modal"
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -573,8 +646,12 @@ table {
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
 				<button type="button" id="regFrmBtn" form="registerForm"
 					class="btn btn-primary">등록</button>
+			<c:if test="${emem.auth eq '인사관리자' || emem.auth eq '총괄관리자' }">
+				<button type="button" id="delBtn" form="registerForm"
+					class="btn btn-danger">삭제</button>
 				<button type="button" id="uptBtn" form="registerForm"
 					class="btn btn-info">수정</button>
+			</c:if>
 			</div>
 		</div>
 	</div>

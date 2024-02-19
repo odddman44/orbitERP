@@ -136,7 +136,9 @@ public interface A02_HRDao {
 	
 	Salary salaryDetail(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
 	
+	int updateSalary(Salary upt);
 	
+	int deleteSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
 	
 	
 	
