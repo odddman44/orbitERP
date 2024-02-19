@@ -34,6 +34,10 @@
    function goMypage(empno) {
       location.href = "mypage?empno" + empno
    }
+   function sendAlram(){
+	    window.open("${path}/sendAlram", "AlramWindow",
+	    		"width=700 height=600 left=500 top=200");
+	}
 </script>
 <link
    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
@@ -142,7 +146,7 @@
             <h6 class="collapse-header">영업계획:</h6>
             <a class="collapse-item" href="planCalendar">연간스케줄조회</a> <a
                class="collapse-item" href="calendar">개인스케줄조회</a> 
-               <a class="collapse-item" href="#">알림 보내기</a>
+               <a class="collapse-item" onclick="sendAlram()">알림 보내기</a>
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
