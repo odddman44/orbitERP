@@ -331,14 +331,11 @@
 
 	<select id="getSalaryList" resultType="salarySch"
 		parameterType="salarySch">
-		SELECT *
-		FROM (
-		SELECT ROWNUM cnt, s.*, d.dname
-		FROM
-		salary s, DEPT d
+		SELECT s.*, d.dname
+		FROM salary s
+		JOIN DEPT d ON s.DEPTNO = d.DEPTNO
 		WHERE 1=1
-		AND s.DEPTNO = d.DEPTNO
-		<if test="deptno != null and deptno !=0">
+		<if test="deptno != null and deptno != 0">
 			AND s.deptno = #{deptno}
 		</if>
 		<if test="year != null and year != ''">
@@ -347,8 +344,7 @@
 		<if test="month != null and month != ''">
 			AND EXTRACT(MONTH FROM PAYMENT_DATE) = #{month}
 		</if>
-		) WHERE cnt BETWEEN #{start} AND #{end}
-		order by payment_date DESC
+		ORDER BY payment_date DESC
 	</select>
 
 	<select id="getEmpListByDeptno" resultType="employee"
@@ -399,22 +395,34 @@
 	<update id="updateSalary" parameterType="salary">
 		UPDATE salary SET
 		PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD'),
-		empno = #{empno},
+		empno =
+		#{empno},
 		BASE_SALARY = #{base_salary},
 		ALLOWANCE = #{allowance},
 		DEDUCTION = #{deduction},
-		START_DATE = to_date(#{start_dateStr}, 'YYYY-MM-DD'),
+		START_DATE = to_date(#{start_dateStr},
+		'YYYY-MM-DD'),
 		end_date = to_date(#{end_dateStr}, 'YYYY-MM-DD'),
-		deptno = #{deptno}
+		deptno
+		= #{deptno}
 		WHERE empno = #{empno}
-		AND PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+		AND PAYMENT_DATE =
+		to_date(#{payment_dateStr}, 'YYYY-MM-DD')
 	</update>
-	
+
 	<delete id="deleteSalary">
 		DELETE FROM SALARY
-		WHERE payment_date = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+		WHERE payment_date =
+		to_date(#{payment_dateStr}, 'YYYY-MM-DD')
 		AND empno = #{empno}
 	</delete>
+
+	<select id="isExistSalary" resultType="int">
+		SELECT count(*) FROM
+		SALARY
+		WHERE TO_CHAR(PAYMENT_DATE, 'YYYY-MM') = #{payment_dateStr}
+		AND EMPNO = #{empno}
+	</select>
 
 
 

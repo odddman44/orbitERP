@@ -140,6 +140,8 @@ public interface A02_HRDao {
 	
 	int deleteSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
 	
+	int isExistSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
+	
 	
 	
 	
