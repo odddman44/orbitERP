@@ -414,6 +414,19 @@ end_date = to_date(#{end_dateStr}, 'YYYY-MM-DD'),
 deptno = #{deptno}
 WHERE empno = #{empno}
 AND PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+
+ * */
+
+SELECT * FROM SALARY s ;
+
+DELETE FROM SALARY
+WHERE payment_date = to_date('2024-02-11', 'YYYY-MM-DD')
+AND empno = 'PR0001';
+
+/*
+ DELETE FROM SALARY
+WHERE payment_date = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+AND empno = #{empno}
  * */
 
 
