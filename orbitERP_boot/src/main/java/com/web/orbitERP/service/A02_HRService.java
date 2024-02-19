@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.orbitERP.dao.A02_HRDao;
+import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
@@ -490,6 +491,10 @@ public class A02_HRService {
 	
 	public Salary salaryDetail(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr) {
 		return dao.salaryDetail(empno, payment_dateStr);
+	}
+	
+	public Attendance detailAttendance(@Param("work_date") String work_date, @Param("empno") String empno) {
+		return dao.detailAttendance(work_date, empno);
 	}
 
 }

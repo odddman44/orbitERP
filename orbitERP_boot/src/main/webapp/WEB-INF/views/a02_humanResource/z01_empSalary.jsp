@@ -4,20 +4,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
-
+<style>
+	#dataTable_paginate {
+    text-align: center; /* 가운데 정렬 */
+}
+</style>
 <script>
 	$(document)
 			.ready(
 					function() {
 
-						$('#dataTable').DataTable({
-							"paging" : true,
-							"searching" : false,
-							"ordering" : true,
-							"info" : true,
-							"pagingType" : "full_numbers",
-							"pageLength" : 10
-						});
+					
 
 						search();
 						// 콤마 추가
@@ -244,54 +241,77 @@
 
 	// 급여 리스트 불러오는 함수
 	function search() {
-		// tbody 비워두기
-		$("#dataTable tbody").empty();
-
-		$.ajax({
-			url : "/salaryList",
-			type : "POST",
-			data : $("#frm01").serialize(),
-			dataType : "json",
-			success : function(data) {
-				console.log(data);
-				var tableBody = $("#dataTable tbody");
-
-				$.each(data, function(index, salary) {
-					var paymentDate = new Date(salary.payment_date);
-					var formattedDate = paymentDate.getFullYear() + "-"
-							+ ("0" + (paymentDate.getMonth() + 1)).slice(-2);
-
-					var row = $("<tr>");
-					row.append("<td>" + formattedDate + "</td>");
-					row.append("<td>" + salary.empno + "</td>");
-					row.append("<td>" + salary.base_salary.toLocaleString()
-							+ "</td>");
-					row.append("<td>" + salary.allowance.toLocaleString()
-							+ "</td>");
-					row.append("<td>" + salary.deduction.toLocaleString()
-							+ "</td>");
-					row.append("<td>" + salary.net_pay.toLocaleString()
-							+ "</td>");
-					row.append("<td>" + salary.dname + "</td>");
-
-					// 클릭 이벤트에 매개변수를 전달하는 방식
-					row.click(function() {
-						goDetail(salary.empno, formattedDate);
-					});
-
-					tableBody.append(row);
-				});
-			},
-			error : function(xhr, status, error) {
-				console.error("Error fetching data: ", error);
-			}
-		});
-	}
+	$('#dataTable').DataTable().destroy(); // 테이블 초기화
+	
+    $('#dataTable').DataTable({
+        "paging": true,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "pagingType": "full_numbers",
+        "pageLength": 10,
+        "ajax": {
+            "url": "/salaryList",
+            "type": "POST",
+            "data": function() {
+                return $("#frm01").serialize(); // 폼 데이터를 직렬화하여 전송
+            },
+            "dataType": "json",
+            "dataSrc": "" // 데이터 소스로 사용할 JSON 배열의 위치를 지정
+        },
+        "columns": [
+            { 
+                "data": "payment_date",
+                "render": function(data, type, row) {
+                    // 데이터가 표시될 때 날짜 형식으로 변환하여 반환
+                    if (type === 'display' || type === 'filter') {
+                        var date = new Date(data);
+                        return date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2);
+                    }
+                    return data;
+                }   
+            }, // 첫 번째 열: payment_date
+            { "data": "empno" },         // 두 번째 열: empno
+            { 
+                "data": "base_salary",
+                "render": $.fn.dataTable.render.number(',', '.', 0),
+                "className": "text-right"
+            },   // 세 번째 열: base_salary
+            { 
+                "data": "allowance",
+                "render": $.fn.dataTable.render.number(',', '.', 0),
+                "className": "text-right"
+            },     // 네 번째 열: allowance
+            { 
+                "data": "deduction",
+                "render": $.fn.dataTable.render.number(',', '.', 0),
+                "className": "text-right"
+            },     
+            { 
+                "data": "net_pay",
+                "render": $.fn.dataTable.render.number(',', '.', 0),
+                "className": "text-right"
+            },       // 여섯 번째 열: net_pay
+            { 
+                "data": "dname" 
+            }          // 일곱 번째 열: dname
+        ],
+        "createdRow": function(row, data, index) {
+            // 행 클릭 이벤트 처리
+            $(row).on('click', function() {
+            	var paymentDate = new Date(data.payment_date);
+                var formattedDate = paymentDate.getFullYear() + "-" + ("0" + (paymentDate.getMonth() + 1)).slice(-2);
+                goDetail(data.empno, formattedDate);
+            });
+        }
+    });
+}
 
 	// 신규 모달창 열기 함수
 	function openNewVoucherModal() {
 		$("#frm02")[0].reset();
 		$("#registerModalLabel").text("급여 정보 등록")
+		$("#regFrmBtn").show()
 		$('#registerModal').modal('show');
 	}
 
@@ -329,6 +349,7 @@
 	function goDetail(empno, payment_dateStr) {
 		console.log("전달받은 사원번호:" + empno)
 		console.log("전달받은 지급일:" + payment_dateStr)
+		$("#frm02")[0].reset();
 		// 상세 정보 가져오기
 		$.ajax({
 			type : "POST",
@@ -531,13 +552,13 @@ table {
 							</thead>
 							<tbody>
 								<tr>
-									<td><input class="form-control" type="text"
+									<td><input class="form-control text-right" type="text"
 										id="base_salary" name="base_salary"></td>
-									<td><input class="form-control" type="text" id="allowance"
+									<td><input class="form-control text-right" type="text" id="allowance"
 										name="allowance"></td>
-									<td><input class="form-control" type="text"
+									<td><input class="form-control text-right" type="text"
 										name="deduction" id="deduction"></td>
-									<td><input class="form-control" type="text" id="net_pay"></td>
+									<td><input class="form-control text-right" type="text" id="net_pay"></td>
 								</tr>
 							</tbody>
 						</table>

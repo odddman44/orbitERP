@@ -67,7 +67,7 @@
 					<!-- Content Row -->
 
 					<div class="row">
-						<%@ include file="/WEB-INF/views/a00_module/a05_main_row02.jsp" %>
+						<%@ include file="/WEB-INF/views/a02_humanResource/z03_mainAtt.jsp" %>
 					</div>
 
 					<!-- Content Row -->

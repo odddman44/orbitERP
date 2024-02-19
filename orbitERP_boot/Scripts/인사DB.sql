@@ -374,6 +374,20 @@ AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02';
 
 SELECT * FROM SALARY s ;
 
+SELECT * FROM ATTENDANCE a ;
+
+DELETE FROM ATTENDANCE a WHERE dep_time IS NULL;
+
+SELECT * FROM ATTENDANCE a 
+WHERE EMPNO = 'HR0001'
+AND work_date = to_date('2024-02-19','YYYY-MM-DD');
+/*
+ SELECT * FROM ATTENDANCE
+	WHERE EMPNO = #{empno}
+	AND work_date = to_date(#{work_date},'YYYY-MM-DD')
+ * */
+
+
 	
 
 
