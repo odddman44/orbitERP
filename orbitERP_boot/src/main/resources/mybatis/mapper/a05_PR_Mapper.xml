@@ -180,4 +180,10 @@
 		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
 		WHERE IDX=#{idx}
 	</select>
+	<!-- 알람 보내기 -->
+	<select id="getSender" parameterType="String" resultType="String">
+		SELECT ENAME
+		FROM EMPLOYEE
+		WHERE EMPNO=#{sender}
+	</select>
 </mapper>

@@ -63,4 +63,5 @@ public interface A03_PRDao {
 	List<Alram> alListAll(@Param("receiver")String receiver);
 	int checkUp(@Param("idx")int idx);
 	Alram alDtail(@Param("idx")int idx);
+	String getSender(String sender);
 }

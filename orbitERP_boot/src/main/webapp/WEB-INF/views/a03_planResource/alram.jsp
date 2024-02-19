@@ -22,13 +22,19 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-if(${alListAll}.length==0){
-	alert('알림이 없습니다.')
-}
-function sendAlram(){
-    window.open("${path}/sendAlram", "AlramWindow",
-    		"width=700 height=600 left=500 top=200");
-}
+var sender = "${emem.empno}"; // 변수를 문자열로 변환
+$(document).ready(function() {
+    if(${alListAll}.length == 0) {
+        alert('알림이 없습니다.');
+    }
+    $("#sendMsg").click(function() {
+        sendAlram(sender);
+    });
+	function sendAlram(sender) {
+	    window.open("sendAlram?sender=" + sender, "AlramWindow", "width=700 height=600 left=500 top=200");
+	}
+});
+
 </script>
      <!-- Custom fonts for this template-->
     <link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -65,7 +71,7 @@ function sendAlram(){
 					<div class="d-sm-flex align-items-center justify-content-between mb-4">
 						<h1 class="h3 mb-0 text-gray-800">☆ 알림</h1>
 						<div style="text-align: right;">
-								<input type="button" class="btn btn-info" value="알림보내기" onclick="sendAlram()" />
+								<input type="button" class="btn btn-info" value="알림보내기" id="sendMsg"/>
 							</div>
 					</div>
 					
