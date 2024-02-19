@@ -14,6 +14,20 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
+ <style type="text/css">
+ .notification-form {
+  background-color: #f5f5f5;
+  color: #333333;
+  padding: 20px 30px;
+}
+
+.header {
+ padding: 10px 0
+ }
+.input-group-text {
+  width: 90px;
+}
+ </style>
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
@@ -36,91 +50,43 @@
 <link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 </head>
-<button id="calModal" class="btn btn-success d-none"
-					data-toggle="modal" data-target="#exampleModalCenter" type="button">등록</button>
-
-<div class="modal fade" id="exampleModalCenter" tabindex="-1"
-					role="dialog" aria-labelledby="exampleModalCenterTitle"
-					aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="calTitle"></h5>
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form id="frm01" class="form" method="post">
-									<input type="hidden" name="id" value="0" />
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												강의명</span>
-										</div>
-										<input type="text" name="title" class="form-control" readonly/>
-									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												개강일자</span>
-										</div>
-										<input type="text" id="start" readonly class="form-control" />
-									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												종강일자</span>
-										</div>
-										<input type="text" id="end" readonly class="form-control" />
-									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												강의실</span>
-										</div>
-										<input name="lec_num" class="form-control" readonly/>
-									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												강사명</span>
-										</div>
-										<input name="lec_teacher" class="form-control" readonly/>
-									</div>
-									<div class="input-group mb-3">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												학생수</span>
-										</div>
-										<input name="lec_snum" class="form-control" readonly/>
-									</div>
-									<div class="input-group mb-3" id="backgroundColor">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												배경색상</span>
-										</div>
-										<input type="color" name="backgroundColor"
-											class="form-control" value="#0099cc" />
-									</div>
-									<div class="input-group mb-3" id="textColor">
-										<div class="input-group-prepend ">
-											<span class="input-group-text  justify-content-center">
-												글자색상</span>
-										</div>
-										<input type="color" name="textColor" class="form-control"
-											value="#ccffff" />
-									</div>
-								</form>
-							</div>
-							<div class="modal-footer">
-								<!-- -->
-								<button type="button" id="detailBtn" class="btn btn-primary">보내기</button>
-							</div>
-						</div>
-					</div>
-				</div>
+<div class="notification-form">
+  <div class="header">
+    <h5>알림보내기</h5>
+  </div>
+  <div class="body">
+    <form id="frm01" class="form" method="post">
+      <input type="hidden" name="id" value="0" />
+      <div class="input-group mb-3">
+        <label for="title" class="input-group-text">제목</label>
+        <input type="text" name="title" class="form-control" />
+      </div>
+      <div class="input-group mb-3">
+        <label for="sender" class="input-group-text">보내는사람</label>
+        <input type="text" id="sender" readonly class="form-control" />
+      </div>
+      <div class="input-group mb-3">
+        <label for="receiver" class="input-group-text">받는사람</label>
+        <input type="text" id="receiver" class="form-control" />
+      </div>
+      <div class="input-group mb-3">
+        <label for="category" class="input-group-text">카테고리</label>
+        <select name="category" class="form-control">
+          <option value="">선택</option>
+          <option value="공지">공지사항</option>
+          <option value="회의">회의</option>
+          <option value="일정">일정</option>
+          <option value="개인">개인</option>
+          </select>
+      </div>
+      <div class="input-group mb-3">
+        <label for="content" class="input-group-text">내용</label>
+        <textarea id="content" name="content" class="form-control" rows="3"></textarea>
+      </div>
+    </form>
+  </div>
+    <button type="button" id="sendBtn" class="btn btn-primary">보내기</button>
+</div>
 
 	<!-- Bootstrap core JavaScript-->
 	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
