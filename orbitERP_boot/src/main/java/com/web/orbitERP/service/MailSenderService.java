@@ -63,7 +63,7 @@ public class MailSenderService {
 		// 1. 메일 발송 데이터 전송을 위한 객체 생성.
 		MimeMessage mmsg = sender.createMimeMessage();
 		
-		msg = "사원번호 "+emp.getEmpno()+" "+ emp.getEname()+"님의 임시 비밀번호는 +\n [" +pwd +"]입니다. \n 비밀번호 변경은 임시 비밀번호로 로그인 후 마이페이지에서 변경 가능합니다.";
+		msg = "사원번호 "+emp.getEmpno()+" "+ emp.getEname()+"님의 임시 비밀번호는 \n [" +pwd +"]입니다. \n 비밀번호 변경은 임시 비밀번호로 로그인 후 마이페이지에서 변경 가능합니다.";
 		// 비밀번호 변경
 		Erpmem erpmem = new Erpmem(empno, pwd);
 		hdao.updateErpmem(erpmem);

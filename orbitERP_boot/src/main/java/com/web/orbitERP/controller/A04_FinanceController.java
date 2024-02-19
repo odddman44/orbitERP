@@ -206,6 +206,12 @@ public class A04_FinanceController {
     	return ResponseEntity.ok(incomeStatements);
     }
     
+    @GetMapping("netIncomeGraph")
+    public ResponseEntity<?> getNetIncomeGraph(@RequestParam("year") int year){
+    	List<FinanceSummary> incomeData = service.getNetIncomeGraph(year);
+    	return ResponseEntity.ok(incomeData);
+    }
+    
     /****
     @GetMapping("/incomeStatement")
     public String getIncomeStatements(@RequestParam(value="basicYear", required = false, defaultValue="2024") String basicYear,

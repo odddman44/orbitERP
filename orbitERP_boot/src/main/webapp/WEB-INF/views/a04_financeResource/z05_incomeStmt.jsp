@@ -28,10 +28,16 @@
 		<div class="card-header">
 			<div class="form-row align-items-center">
 				<div class="col-auto">
-					기준년도 : <input type="text" v-model="basicYear" class="form-control" id="basicYear" name="basicYear" />
+				    기준년도 : 
+				    <select v-model="basicYear" class="form-control" id="basicYear" name="basicYear">
+				        <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+				    </select>
 				</div>
 				<div class="col-auto">
-					비교년도 :<input type="text" v-model="compYear" class="form-control" id="compYear" name="compYear" />
+				    비교년도 :
+				    <select v-model="compYear" class="form-control" id="compYear" name="compYear">
+				        <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+				    </select>
 				</div>
 			</div>
 		</div>
@@ -92,9 +98,9 @@
 		                <td class="text-right">{{ getSum(8029).compYearSum }}</td>
 		            </tr>
 		            <tr>
-		                <td>&nbsp;&nbsp;퇴직급여 (5099)</td>
-		                <td class="text-right">{{ getSum(5099).basicYearSum }}</td>
-		                <td class="text-right">{{ getSum(5099).compYearSum }}</td>
+		                <td>&nbsp;&nbsp;퇴직급여 (8089)</td>
+		                <td class="text-right">{{ getSum(8089).basicYearSum }}</td>
+		                <td class="text-right">{{ getSum(8089).compYearSum }}</td>
 		            </tr>
 		            <tr>
 		                <td>&nbsp;&nbsp;복리후생비 (8109)</td>
@@ -176,13 +182,23 @@
 		name:"App",
 	    data() {
 	        return {
-	            basicYear: '2024',
+	            basicYear: new Date().getFullYear().toString(), // 기본값을 현재 년도로 설정
 	            compYear: '2023',
-	            incomeStatements: []
+	            incomeStatements: [],
+	            years:[]
 	        };
 	    },
-	    
+	    created() {
+	        this.generateYears();
+	    },
 	    methods: {
+	    	// 현재 날짜의 연도까지 option을 생성하는 함수
+	    	generateYears() {
+	            const currentYear = new Date().getFullYear();
+	            for (let year = 2023; year <= currentYear; year++) {
+	                this.years.push(year.toString());
+	            }
+	        },
 	        fetchData() {
 	        	const params = {
 	        	        basicYear: this.basicYear,
@@ -221,7 +237,7 @@
 	        },
 	        totalSGA() {
 	            // 판매비 및 일반관리비 관련 계정 코드 예시
-	            return this.sum([8029, 5099, 8109, 8119, 8269, 8279, 8329, 8338, 8299]);
+	            return this.sum([8029, 8089, 8109, 8119, 8269, 8279, 8329, 8338, 8299]);
 	        },
 	        sum(accCodes) {
 	            return accCodes.reduce((acc, code) => {
@@ -235,12 +251,12 @@
 	        },
 	        grossProfit() {
 	            const sales = this.sum([4019, 4119]);
-	            const cogs = this.sum([5069, 6039]); // Cost of Goods Sold
+	            const cogs = this.sum([5069, 6039]);
 	            return { basic: sales.basic + cogs.basic, comp: sales.comp + cogs.comp };
 	        },
 	        opIncome() {
 	            const gross = this.grossProfit();
-	            const expenses = this.sum([8029, 5099, 8109, 8119, 8269, 8279, 8329, 8338, 8299]);
+	            const expenses = this.sum([8029, 8089, 8109, 8119, 8269, 8279, 8329, 8338, 8299]);
 	            return { basic: gross.basic + expenses.basic, comp: gross.comp + expenses.comp };
 	        },
 	        netIncome() {

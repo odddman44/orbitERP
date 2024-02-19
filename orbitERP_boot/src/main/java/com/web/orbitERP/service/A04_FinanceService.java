@@ -161,7 +161,7 @@ public class A04_FinanceService {
     // 매출매입 그래프
     public List<FinanceSummary> getSalesAndPurchasesSummaryByYear(int year) {
     	List<FinanceSummary> summary = dao.getSalesAndPurchasesSummaryByYear(year);
-    	System.out.println("조회된 금융 요약 데이터: " + summary);
+    	// System.out.println("조회된 금융 요약 데이터: " + summary);
         return summary;
     }
     
@@ -173,6 +173,11 @@ public class A04_FinanceService {
     // 손익계산서
     public List<IncomeStatement> getIncomeStatements(String basicYear, String compYear){
     	return dao.getIncomeStatements(basicYear, compYear);
+    }
+    
+    // 손익 선그래프
+    public List<FinanceSummary> getNetIncomeGraph(int year) {
+        return dao.getNetIncomeGraph(year);
     }
     
 }
