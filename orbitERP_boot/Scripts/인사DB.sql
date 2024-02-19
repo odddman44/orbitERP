@@ -378,13 +378,42 @@ SELECT * FROM ATTENDANCE a ;
 
 DELETE FROM ATTENDANCE a WHERE dep_time IS NULL;
 
-SELECT * FROM ATTENDANCE a 
+SELECT a.*,
+    TO_CHAR(TRUNC((DEP_TIME - ARR_TIME) * 24) - 1, 'FM00') || '시간 ' || 
+    TO_CHAR(ROUND(MOD((DEP_TIME - ARR_TIME) * 24 * 60, 60)), 'FM00') || '분' AS tot_workhours
+FROM ATTENDANCE a 
 WHERE EMPNO = 'HR0001'
 AND work_date = to_date('2024-02-19','YYYY-MM-DD');
 /*
  SELECT * FROM ATTENDANCE
 	WHERE EMPNO = #{empno}
 	AND work_date = to_date(#{work_date},'YYYY-MM-DD')
+ * */
+
+UPDATE salary SET 
+PAYMENT_DATE = to_date('2024-02-11', 'YYYY-MM-DD'),
+empno = 'PR0001',
+BASE_SALARY = 3200000,
+ALLOWANCE = 0,
+DEDUCTION = 100000,
+START_DATE = to_date('2024-01-02', 'YYYY-MM-DD'),
+end_date = to_date('2024-01-30', 'YYYY-MM-DD'),
+deptno = 40
+WHERE empno = 'PR0001'
+AND PAYMENT_DATE = to_date('2024-02-10', 'YYYY-MM-DD');
+
+/*
+ UPDATE salary SET 
+PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD'),
+empno = #{empno},
+BASE_SALARY = #{base_salary}
+ALLOWANCE = #{allowance},
+DEDUCTION = #{deduction},
+START_DATE = to_date(#{start_dateStr}, 'YYYY-MM-DD'),
+end_date = to_date(#{end_dateStr}, 'YYYY-MM-DD'),
+deptno = #{deptno}
+WHERE empno = #{empno}
+AND PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
  * */
 
 
