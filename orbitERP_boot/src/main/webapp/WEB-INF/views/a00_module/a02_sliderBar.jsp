@@ -157,7 +157,6 @@
             <a class="collapse-item" href="lectureCalendar">강의스케줄조회</a> <a
                class="collapse-item" href="lectureList">강의조회</a> 
                <a class="collapse-item" href="lectureInsertFrm" id="session1">강의등록</a>
-               <a class="collapse-item" href="#" id="session2">알림 보내기</a>
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
