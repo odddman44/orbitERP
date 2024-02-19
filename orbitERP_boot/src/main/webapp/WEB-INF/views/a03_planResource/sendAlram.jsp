@@ -56,7 +56,7 @@
 </head>
 <div class="notification-form">
   <div class="header">
-    <h5>알림보내기</h5>
+    <h5>알림보내기페이지</h5>
   </div>
   <div class="body">
     <form id="frm01" class="form" method="post">
