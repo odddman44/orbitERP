@@ -77,6 +77,9 @@ width:70%;
 		           }
 		           return x1 + x2;
 		       }
+		// 강의료, 교재비 초기로딩시 콤마표시
+			$('#textbook_fee').val((addCommas(${lecture.textbook_fee})))
+			$('#tuition_fee').val((addCommas(${lecture.tuition_fee})))
 		// 키 입력시 자동으로 콤마 처리
 	       $('#tuition_fee,#textbook_fee').on('input', function() {
 	           var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
@@ -391,6 +394,10 @@ width:70%;
 	    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
 	    console.log(snoList)
 	}
+	function opensend(){
+		window.open("${path}/sendAlram", "AlramWindow",
+		"width=700 height=600 left=500 top=200");
+	}
 </script>
 <!-- DB테이블 플러그인 추가 -->
 <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -517,18 +524,13 @@ width:70%;
 									<span class="input-group-text  justify-content-center">
 										강의료</span>
 								</div>
-								<input name="tuition_fee" id="tuition_fee" class="form-control" 
-								value="${lecture.tuition_fee}"/>
-						<!--에러남	
-						value='﻿<fmt:formatNumber value="${lecture.tuition_fee}" pattern="#,###"/>'/> 
-						-->
+								<input name="tuition_fee" id="tuition_fee" class="form-control"/>
 								<div class="input-group-prepend ">
 									<span class="input-group-text  justify-content-center">
 										교재비</span>
 								</div>
 								<div class="input_value">
-								<input name="textbook_fee" id="textbook_fee" class="form-control"
-								value="${lecture.textbook_fee}"/>
+								<input name="textbook_fee" id="textbook_fee" class="form-control"/>
 								</div>
 							</div>
 							<div class="input-group mb-3">
@@ -541,7 +543,7 @@ width:70%;
 							<div style="text-align: right;">
 								<input type="button" class="btn btn-success" value="수정" id="uptBtn" />
 								<input type="button" class="btn btn-danger" value="삭제" id="delBtn" /> 
-								<input type="button" class="btn btn-dark" value="알림보내기" id="mainBtn" />
+								<input type="button" class="btn btn-dark" value="알림보내기" id="mainBtn"  onclick="opensend()"/>
 							</div>
 							</form>
 						</div>

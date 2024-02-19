@@ -191,6 +191,7 @@ public class A03_PRController {
 		@RequestMapping("alramAll")
 		public String alramAll(String receiver,Model d) {
 			d.addAttribute("alListAll",service.alListAll(receiver));
+			System.out.println(service.alListAll(receiver));
 			return"a03_planResource\\alram";
 		}
 		@RequestMapping("checkUp")
@@ -201,6 +202,12 @@ public class A03_PRController {
 		public String alDtail(int idx,Model d) {
 			d.addAttribute("alram",service.alDtail(idx));
 			return"pageJsonReport";
+		}
+		//http://localhost:4444/sendAlram
+		//알림보내기
+		@RequestMapping("sendAlram")
+		public String sendAlram() {
+			return"a03_planResource\\sendAlram";
 		}
 		
 }

@@ -22,8 +22,12 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+if(${alListAll}.length==0){
+	alert('알림이 없습니다.')
+}
 function sendAlram(){
-	window.open("${path}/sendAlram","width=600,height=400")
+    window.open("${path}/sendAlram", "AlramWindow",
+    		"width=700 height=600 left=500 top=200");
 }
 </script>
      <!-- Custom fonts for this template-->
@@ -81,6 +85,7 @@ function sendAlram(){
 								<a class="dropdown-item d-flex align-items-center"
 								onclick="checkUp(${alram.idx})" id="ck1_${alram.idx }"
 								style="${alram.checked eq 'Y' ? 'background-color: #f0f0f0;' : ''}">
+								<h3 id="nulls"></h3>
 								<!-- 클릭시 모달창으로 상세정보 보여줄예정 -->
 									<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">
 										<div class="icon-circle bg-${alram.color}">
