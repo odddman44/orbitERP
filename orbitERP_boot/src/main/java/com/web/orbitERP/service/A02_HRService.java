@@ -19,6 +19,7 @@ import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.Paystub;
 import com.web.orbitERP.vo.Salary;
 import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
@@ -503,6 +504,17 @@ public class A02_HRService {
 	
 	public int deleteSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr) {
 		return dao.deleteSalary(empno, payment_dateStr);
+		
 	}
+	
+	public int salDuplicationCheck(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr) {
+		return dao.salDuplicationCheck(empno, payment_dateStr);
+	}
+	
+	public Paystub getPaystubList(@Param("deptno") int deptno, 
+			@Param("year") int year ,@Param("month") int month  ) {
+		return dao.getPaystubList(deptno, month, year);
+	}
+	
 
 }

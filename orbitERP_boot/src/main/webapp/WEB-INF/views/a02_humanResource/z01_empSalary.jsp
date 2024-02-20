@@ -38,6 +38,11 @@
 						// 모달창 띄우기
 						$("#newBtn").click(function() {
 							openNewVoucherModal();
+							
+							// payment_dateStr, empno, deptno 수정 가능 처리
+							$("#frm02 [name='payment_dateStr']").prop('disabled', false);
+							$("#frm02 [name='empno']").prop('disabled', false);
+							$("#frm02 [name='deptno']").prop('disabled', false);
 							$("#uptBtn").hide()
 							$("#delBtn").hide()
 						});
@@ -147,14 +152,17 @@
 											}
 
 										});
+						$("#closeBtn").click(function(){
+							$("#frm02")[0].reset();
+						})
 
 						$("#regFrmBtn")
 								.click(
 										function() {
-											// payment_dateStr, empno, deptno 수정 가능 처리
-											 $("#frm02 [name='payment_dateStr']").prop('disabled', false);
-											 $("#frm02 [name='empno']").prop('disabled', false);
-											 $("#frm02 [name='deptno']").prop('disabled', false);
+											
+											
+											
+											
 											 
 											var payment_date = new Date($(
 													"#payment_date").val());
@@ -208,36 +216,38 @@
 												return false;
 											} else {
 												if (confirm("급여 정보를 등록하시겠습니까?")) {
-													removeComma(); // 콤마 제거
-													$
-															.ajax({
-																type : "POST",
-																url : "/insertSalary",
-																data : $(
-																		"#frm02")
-																		.serialize(),
-																dataType : "json",
-																success : function(
-																		data) {
-																	console
-																			.log("등록 결과: "
-																					+ data)
-																	if (data > 0) {
-																		alert("급여 정보 등록 성공")
-																		window.location
-																				.reload();
-																	} else {
-																		alert("급여 정보 등록 실패")
-																	}
+													var dateString = $("#payment_date").val(); // yyyy-mm-dd 형식의 날짜 문자열
+													var dateParts = dateString.split("-"); // 날짜를 구성하는 부분을 분리
 
-																},
-																error : function(
-																		err) {
-																	console
-																			.log(err);
-																	// Handle form submission error here
-																}
-															})
+													// Date 객체를 생성하여 날짜 설정
+													var dateObject = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+													// 일자를 뺀 값 구하기
+													var yearMonth = dateObject.getFullYear() + "-" + ("0" + (dateObject.getMonth() + 1)).slice(-2);
+													removeComma(); // 콤마 제거
+													$.ajax({
+													    type: "POST",
+													    url: "/salDuplicationCheck",
+													    data: {
+													        empno: $("#frm02 [name=empno]").val(),
+													        payment_dateStr: yearMonth
+													    },
+													    dataType: "json",
+													    success: function(data) {
+													        console.log("등록 결과: " + data);
+													        if (data <= 0) {
+													            insertSalary();
+													        } else {
+													            alert("해당 달의 입력하신 사원의 급여 정보가 이미 존재합니다.");
+													            return;
+													        }
+													    },
+													    error: function(err) {
+													        console.log(err);
+													    }
+													});
+													
+												
 												}
 											}
 
@@ -313,6 +323,8 @@
 												})
 											}
 										})
+										
+										
 
 					})
 
@@ -494,6 +506,29 @@
 		
 		 
 	
+	}
+	
+	
+	// 등록 함수
+	function insertSalary(){
+		$.ajax({
+			type : "POST",
+			url : "/insertSalary",
+			data : $("#frm02").serialize(),
+			dataType : "json",
+			success : function(data) {
+				console.log("등록 결과: "+ data)
+				if (data > 0) {
+					alert("급여 정보 등록 성공")
+					window.location.reload();
+				} else {
+					alert("급여 정보 등록 실패")
+				}
+			},
+			error : function(err) {
+				console.log(err);
+			}
+		})
 	}
 </script>
 <style>
