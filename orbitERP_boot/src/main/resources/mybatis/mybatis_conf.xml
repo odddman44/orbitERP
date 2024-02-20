@@ -11,6 +11,7 @@
 		<typeAlias alias="attendance" type="com.web.orbitERP.vo.Attendance"/>
 		<typeAlias alias="salary" type="com.web.orbitERP.vo.Salary"/>
 		<typeAlias alias="salarySch" type="com.web.orbitERP.vo.SalarySch"/>
+		<typeAlias alias="paystub" type="com.web.orbitERP.vo.Paystub"/>
 		<typeAlias alias="attendanceSch" type="com.web.orbitERP.vo.AttendanceSch"/>
 		<typeAlias alias="accsub" type="com.web.orbitERP.vo.Accsub"/>
 		<typeAlias alias="accsubSch" type="com.web.orbitERP.vo.AccsubSch"/>

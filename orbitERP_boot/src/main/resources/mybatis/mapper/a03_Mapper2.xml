@@ -417,11 +417,29 @@
 		AND empno = #{empno}
 	</delete>
 
-	<select id="isExistSalary" resultType="int">
+	<select id="salDuplicationCheck" resultType="int">
 		SELECT count(*) FROM
 		SALARY
 		WHERE TO_CHAR(PAYMENT_DATE, 'YYYY-MM') = #{payment_dateStr}
-		AND EMPNO = #{empno}
+		AND
+		EMPNO = #{empno}
+	</select>
+
+	<select id="getPaystubList" resultType="paystub">
+		SELECT DISTINCT
+			payment_date, stub_name, deptno, count(*) AS count, SUM(net_pay) AS
+			total_net_pay
+			FROM PAYSTUB
+		<if test="deptno != null and deptno != '0'">
+			WHERE deptno = #{deptno}
+		</if>
+		<if test="year != null and year != '0'">
+			AND EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
+		</if>
+		<if test="month != null and month != '0'">
+			AND EXTRACT(MONTH FROM PAYMENT_DATE) = #{month}
+		</if>
+			GROUP BY payment_date, stub_name, deptno
 	</select>
 
 

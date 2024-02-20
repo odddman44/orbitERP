@@ -15,6 +15,7 @@ import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.Paystub;
 import com.web.orbitERP.vo.Salary;
 import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
@@ -140,7 +141,10 @@ public interface A02_HRDao {
 	
 	int deleteSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
 	
-	int isExistSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
+	int salDuplicationCheck(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
+	
+	Paystub getPaystubList(@Param("deptno") int deptno, 
+					@Param("month") int month, @Param("year") int year );
 	
 	
 	

@@ -429,6 +429,42 @@ WHERE payment_date = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
 AND empno = #{empno}
  * */
 
+-- 급여명세서 테이블 만들기
+
+CREATE TABLE paystub (
+    payment_date DATE, -- 급여 지급일, 신고 귀속
+    stub_name varchar2(100), -- 명세서 이름
+    empno varchar2(20), -- 사원번호
+    deptno NUMBER(2,0), -- 부서번호
+    net_pay NUMBER, -- 총액
+    CONSTRAINT pk_paystub PRIMARY KEY (payment_date, empno),
+    CONSTRAINT fk_paystub_dept FOREIGN KEY (deptno) REFERENCES dept(deptno),
+    CONSTRAINT fk_paystub_emp FOREIGN KEY (empno) REFERENCES employee(empno)
+);
+
+DROP TABLE paystub;
+
+
+SELECT * FROM PAYSTUB ;
+
+SELECT * FROM EMPLOYEE e ;
+
+SELECT * FROM SALARY s  WHERE deptno = 10 AND to_char(s.PAYMENT_DATE, 'YYYY-MM') = '2024-02';
+
+SELECT * FROM ALARM a ;
+
+INSERT INTO PAYSTUB values(
+	to_date('2024-02', 'YYYY-MM'), '인사팀 2월 급여', 'HR2311', 10, 5075500);
+
+SELECT DISTINCT  payment_date, stub_name, deptno, count(*) AS count, SUM(net_pay) AS total_net_pay
+FROM PAYSTUB
+WHERE deptno = 10 
+AND EXTRACT(YEAR FROM PAYMENT_DATE) = 2024
+AND EXTRACT(MONTH FROM PAYMENT_DATE) = 2
+GROUP BY payment_date, stub_name, deptno;
+
+
+
 
 	
 

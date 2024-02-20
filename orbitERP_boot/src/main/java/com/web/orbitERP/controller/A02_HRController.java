@@ -278,6 +278,19 @@ public class A02_HRController {
 		return ResponseEntity.ok(service.deleteSalary(empno, payment_dateStr));
 	}
 	
+	@RequestMapping("salDuplicationCheck")
+	public ResponseEntity<?> salDuplicationCheck(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
+	    return ResponseEntity.ok(service.salDuplicationCheck(empno, payment_dateStr));
+	}
+	
+	// http://localhost:4444/paystubList
+	@RequestMapping("paystubList")
+	public ResponseEntity<?> getPaystubList(@RequestParam("deptno") int deptno, 
+	                                         @RequestParam("year") int year ,
+	                                         @RequestParam("month") int month){
+	    return ResponseEntity.ok(service.getPaystubList(deptno, year, month));
+	}
+	
 	
 	
 	
