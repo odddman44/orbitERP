@@ -206,6 +206,7 @@ public class A04_FinanceController {
     	return ResponseEntity.ok(incomeStatements);
     }
     
+    // http://localhost:4444/netIncomeGraph?year=2024
     @GetMapping("netIncomeGraph")
     public ResponseEntity<?> getNetIncomeGraph(@RequestParam("year") int year){
     	List<FinanceSummary> incomeData = service.getNetIncomeGraph(year);
