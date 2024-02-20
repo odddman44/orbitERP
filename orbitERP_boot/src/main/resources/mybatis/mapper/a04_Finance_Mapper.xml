@@ -226,6 +226,6 @@
 		GROUP BY
 		    EXTRACT(MONTH FROM v.voucher_date)
 		ORDER BY
-		    month;
+		    month
     </select>
 </mapper>	

@@ -83,9 +83,9 @@
 	    function createNewRow() {
 	        var newRow = '<tr class="text-center">' +
 	            '<td><input type="number" class="form-control" name="acc_code" placeholder="클릭하여 선택.."></td>' +
-	            '<td><input type="number" class="form-control" name="debit_amount"></td>' +
+	            '<td><input type="number" class="form-control" name="debit_amount" style="text-align:right;"></td>' +
 	            '<td><input type="text" class="form-control acc-name" readonly></td>' +
-	            '<td><input type="number" class="form-control" name="credit_amount"></td>' +
+	            '<td><input type="number" class="form-control" name="credit_amount" style="text-align:right;"></td>' +
 	            '<td><input type="text" class="form-control" name="trans_name"></td>' +
 	            '<td><input type="text" class="form-control" name="j_remark"></td>' +
 	            '</tr>';
@@ -97,8 +97,13 @@
 	        $("#modalTable").append(newRow);
 	    }
 		
-	    // '등록' 버튼 클릭 이벤트
+	    // '등록' 버튼 클릭 이벤트(폼 제출1)
 	    $("#regFrmBtn").click(function() {
+	    	// 콤마 제거
+	        $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
+	            $(this).val($(this).val().replace(/,/g, ''));
+	        });
+	    	
 	    	var formData = {};
 	        var journalizings = [];
 	        console.log("전송 Data: ", formData); // 전송 데이터 확인
@@ -172,8 +177,13 @@
 
 	    });
 
-	    // 수정 버튼 클릭 이벤트
+	    // 수정 버튼 클릭 이벤트 (폼 제출2)
 	    $("#uptBtn").click(function() {
+	    	// 콤마 제거
+	        $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
+	            $(this).val($(this).val().replace(/,/g, ''));
+	        });
+	    	
 	    	var formData = {};
 	        var journalizings = [];
 	        var isValid = true;
@@ -244,11 +254,11 @@
 	        });
 	    });
 	    
-		 // 전체 선택/해제
+		// 전체 선택/해제
 	    $("#selectAll").click(function() {
 	        $(".selectRow").prop('checked', $(this).prop('checked'));
 	    }); 
-		// '선택삭제' 버튼 클릭 이벤트
+		// '선택삭제' 버튼 클릭 이벤트 (폼제출3)
 	    $("#delBtn").click(function() {
 	    	if (deptAuth !== 1 && deptAuth !== 20) {
 	            alert("권한이 없는 이용자입니다.");
@@ -290,6 +300,14 @@
 	        }
 	        
 	    });
+		
+		// 숫자 입력 필드에 대해 키 입력 시 콤마 처리
+	    $('#modalTable').on('input', 'input[name="debit_amount"], input[name="credit_amount"]', function() {
+	        var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+	        if (!isNaN(input) && input) { // 입력 값이 숫자인 경우
+	            $(this).val(addCommas(input)); // 콤마 추가
+	        }
+	    });
 
 	}); // $(document).ready 끝
 	
@@ -328,13 +346,16 @@
 	            	// null 값 공백 문자열로 처리
 	                var trans_name = journal.trans_name ? journal.trans_name : "";
 	                var j_remark = journal.j_remark ? journal.j_remark : "";
+	                // 천단위 콤마 추가
+	                var debitWithCommas = addCommas(journal.debit_amount);
+                	var creditWithCommas = addCommas(journal.credit_amount);
 	            	
 	                var row = '<tr class="text-center">' +
 	                    '<td><input type="hidden" name="journal_id" value="'+journal.journal_id+'"/>'+
 	                	'<input type="number" class="form-control" name="acc_code" value="' + journal.acc_code + '"></td>' +
-	                    '<td><input type="number" class="form-control" name="debit_amount" value="' + journal.debit_amount + '"></td>' +
+	                    '<td><input type="text" class="form-control" style="text-align:right;" name="debit_amount" value="' + debitWithCommas + '"></td>' +
 	                    '<td><input type="text" class="form-control acc-name" value="' + journal.acc_name + '" readonly></td>' +
-	                    '<td><input type="number" class="form-control" name="credit_amount" value="' + journal.credit_amount + '"></td>' +
+	                    '<td><input type="text" class="form-control" style="text-align:right;" name="credit_amount" value="' + creditWithCommas + '"></td>' +
 	                    '<td><input type="text" class="form-control" name="trans_name" value="' + trans_name + '"></td>' +
 	                    '<td><input type="text" class="form-control" name="j_remark" value="' + j_remark + '"></td>' +
 	                    '</tr>';
@@ -357,21 +378,45 @@
 	        }
 	    });
 	}
+	
 	// 차변과 대변 입력란에 이벤트 핸들러 추가
 	$(document).on('keyup', 'input[name="debit_amount"], input[name="credit_amount"]', function() {
 	    var $row = $(this).closest('tr');
 	    var $debitInput = $row.find('input[name="debit_amount"]');
 	    var $creditInput = $row.find('input[name="credit_amount"]');
 
+	    // 입력 값이 있을 때, 다른 필드를 readonly로 설정
 	    if ($debitInput.val()) {
-	        $creditInput.prop('readonly', true);
+	        $creditInput.prop('readonly', true).val(''); // 대변 필드를 readonly로 설정하고 값을 비웁니다.
 	    } else if ($creditInput.val()) {
-	        $debitInput.prop('readonly', true);
+	        $debitInput.prop('readonly', true).val(''); // 차변 필드를 readonly로 설정하고 값을 비웁니다.
 	    } else {
+	        // 두 필드 모두 비어있을 때, readonly 해제
 	        $debitInput.prop('readonly', false);
 	        $creditInput.prop('readonly', false);
 	    }
 	});
+	
+	// 숫자에 콤마를 추가하는 함수
+    function addCommas(nStr) {
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+ 	// 콤마 제거하기 (전역 스코프에 정의)
+    function removeComma() {
+        $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
+            var valueWithCommas = $(this).val();
+            var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+            $(this).val(valueWithoutCommas);
+        });
+    }
 </script>
 	<!-- DB테이블 플러그인 추가 -->
     <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -469,7 +514,7 @@
                                         	<td><input type="checkbox" class="selectRow" value="${vc.voucher_id}"></td>
                                             <td><fmt:formatDate pattern="yyyy-MM-dd" value="${vc.voucher_date}"/>/${vc.voucher_no}</td>
                                             <td>${vc.voucher_type}</td>
-                                            <td><fmt:formatNumber value="${vc.total_amount}" groupingUsed="true" maxFractionDigits="0" /></td>
+                                            <td style="text-align:right;"><fmt:formatNumber value="${vc.total_amount}" groupingUsed="true" maxFractionDigits="0" /></td>
                                             <td>${vc.trans_cname}</td>
                                             <td>${vc.remarks}</td>
                                             <td>${vc.dname}</td>

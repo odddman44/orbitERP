@@ -7,7 +7,7 @@
 <script>
 	$(document).ready(function() {
 		// 기본 연도 설정
-        var defaultYear = 2024;
+        var defaultYear = new Date().getFullYear();
         // 초기 차트 데이터 로드
         fetchSalesAndPurchasesData(defaultYear);
 		
