@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.web.orbitERP.dao.A03_PRDao;
 import com.web.orbitERP.vo.Alram;
 import com.web.orbitERP.vo.Calendar;
+import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
@@ -122,7 +123,10 @@ public class A03_PRService {
 		return dao.alDtail(idx);
 	}
 	public String getSender(String sender) {
-		// TODO Auto-generated method stub
 		return dao.getSender(sender);
+	}
+	public List<Employee> empList(Employee sch) {
+		if(sch.getEname()==null) sch.setEname("");
+		return dao.empList(sch);
 	}
 }

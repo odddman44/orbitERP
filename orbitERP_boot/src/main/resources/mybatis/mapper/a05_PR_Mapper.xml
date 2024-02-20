@@ -186,8 +186,13 @@
 		FROM EMPLOYEE
 		WHERE EMPNO=#{sender}
 	</select>
-   <insert id="sedAlram" parameterType="alram">
+   <insert id="sendAlram" parameterType="alram">
       INSERT INTO ALARM values(al_seq.nextval,#{sender},#{receiver},'N',
       #{content},#{title},sysdate,#{color},#{icon},#{category});
    </insert>
+   <!-- 사원조회 -->
+   <select id="empList" resultType="employee" parameterType="employee">
+		SELECT * FROM EMPLOYEE
+		WHERE ENAME LIKE '%'||#{ename}||'%' AND (#{deptno} = 0 OR deptno = #{deptno})
+	</select> 
 </mapper>

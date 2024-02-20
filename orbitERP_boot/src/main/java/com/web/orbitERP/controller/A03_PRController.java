@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.service.A03_PRService;
 import com.web.orbitERP.vo.Alram;
 import com.web.orbitERP.vo.Calendar;
+import com.web.orbitERP.vo.Dept;
+import com.web.orbitERP.vo.EmpSch;
+import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
@@ -26,6 +30,8 @@ public class A03_PRController {
 
 	@Autowired(required = false)
 	private A03_PRService service;
+	@Autowired(required = false)
+	private A02_HRService service2;
 	//http://localhost:4444/lectureList
 	//http://211.63.89.67:4444/lectureList
 	// 강의조회
@@ -51,6 +57,7 @@ public class A03_PRController {
 	//수강테이블 등록
 	@RequestMapping("insertEnroll")
 	public ResponseEntity<?> insertEnroll(Enrollment ins){
+		System.out.println(ins.getEmpno());
 		return ResponseEntity.ok(service.insertEnroll(ins));
 	}
 	
@@ -97,7 +104,7 @@ public class A03_PRController {
 	//http://localhost:4444/schTch
 	//강사테이블 검색
 	@RequestMapping("schTch")
-	public String schTch(@ModelAttribute("schT") LectureTch sch, Model d) {
+	public String schTch(@ModelAttribute("sch") LectureTch sch, Model d) {
 		d.addAttribute("teacherList", service.schTch(sch));
 		return "pageJsonReport";
 	}
@@ -207,9 +214,18 @@ public class A03_PRController {
 		//알림보내기
 		//보낸사람 이름
 		@RequestMapping("sendAlram")
-		public String sendAlram(String sender,Model d) {
+		public String sendAlram(String sender ,Model d) {
 			d.addAttribute("sender",service.getSender(sender));
 			return"a03_planResource\\sendAlram";
+		}
+		@RequestMapping("schEmp")
+		public String schEmp(@ModelAttribute("sch")Employee sch,Model d) {
+			d.addAttribute("empList",service.empList(sch));
+			return "pageJsonReport";
+		}
+		@ModelAttribute("dlist")
+		public List<Dept> getDeptList(){
+			return service2.getDeptList(new Dept());
 		}
 		//보내기
 //		@RequestMapping("insAlram")
