@@ -83,9 +83,9 @@
 	    function createNewRow() {
 	        var newRow = '<tr class="text-center">' +
 	            '<td><input type="number" class="form-control" name="acc_code" placeholder="클릭하여 선택.."></td>' +
-	            '<td><input type="number" class="form-control" name="debit_amount" style="text-align:right;"></td>' +
+	            '<td><input type="text" class="form-control" name="debit_amount" style="text-align:right;"></td>' +
 	            '<td><input type="text" class="form-control acc-name" readonly></td>' +
-	            '<td><input type="number" class="form-control" name="credit_amount" style="text-align:right;"></td>' +
+	            '<td><input type="text" class="form-control" name="credit_amount" style="text-align:right;"></td>' +
 	            '<td><input type="text" class="form-control" name="trans_name"></td>' +
 	            '<td><input type="text" class="form-control" name="j_remark"></td>' +
 	            '</tr>';
@@ -399,6 +399,10 @@
 	
 	// 숫자에 콤마를 추가하는 함수
     function addCommas(nStr) {
+    	nStr = parseFloat(nStr); // 입력 값을 숫자로 변환
+        if (nStr === 0) { // 값이 0인 경우 공백 반환
+            return "";
+        }
         nStr += '';
         var x = nStr.split('.');
         var x1 = x[0];
@@ -409,7 +413,7 @@
         }
         return x1 + x2;
     }
- 	// 콤마 제거하기 (전역 스코프에 정의)
+ 	// 콤마 제거하기
     function removeComma() {
         $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
             var valueWithCommas = $(this).val();
