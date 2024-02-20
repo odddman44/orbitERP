@@ -19,7 +19,7 @@ $(document).ready(function() {
     
     function fetchNetIncomeData(year){
         $.ajax({
-            url: '/netIncomeGraph?year=' + year, // 서버 엔드포인트 URL 수정 필요
+            url: '/netIncomeGraph?year=' + year, 
             method: 'GET',
             dataType: 'json',
             success: function(response){
