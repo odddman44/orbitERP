@@ -186,4 +186,8 @@
 		FROM EMPLOYEE
 		WHERE EMPNO=#{sender}
 	</select>
+   <insert id="sedAlram" parameterType="alram">
+      INSERT INTO ALARM values(al_seq.nextval,#{sender},#{receiver},'N',
+      #{content},#{title},sysdate,#{color},#{icon},#{category});
+   </insert>
 </mapper>
