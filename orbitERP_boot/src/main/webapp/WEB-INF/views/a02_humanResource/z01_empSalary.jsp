@@ -151,6 +151,11 @@
 						$("#regFrmBtn")
 								.click(
 										function() {
+											// payment_dateStr, empno, deptno 수정 가능 처리
+											 $("#frm02 [name='payment_dateStr']").prop('disabled', false);
+											 $("#frm02 [name='empno']").prop('disabled', false);
+											 $("#frm02 [name='deptno']").prop('disabled', false);
+											 
 											var payment_date = new Date($(
 													"#payment_date").val());
 											var start_date = new Date($(
@@ -239,10 +244,15 @@
 										})
 										$("#uptBtn").click(function(){
 											// alert($("#frm02").serialize());
+											
+										
 											 
 											if(confirm("급여 정보를 수정하시겠습니까?")){
 												removeComma(); // 콤마 제거하기
-										
+												// 비활성화 풀기
+													 $("#frm02 [name='payment_dateStr']").prop('disabled', false);
+													 $("#frm02 select[name='empno']").prop('disabled', false);
+													 $("#frm02 select[name='deptno']").prop('disabled', false);
 												
 												$.ajax({
 													url:"/updateSalary",
@@ -274,6 +284,10 @@
 											var payment_dateStr = $("[name=payment_dateStr]").val();
 											console.log(payment_dateStr)
 											if(confirm("급여 정보를 삭제하시겠습니까?")){
+												// 비활성화 풀기
+												 $("#frm02 [name='payment_dateStr']").prop('disabled', false);
+												 $("#frm02 select[name='empno']").prop('disabled', false);
+												 $("#frm02 select[name='deptno']").prop('disabled', false);
 												$.ajax({
 													url:"/deleteSalary",
 													dataType:"json",
@@ -457,6 +471,7 @@
 				$("#frm02 [name=payment_dateStr]").val(payment_dateStr)
 				$("#frm02 [name=start_dateStr]").val(start_dateStr)
 				$("#frm02 [name=end_dateStr]").val(end_dateStr)
+				
 
 			},
 			error : function(err) {
@@ -469,6 +484,16 @@
 		$("#uptBtn").show();
 		$("#delBtn").show()
 		$("#regFrmBtn").hide();
+		
+		// payment_dateStr, empno, deptno 수정 불가 처리
+		 $("#frm02 [name='payment_dateStr']").prop('disabled', true);
+		 $("#frm02 select[name='empno']").prop('disabled', true);
+		 $("#frm02 select[name='deptno']").prop('disabled', true);
+		 
+
+		
+		 
+	
 	}
 </script>
 <style>
@@ -574,9 +599,9 @@ table {
 
 						<div class="col-md-4">
 
-							<label for="start_date">급여 지급일</label> <input type="date"
-								class="form-control" id="payment_date" name="payment_dateStr"
-								required />
+							<label for="start_date">급여 지급일</label> 
+							<input type="date" class="form-control" id="payment_date" name="payment_dateStr" required />
+							
 						</div>
 
 						<div class="col-md-4">
@@ -598,6 +623,7 @@ table {
 								name="empno" class="form-control">
 								<option value="" id="defaultEmpno">사원번호 선택</option>
 							</select>
+							
 						</div>
 						<div class="col-md-6">
 
@@ -608,6 +634,7 @@ table {
 									<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
 								</c:forEach>
 							</select>
+							
 						</div>
 					</div>
 

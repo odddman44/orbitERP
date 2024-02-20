@@ -22,7 +22,11 @@ $(document).ready(function() {
 			class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 
 			<h6 class="m-0 font-weight-bold text-primary">급여대장 조회</h6>
-			<button class="btn btn-success" type="button">신규</button>
+			<button type="button" id="newBtn"
+				class="btn btn-primary btn-icon-split">
+				<span class="icon text-white-50"><i class="fas fa-check"></i></span>
+				<span class="text">신규</span>
+			</button>
 		</div>
 
 
