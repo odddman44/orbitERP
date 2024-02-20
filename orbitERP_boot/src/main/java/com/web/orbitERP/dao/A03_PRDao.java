@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.web.orbitERP.vo.Alram;
 import com.web.orbitERP.vo.Calendar;
+import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
@@ -64,4 +65,5 @@ public interface A03_PRDao {
 	int checkUp(@Param("idx")int idx);
 	Alram alDtail(@Param("idx")int idx);
 	String getSender(String sender);
+	List<Employee> empList(Employee sch);
 }
