@@ -180,4 +180,14 @@
 		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
 		WHERE IDX=#{idx}
 	</select>
+	<!-- 알람 보내기 -->
+	<select id="getSender" parameterType="String" resultType="String">
+		SELECT ENAME
+		FROM EMPLOYEE
+		WHERE EMPNO=#{sender}
+	</select>
+   <insert id="sedAlram" parameterType="alram">
+      INSERT INTO ALARM values(al_seq.nextval,#{sender},#{receiver},'N',
+      #{content},#{title},sysdate,#{color},#{icon},#{category});
+   </insert>
 </mapper>

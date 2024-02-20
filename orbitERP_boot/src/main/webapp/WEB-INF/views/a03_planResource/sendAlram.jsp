@@ -15,8 +15,10 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
  <style type="text/css">
- .notification-form {
+ body {
   background-color: #f5f5f5;
+}
+ .notification-form {
   color: #333333;
   padding: 20px 30px;
 }
@@ -27,12 +29,14 @@
 .input-group-text {
   width: 90px;
 }
+#sendBtn {
+  float: right;
+}
  </style>
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#calModal").click()
 	});
 </script>
 <!-- Custom fonts for this template-->
@@ -52,7 +56,7 @@
 </head>
 <div class="notification-form">
   <div class="header">
-    <h5>알림보내기</h5>
+    <h5>알림보내기페이지</h5>
   </div>
   <div class="body">
     <form id="frm01" class="form" method="post">
@@ -63,7 +67,7 @@
       </div>
       <div class="input-group mb-3">
         <label for="sender" class="input-group-text">보내는사람</label>
-        <input type="text" id="sender" readonly class="form-control" />
+        <input type="text" id="sender" readonly class="form-control" value="${sender}" />
       </div>
       <div class="input-group mb-3">
         <label for="receiver" class="input-group-text">받는사람</label>
@@ -81,7 +85,7 @@
       </div>
       <div class="input-group mb-3">
         <label for="content" class="input-group-text">내용</label>
-        <textarea id="content" name="content" class="form-control" rows="3"></textarea>
+        <textarea id="content" name="content" class="form-control" rows="8"></textarea>
       </div>
     </form>
   </div>

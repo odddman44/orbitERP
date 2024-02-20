@@ -121,4 +121,8 @@ public class A03_PRService {
 	public Alram alDtail(int idx) {
 		return dao.alDtail(idx);
 	}
+	public String getSender(String sender) {
+		// TODO Auto-generated method stub
+		return dao.getSender(sender);
+	}
 }

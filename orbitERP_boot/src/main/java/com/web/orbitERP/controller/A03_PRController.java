@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A03_PRService;
+import com.web.orbitERP.vo.Alram;
 import com.web.orbitERP.vo.Calendar;
 import com.web.orbitERP.vo.Enrollment;
 import com.web.orbitERP.vo.InsertLecCal;
@@ -191,7 +192,6 @@ public class A03_PRController {
 		@RequestMapping("alramAll")
 		public String alramAll(String receiver,Model d) {
 			d.addAttribute("alListAll",service.alListAll(receiver));
-			System.out.println(service.alListAll(receiver));
 			return"a03_planResource\\alram";
 		}
 		@RequestMapping("checkUp")
@@ -205,9 +205,17 @@ public class A03_PRController {
 		}
 		//http://localhost:4444/sendAlram
 		//알림보내기
+		//보낸사람 이름
 		@RequestMapping("sendAlram")
-		public String sendAlram() {
+		public String sendAlram(String sender,Model d) {
+			d.addAttribute("sender",service.getSender(sender));
 			return"a03_planResource\\sendAlram";
 		}
+		//보내기
+//		@RequestMapping("insAlram")
+//		public int insAlram(Alram alram,Model d) {
+//			d.addAttribute();
+//			return"a03_planResource\\sendAlram";
+//		}
 		
 }
