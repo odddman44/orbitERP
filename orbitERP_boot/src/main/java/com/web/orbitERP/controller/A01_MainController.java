@@ -46,6 +46,11 @@ public class A01_MainController {
 		d.addAttribute("alList",prService.alList(emem.getEmpno()));
 		return "a01_main\\a83_login";
 	}
+	
+	@GetMapping("multiLang")
+    public String changeLanguage(HttpSession session) {
+        return "redirect:/login"; 
+    }
 
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
