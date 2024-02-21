@@ -283,24 +283,24 @@
      <div class="modal-body" id="detail">
     <div class="form-group">
         <label for="title">제목</label>
-        <input type="text" class="form-control" id="title" name="title" value="">
+        <input type="text" class="form-control" id="title" name="title" value="" readonly>
     </div>
     <div class="form-group">
         <label for="senderAndCreateDate">보낸사람&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;작성일시</label>
         <div class="d-flex">
-            <input type="text" class="form-control flex-grow-1 mr-2" id="sender" name="sender" value="">
-            <input type="text" class="form-control" id="create_date" name="create_date" value="">
+            <input type="text" class="form-control flex-grow-1 mr-2" id="sender" name="sender" value="" readonly>
+            <input type="text" class="form-control" id="create_date" name="create_date" value="" readonly>
         </div>
     </div>
     <div class="form-group">
         <label for="category">카테고리</label>
-        <input type="text" class="form-control" id="category" name="category" value="">
+        <input type="text" class="form-control" id="category" name="category" value="" readonly>
     </div>
     <div class="form-group">
         <label for="content">내용</label>
-        <textarea class="form-control" id="content" name="content" rows="4"></textarea>
+        <textarea class="form-control" id="content" name="content" rows="4" readonly></textarea>
     </div>
 </div>
       <div class="modal-footer">
