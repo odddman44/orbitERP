@@ -421,6 +421,10 @@
             $(this).val(valueWithoutCommas);
         });
     }
+ 	// 다운로드
+    function  downloadVoucherDetail(voucherId) {
+        window.location.href = "${path}/downloadExcel?voucher_id="+voucherId;
+    }
 </script>
 	<!-- DB테이블 플러그인 추가 -->
     <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -522,7 +526,8 @@
                                             <td>${vc.trans_cname}</td>
                                             <td>${vc.remarks}</td>
                                             <td>${vc.dname}</td>
-                                            <td><button type="button" id="downloadBtn" class="btn btn-warning btn-icon-split">
+                                            <td><button type="button" id="downloadBtn" class="btn btn-warning btn-icon-split"
+                                            	onclick="downloadVoucherDetail('${vc.voucher_id}')">
 				                            	<span class="icon text-white-50"><i class="fas fa-download"></i></span>
 				                            	<span class="text">다운로드</span></button></td>
                                         </tr>

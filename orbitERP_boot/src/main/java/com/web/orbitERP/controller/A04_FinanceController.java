@@ -1,9 +1,23 @@
 package com.web.orbitERP.controller;
 
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +41,10 @@ import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.GrossProfit;
 import com.web.orbitERP.vo.IcStmtSch;
 import com.web.orbitERP.vo.IncomeStatement;
+import com.web.orbitERP.vo.Journalizing;
 import com.web.orbitERP.vo.VoucherDetail;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class A04_FinanceController {
@@ -160,6 +177,125 @@ public class A04_FinanceController {
             return ResponseEntity.status
             		(HttpStatus.INTERNAL_SERVER_ERROR).body
             		(Map.of("status", "error", "message", e.getMessage()));
+        }
+    }
+    
+    // 전표 엑셀로 다운로드!
+    @GetMapping("downloadExcel")
+    public void downloadExcel(HttpServletResponse response, @RequestParam("voucher_id") int voucher_id) {
+        try {
+            // voucherId를 사용하여 데이터베이스에서 전표 상세 정보와 분개 정보를 조회
+        	VoucherDetail voucherDetail = service.getVoucherDetail(voucher_id);
+            List<Journalizing> journalizings = voucherDetail.getJournalizings();
+
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("전표 상세 조회");
+            
+            // 셀 스타일 설정
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            CellStyle infoCellStyle = workbook.createCellStyle();
+            CellStyle normalCellStyle = workbook.createCellStyle();
+
+            // 헤더 셀 스타일 설정
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerCellStyle.setFont(headerFont);
+            headerCellStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+            headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+            // 데이터 셀 스타일 설정
+            Font dataFont = workbook.createFont();
+            dataFont.setBold(true);
+            infoCellStyle.setFont(dataFont);
+            infoCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            infoCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // 일반 셀 스타일 설정 (하얀 배경)
+            Font normalFont = workbook.createFont();
+            normalFont.setBold(false);
+            normalCellStyle.setFont(normalFont);
+            normalCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+            normalCellStyle.setFillPattern(FillPatternType.NO_FILL);
+            
+            // 헤더 행 생성
+            String[] headerColumns = {"전표번호", "전표 날짜", "전표유형", "금액", "거래(처)명", "적요", "부서"};
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < headerColumns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headerColumns[i]);
+                cell.setCellStyle(headerCellStyle);
+                sheet.setColumnWidth(i, 20 * 256); // 셀 너비 설정
+            }
+
+            // 전표 상세 정보 행 생성
+            Row detailRow = sheet.createRow(1);
+            for (int i = 0; i < headerColumns.length; i++) {
+                Cell cell = detailRow.createCell(i);
+                cell.setCellStyle(infoCellStyle);
+            }
+            // 데이터 셀 설정 
+            detailRow.createCell(0).setCellValue(voucherDetail.getVoucher_id());
+            
+            // 날짜 포매팅 추가
+            CellStyle dateCellStyle = workbook.createCellStyle();
+            CreationHelper createHelper = workbook.getCreationHelper();
+            dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-mm-dd"));
+            Cell dateCell = detailRow.createCell(1);
+            dateCell.setCellValue(voucherDetail.getVoucher_date());
+            dateCell.setCellStyle(dateCellStyle);
+            detailRow.createCell(2).setCellValue(voucherDetail.getVoucher_type());
+            detailRow.createCell(3).setCellValue(voucherDetail.getTotal_amount());
+            detailRow.createCell(4).setCellValue(voucherDetail.getTrans_cname());
+            detailRow.createCell(5).setCellValue(voucherDetail.getRemarks());
+            detailRow.createCell(6).setCellValue(voucherDetail.getDname());
+            
+            // 금액 데이터에 천단위 콤마 스타일 적용
+            CellStyle amountCellStyle = workbook.createCellStyle();
+            amountCellStyle.setDataFormat(workbook.createDataFormat().getFormat("#,##0"));
+            // 전표 상세 정보에 금액 콤마 스타일 적용
+            detailRow.getCell(3).setCellStyle(amountCellStyle);
+            
+            // 분개 정보 섹션 헤더 생성
+            String[] journalColumns = {"계정코드", "계정명", "차변", "대변", "거래명", "분개 적요"};
+            int journalRowNum = 5; // 전표 정보 다음 행 번호
+            Row journalHeaderRow = sheet.createRow(journalRowNum);
+            for (int i = 0; i < journalColumns.length; i++) {
+                Cell cell = journalHeaderRow.createCell(i);
+                cell.setCellValue(journalColumns[i]);
+                cell.setCellStyle(infoCellStyle);
+            }
+
+            // 분개 정보 데이터 행 생성
+            journalRowNum++;
+            for (Journalizing journal : journalizings) {
+                Row row = sheet.createRow(journalRowNum++);
+                for (int i = 0; i < journalColumns.length; i++) {
+                    Cell cell = row.createCell(i);
+                    cell.setCellStyle(normalCellStyle);
+                }
+                // 각 셀에 분개 정보 데이터를 설정합니다...
+                row.getCell(0).setCellValue(journal.getAcc_code());
+                row.getCell(1).setCellValue(journal.getAcc_name());
+                row.getCell(2).setCellValue(journal.getDebit_amount());
+                row.getCell(3).setCellValue(journal.getCredit_amount());
+                row.getCell(4).setCellValue(journal.getTrans_name());
+                row.getCell(5).setCellValue(journal.getJ_remark());
+                // 금액 데이터에 천단위 콤마 스타일 적용
+                row.getCell(2).setCellStyle(amountCellStyle);
+                row.getCell(3).setCellStyle(amountCellStyle);
+            }
+
+            // HTTP 헤더 설정 및 엑셀 파일 다운로드
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            // 파일명 랜덤생성.
+            String fileName = "Voucher_" + voucher_id + "_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".xlsx";
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            workbook.write(response.getOutputStream());
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     
