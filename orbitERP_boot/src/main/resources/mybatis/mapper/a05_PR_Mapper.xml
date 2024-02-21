@@ -169,7 +169,7 @@
 		WHERE RECEIVER =#{receiver}
 		ORDER BY a.CHECKED, a.CREATE_DATE DESC
 	</select>
-	<!-- 알람 조회처리 -->
+	<!-- 알람 읽음처리 -->
 	<update id="checkUp" parameterType="int">
 		UPDATE ALARM SET CHECKED ='Y' WHERE IDX =${idx}
 	</update>

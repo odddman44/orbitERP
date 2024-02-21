@@ -120,6 +120,7 @@
 		    console.log($("[name=color]").val())
 		    console.log($("[name=icon]").val())
 			$("[name=sender]").val('${sender.empno}')
+			receiverList(checkedValues)
 		    checkedValues.forEach(function (check) {
 		        $("[name=receiver]").val(check.empno);
 
@@ -130,7 +131,7 @@
 		            dataType: "json",
 		            success: function (data) {
 		                alert(data.msg)
-		                window.close()
+					    window.close()
 		            },
 		            error: function (err) {
 		                console.log(err);
@@ -140,6 +141,21 @@
 		    });
 		});
 	})
+	function receiverList(checkedValues){ //받는사람 리스트 보내기
+		var receivers= JSON.stringify(checkedValues);
+		$.ajax({
+			type:"POST",
+			url:"/receiverList",
+			data:{reList:receivers},
+			dataType: "json",
+			success: function (data) {
+            },
+            error: function (err) {
+                console.log(err);
+                // Handle form submission error here
+            }
+		})
+	}
 	function table(){
 		$("#dataTable5").DataTable({
 	    	//"paging": true,        // 페이지 나누기 기능 사용
