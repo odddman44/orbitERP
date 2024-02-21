@@ -291,6 +291,12 @@ public class A02_HRController {
 	    return ResponseEntity.ok(service.getPaystubList(deptno, year, month));
 	}
 	
+	// http://localhost:4444/insertPaystubFrm
+	@RequestMapping("insertPaystubFrm")
+	public String insertPaystubFrm() {
+		return "a02_humanResource\\z04_paystubInsert";
+	}
+	
 	
 	
 	

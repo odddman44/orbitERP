@@ -331,9 +331,10 @@
 
 	<select id="getSalaryList" resultType="salarySch"
 		parameterType="salarySch">
-		SELECT s.*, d.dname
+		SELECT s.*, d.dname, e.ename
 		FROM salary s
 		JOIN DEPT d ON s.DEPTNO = d.DEPTNO
+		JOIN Employee e ON e.empno = s.empno
 		WHERE 1=1
 		<if test="deptno != null and deptno != 0">
 			AND s.deptno = #{deptno}
@@ -427,19 +428,19 @@
 
 	<select id="getPaystubList" resultType="paystub">
 		SELECT DISTINCT
-			payment_date, stub_name, deptno, count(*) AS count, SUM(net_pay) AS
-			total_net_pay
-			FROM PAYSTUB
-		<if test="deptno != null and deptno != '0'">
-			WHERE deptno = #{deptno}
+		payment_date, stub_name, deptno, count(*) AS count, SUM(net_pay) AS total_net_pay
+		FROM PAYSTUB
+		WHERE 1=1
+		<if test="deptno != null and deptno != 0">
+			AND deptno = #{deptno}
 		</if>
-		<if test="year != null and year != '0'">
+		<if test="year != null and year != 0">
 			AND EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
 		</if>
-		<if test="month != null and month != '0'">
+		<if test="month != null and month != 0">
 			AND EXTRACT(MONTH FROM PAYMENT_DATE) = #{month}
 		</if>
-			GROUP BY payment_date, stub_name, deptno
+		GROUP BY payment_date, stub_name, deptno
 	</select>
 
 

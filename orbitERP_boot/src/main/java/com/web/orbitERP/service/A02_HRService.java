@@ -511,7 +511,7 @@ public class A02_HRService {
 		return dao.salDuplicationCheck(empno, payment_dateStr);
 	}
 	
-	public Paystub getPaystubList(@Param("deptno") int deptno, 
+	public List<Paystub> getPaystubList(@Param("deptno") int deptno, 
 			@Param("year") int year ,@Param("month") int month  ) {
 		return dao.getPaystubList(deptno, month, year);
 	}

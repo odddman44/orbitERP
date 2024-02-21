@@ -14,6 +14,7 @@ public class SalarySch {
 	private int net_pay;
 	private int deptno;
 	private String dname;
+	private String ename;
 	
 	// 페이징 처리를 위한 필드값
 	
@@ -36,7 +37,7 @@ public class SalarySch {
 
 	public SalarySch(Date payment_date, String empno, int base_salary, int allowance, int deduction, int net_pay,
 			int deptno, String dname, int count, int pageSize, int pageCount, int curPage, int start, int end, int blockSize,
-			int startBlock, int endBlock) {
+			int startBlock, int endBlock, String ename) {
 		super();
 		this.payment_date = payment_date;
 		this.empno = empno;
@@ -55,6 +56,15 @@ public class SalarySch {
 		this.blockSize = blockSize;
 		this.startBlock = startBlock;
 		this.endBlock = endBlock;
+		this.ename = ename;
+	}
+
+	public String getEname() {
+		return ename;
+	}
+
+	public void setEname(String ename) {
+		this.ename = ename;
 	}
 
 	public Date getPayment_date() {

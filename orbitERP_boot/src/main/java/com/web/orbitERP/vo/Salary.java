@@ -15,6 +15,7 @@ public class Salary {
 	private Date end_date;
 	private String end_dateStr; // 입력용
 	private int deptno;
+	private String ename;
 	
 	public Salary() {
 	
@@ -32,6 +33,21 @@ public class Salary {
 		this.start_date = start_date;
 		this.end_date = end_date;
 		this.deptno = deptno;
+	}
+	
+	public Salary(Date payment_date, String empno, int base_salary, int allowance, int deduction, int net_pay,
+			Date start_date, Date end_date, int deptno, String ename) {
+		
+		this.payment_date = payment_date;
+		this.empno = empno;
+		this.base_salary = base_salary;
+		this.allowance = allowance;
+		this.deduction = deduction;
+		this.net_pay = net_pay;
+		this.start_date = start_date;
+		this.end_date = end_date;
+		this.deptno = deptno;
+		this.ename = ename;
 	}
 
 	public Salary(String payment_dateStr, String empno, int base_salary, int allowance, int deduction,
