@@ -24,6 +24,7 @@ import com.web.orbitERP.vo.InsertLecCal;
 import com.web.orbitERP.vo.Lecture;
 import com.web.orbitERP.vo.LectureStu;
 import com.web.orbitERP.vo.LectureTch;
+import com.web.orbitERP.vo.Receiver;
 
 @Controller
 public class A03_PRController {
@@ -218,6 +219,7 @@ public class A03_PRController {
 			d.addAttribute("sender",service.getSender(sender));
 			return"a03_planResource\\sendAlram";
 		}
+		//사원정보조회
 		@RequestMapping("schEmp")
 		public String schEmp(@ModelAttribute("sch")Employee sch,Model d) {
 			d.addAttribute("empList",service.empList(sch));
@@ -233,5 +235,11 @@ public class A03_PRController {
 			d.addAttribute("msg",service.sendAlramGo(alram));
 			return"pageJsonReport";
 		}
-		
+		//알림보내기페이지에서 top으로 받는사람리스트 보내기
+		@GetMapping("receiverList")
+		public String receiverList(List<Receiver> reList,Model d) {
+			System.out.println(reList);
+			d.addAttribute(reList);
+			return "a01_main\\a01_index";
+		}
 }

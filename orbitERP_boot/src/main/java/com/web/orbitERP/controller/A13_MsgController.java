@@ -13,8 +13,8 @@ public class A13_MsgController {
 		return "a03_planResource\\a22_msg";
 	}		
 	
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
+    @MessageMapping("/hello") //보내는 거
+    @SendTo("/topic/greetings") //메시지
     public String greeting(String message) {
     	System.out.println("# 메시지 전송 #"+message);
     	//DB저장용임

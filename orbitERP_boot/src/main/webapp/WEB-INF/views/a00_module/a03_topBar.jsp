@@ -5,6 +5,8 @@
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
 <%@ page import="jakarta.servlet.http.HttpSession"%>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 <script type="text/javascript">
 	var empno="${emem.empno}"
 	$(document).ready(function() {
@@ -14,7 +16,18 @@
 	        window.location.href = "${path}/login";
 	    }
 		realram(empno)
+		alert(reList)
 	});
+	function socketAlram(){
+		alert('하이')
+	}
+	/*function sendName() {
+    	
+        var name = document.getElementById('name').value; // 받을사람 이름
+        var msg = document.getElementById('msg').value; // 보낼 메시지(알림이 도착했습니다. 예정)
+        document.querySelector("#show").innerHTML += "나:"+msg+"<br>" //나에게 보여지는 내가 보낸 메시지
+        stompClient.send("/app/hello", {}, JSON.stringify({'name': name, 'msg':msg}));
+    }*/
 	
 	function realram(empno){
 		//탑바로 정보 보내기
