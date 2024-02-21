@@ -23,13 +23,13 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-    if(${alListAll}.length == 0) {
+   	if('${alListAll}.length' == 0) {
         alert('알림이 없습니다.');
     }
-    $("#sendMsg").click(function() {
-        sendAlram("${emem.empno}");
-    });
-	
+    
+    $('#sendMsgg').click(function() {
+        sendAlram('${emem.empno}');
+    })
 });
 
 </script>
@@ -68,7 +68,7 @@ $(document).ready(function() {
 					<div class="d-sm-flex align-items-center justify-content-between mb-4">
 						<h1 class="h3 mb-0 text-gray-800">☆ 알림</h1>
 						<div style="text-align: right;">
-								<input type="button" class="btn btn-info" value="알림보내기" id="sendMsg"/>
+								<input type="button" class="btn btn-info" value="알림보내기" id="sendMsgg"/>
 							</div>
 					</div>
 					

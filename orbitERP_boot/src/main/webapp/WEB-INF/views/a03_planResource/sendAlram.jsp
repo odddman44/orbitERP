@@ -194,19 +194,23 @@
 	    });
 	}
 	function getCheck() {
-	    //선택 버튼 클릭 시
-	    var cnt=1
+	    // 선택 버튼 클릭 시
+	    var cnt = 1;
 	    var rechtml = "";
-		checkedValues.forEach(function (check) {
-			cnt++;
-			if(cnt===5){
-				rechtml += '\n';
-			}
-			rechtml += check.ename+', '
-        });
-		rechtml = rechtml.slice(0, -2);
-		$("[name=receiver]").val(rechtml)
-	    $("#close").click() //모달창 닫기
+
+	    checkedValues.forEach(function (check) {
+	        rechtml += check.ename + ', ';
+	        cnt++;
+
+	        if (cnt === 6) {
+	            rechtml += '\n';
+	            cnt = 1; // cnt 초기화
+	        }
+	    });
+
+	    rechtml = rechtml.slice(0, -2);
+	    $("[name=receiver]").val(rechtml);
+	    $("#close").click(); // 모달창 닫기
 	}
 
 	// 체크박스 클릭 시 배열에 저장
