@@ -203,7 +203,7 @@
          aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">예산관리:</h6>
-            <a class="collapse-item" href="#">예산 편성</a> <a class="collapse-item"
+            <a class="collapse-item" href="budgetList">예산 편성</a> <a class="collapse-item"
                href="#">예산-실적비교</a>
          </div>
       </div></li>

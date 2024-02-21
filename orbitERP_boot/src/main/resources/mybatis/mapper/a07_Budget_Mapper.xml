@@ -2,7 +2,8 @@
 <!DOCTYPE mapper
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.orbitERP.dao.A06_BudgetDao">
+<mapper namespace="com.web.orbitERP.dao.A07_BudgetDao">
+	<!-- 조회 -->
 	<select id="getBudgetByDeptAndYear" resultType="mBudget">
         SELECT
             b.MBUDGET_ID as mbudget_id,
@@ -15,7 +16,7 @@
             M_BUDGET b
             JOIN DEPT d ON b.DEPTNO = d.DEPTNO
         WHERE
-            b.DEPTNO = #{deptno}
+            (b.DEPTNO = #{deptno} OR #{deptno} = 0)
             AND b.YEAR = #{year}
         ORDER BY
             b.MONTH
