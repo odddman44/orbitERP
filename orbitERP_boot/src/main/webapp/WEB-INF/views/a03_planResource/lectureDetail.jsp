@@ -394,10 +394,7 @@ width:70%;
 	    $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
 	    console.log(snoList)
 	}
-	function opensend(){
-		window.open("${path}/sendAlram", "AlramWindow",
-		"width=700 height=600 left=500 top=200");
-	}
+	
 </script>
 <!-- DB테이블 플러그인 추가 -->
 <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -543,7 +540,7 @@ width:70%;
 							<div style="text-align: right;">
 								<input type="button" class="btn btn-success" value="수정" id="uptBtn" />
 								<input type="button" class="btn btn-danger" value="삭제" id="delBtn" /> 
-								<input type="button" class="btn btn-dark" value="알림보내기" id="mainBtn"  onclick="opensend()"/>
+								<input type="button" class="btn btn-dark" value="알림보내기" id="mainBtn"  onclick="sendAlram('${emem.empno}')"/>
 							</div>
 							</form>
 						</div>
