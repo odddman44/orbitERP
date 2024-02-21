@@ -12,6 +12,10 @@ public class A01_MainService {
 	private A01_MainDao dao;
 	
 	public Erpmem login(Erpmem sch) {
-		return dao.login(sch);
+		Erpmem emem = dao.login(sch);
+        if (emem == null) {
+            emem = new Erpmem();
+        }
+        return emem;
 	}
 }
