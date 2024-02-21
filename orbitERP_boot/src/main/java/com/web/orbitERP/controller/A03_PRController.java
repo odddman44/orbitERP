@@ -228,10 +228,10 @@ public class A03_PRController {
 			return service2.getDeptList(new Dept());
 		}
 		//보내기
-//		@RequestMapping("insAlram")
-//		public int insAlram(Alram alram,Model d) {
-//			d.addAttribute();
-//			return"a03_planResource\\sendAlram";
-//		}
+		@RequestMapping("sendAlramGo")
+		public String sendAlramGo(Alram alram,Model d) {
+			d.addAttribute("msg",service.sendAlramGo(alram));
+			return"pageJsonReport";
+		}
 		
 }
