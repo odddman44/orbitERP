@@ -36,17 +36,40 @@
 <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
+	//체크된 값들을 저장할 배열
+	var checkedValues = [];
 	$(document).ready(function() {
 		
 		$("#empListBtn").click(function(){
 			empList()
+			checkedValues = [];
+			$("#receiver").val("")
 			$("#empModalBtn").click();
 		})
 		$("#schTBtn").click(function(){
 			empList()
 		})
 		$("#selectAll").click(function() {
-	        $(".selectRow").prop('checked', $(this).prop('checked'));
+			var isChecked = $(this).prop('checked'); // 전체 선택 체크박스의 상태 가져오기
+
+		    $(".selectRow").prop('checked', isChecked); // 모든 개별 체크박스에 전체 선택 상태 적용
+
+		    // 개별 체크박스가 체크되었을 경우 배열에 값을 추가
+		    if (isChecked) {
+		        $(".selectRow:checked").each(function() {
+		            var empno = $(this).closest("tr").find("td.empno").text();
+		            var ename = $(this).closest("tr").find("td.ename").text();
+		            
+		            checkedValues.push({
+		                empno: empno,
+		                ename: ename
+		            });
+		        });
+		    } else {
+		        checkedValues = []; // 전체 선택 해제 시 배열 초기화
+		    }
+
+		    console.log(checkedValues); // 배열 확인
 	    });
 		$('#dataTable5').on('draw.dt', function() {
 		    $("#selectAll").prop('checked', false);
@@ -58,7 +81,7 @@
 	    	"pageLength": 10, 
 	        "lengthChange": false, // 한 페이지에 표시되는 행 수 변경 가능
 	        "searching": false, // 검색 기능 사용
-	        "ordering": true, // 정렬 기능 사용
+	        "ordering": false, // 정렬 기능 사용
 	        "info": true, // 표시 건수 및 현재 페이지 표시
 	        "autoWidth": false, // 컬럼 너비 자동 조절 해제
 	        "language" : {
@@ -82,9 +105,9 @@
 				$("#dataTable5").DataTable().destroy();
 	            $.each(data.empList, function (idx, emp) {
 	            	stuhtml += "<tr>";
-	                stuhtml += "<td><input type='checkbox' class='selectRow' value=''></td>"
-	                stuhtml += "<td>" + emp.empno + "</td>"
-	                stuhtml += "<td>" + emp.ename + "</td>"
+	            	stuhtml += "<td><input type='checkbox' class='selectRow' value='' " + (isChecked(emp.empno) ? "checked" : "") + "></td>"
+	                stuhtml += "<td class='empno'>" + emp.empno + "</td>"
+	                stuhtml += "<td class='ename'>" + emp.ename + "</td>"
 	                stuhtml += "<td>" + emp.job + "</td>"
 	                stuhtml += "<td>" + emp.deptno + "</td>"
 	                stuhtml += "</tr>"
@@ -99,6 +122,49 @@
             }
 		})
 	}
+	// 이미 선택된 사원인지 확인하는 함수
+	function isChecked(empno) {
+	    return checkedValues.some(function (value) {
+	        return value.empno === empno;
+	    });
+	}
+	function getCheck() {
+	    //선택 버튼 클릭 시
+	    var cnt=1
+	    var rechtml = "";
+		checkedValues.forEach(function (check) {
+			cnt++; //###############수정하기
+			if(cnt===5){
+				rechtml += '\n';
+			}
+			rechtml += check.ename+', '
+        });
+		rechtml = rechtml.slice(0, -2);
+		$("#receiver").val(rechtml)
+	    $("#close").click() //모달창 닫기
+	}
+
+	// 체크박스 클릭 시 배열에 저장
+	document.addEventListener('change', function (event) {
+	    if (event.target.classList.contains('selectRow')) {
+	    	var empno = event.target.closest("tr").querySelector("td.empno").innerText;
+	    	var ename = event.target.closest("tr").querySelector("td.ename").innerText;
+	    	
+	    	if (event.target.checked) {
+		    		checkedValues.push({
+			            empno: empno,
+			            ename: ename
+			        });
+	        } else {
+	            // 체크가 해제된 경우 해당 객체를 배열에서 제거
+	            checkedValues = checkedValues.filter(function (value) {
+	                return value.empno !== empno;
+	            });
+	        }
+	    	
+	    	console.log(checkedValues)
+	    }
+	});
 </script>
 <!-- DB테이블 플러그인 추가 -->
 <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -211,8 +277,8 @@
 						</div>
 					</div>
 						<div class="modal-footer">
-						<button type="button" class="btn btn-success">선택</button>
-							<button type="button" class="btn btn-secondary"
+						<button type="button" class="btn btn-success" onclick="getCheck()">선택</button>
+							<button type="button" class="btn btn-secondary" id="close"
 								data-dismiss="modal">닫기</button>
 						</div>
 					</div>
