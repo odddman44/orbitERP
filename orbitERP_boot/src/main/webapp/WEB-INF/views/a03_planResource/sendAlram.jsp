@@ -39,11 +39,10 @@
 	//체크된 값들을 저장할 배열
 	var checkedValues = [];
 	$(document).ready(function() {
-		
 		$("#empListBtn").click(function(){
 			empList()
 			checkedValues = [];
-			$("#receiver").val("")
+			$("[name=receiver]").val("")
 			$("#empModalBtn").click();
 		})
 		$("#schTBtn").click(function(){
@@ -71,8 +70,74 @@
 
 		    console.log(checkedValues); // 배열 확인
 	    });
+		
 		$('#dataTable5').on('draw.dt', function() {
-		    $("#selectAll").prop('checked', false);
+		    $("#selectAll").prop('checked', false);//페이지 이동하면 전체체크해제]
+		});
+		
+		$('#sendBtn').click(function() { // 보내기 버튼
+		    
+		    if ($("[name=title]").val() == "") {
+		        alert("제목을 입력하세요.");
+		        return;
+		    }
+		    if ($("[name=receiver]").val() == "") {
+		        alert("받는 사람을 선택하세요.");
+		        return;
+		    }
+		    if ($("[name=category]").val() == "") {
+		        alert("카테고리를 선택하세요.");
+		        return;
+		    }
+		    if ($("[name=content]").val() == "") {
+		        alert("내용를 선택하세요.");
+		        return;
+		    }
+		    
+
+		    var categoryVal = $("[name=category]").val()
+		    console.log(categoryVal)
+		    switch (categoryVal) {
+		        case "공지사항":
+		            $("[name=color]").val("danger");
+		            $("[name=icon]").val("bell");
+		            break;
+		        case "회의":
+		            $("[name=color]").val("warning");
+		            $("[name=icon]").val("users");
+		            break;
+		        case "일정":
+		            $("[name=color]").val("info");
+		            $("[name=icon]").val("calendar-alt");
+		            break;
+		        case "개인":
+		            $("[name=color]").val("primary");
+		            $("[name=icon]").val("file-alt");
+		            break;
+		        default:
+		            break; //핑크
+		    }
+		    console.log($("[name=color]").val())
+		    console.log($("[name=icon]").val())
+			$("[name=sender]").val('${sender.empno}')
+		    checkedValues.forEach(function (check) {
+		        $("[name=receiver]").val(check.empno);
+
+		        $.ajax({
+		            type: "POST",
+		            url: "/sendAlramGo",
+		            data: $("#frm01").serialize(),
+		            dataType: "json",
+		            success: function (data) {
+		                alert(data.msg)
+		                window.close()
+		            },
+		            error: function (err) {
+		                console.log(err);
+		                // Handle form submission error here
+		            }
+		        });
+		    });
 		});
 	})
 	function table(){
@@ -133,14 +198,14 @@
 	    var cnt=1
 	    var rechtml = "";
 		checkedValues.forEach(function (check) {
-			cnt++; //###############수정하기
+			cnt++;
 			if(cnt===5){
 				rechtml += '\n';
 			}
 			rechtml += check.ename+', '
         });
 		rechtml = rechtml.slice(0, -2);
-		$("#receiver").val(rechtml)
+		$("[name=receiver]").val(rechtml)
 	    $("#close").click() //모달창 닫기
 	}
 
@@ -201,18 +266,20 @@
       </div>
       <div class="input-group mb-3">
         <label for="sender" class="input-group-text">보내는사람</label>
-        <input type="text" id="sender" readonly class="form-control" value="${sender}" />
+        <input type="text" id="sender" name="sender" readonly class="form-control" value="${sender.ename}" />
       </div>
       <div class="input-group mb-3">
         <label for="receiver" class="input-group-text">받는사람</label>
-        <input type="text" id="receiver" class="form-control" />
+        <input type="text" name="receiver" class="form-control" readonly/>
         <button type="button" id="empListBtn" class="btn btn-dark">사원조회</button>
       </div>
       <div class="input-group mb-3">
+      	<input type="text" name="color" class="form-control" style="display: none;" value=""/>
+      	<input type="text" name="icon" class="form-control" style="display: none;" value=""/>
         <label for="category" class="input-group-text">카테고리</label>
         <select name="category" class="form-control">
           <option value="">선택</option>
-          <option value="공지">공지사항</option>
+          <option value="공지사항">공지사항</option>
           <option value="회의">회의</option>
           <option value="일정">일정</option>
           <option value="개인">개인</option>

@@ -122,11 +122,14 @@ public class A03_PRService {
 	public Alram alDtail(int idx) {
 		return dao.alDtail(idx);
 	}
-	public String getSender(String sender) {
+	public Employee getSender(String sender) {
 		return dao.getSender(sender);
 	}
 	public List<Employee> empList(Employee sch) {
 		if(sch.getEname()==null) sch.setEname("");
 		return dao.empList(sch);
+	}
+	public String sendAlramGo(Alram ins) {
+		return dao.sendAlramGo(ins)>0?"전송완료":"전송실패";
 	}
 }

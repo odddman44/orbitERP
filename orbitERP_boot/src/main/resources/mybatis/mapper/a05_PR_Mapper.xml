@@ -181,14 +181,14 @@
 		WHERE IDX=#{idx}
 	</select>
 	<!-- 알람 보내기 -->
-	<select id="getSender" parameterType="String" resultType="String">
-		SELECT ENAME
+	<select id="getSender" parameterType="String" resultType="employee">
+		SELECT *
 		FROM EMPLOYEE
 		WHERE EMPNO=#{sender}
 	</select>
-   <insert id="sendAlram" parameterType="alram">
+   <insert id="sendAlramGo" parameterType="alram">
       INSERT INTO ALARM values(al_seq.nextval,#{sender},#{receiver},'N',
-      #{content},#{title},sysdate,#{color},#{icon},#{category});
+      #{content},#{title},sysdate,#{color},#{icon},#{category})
    </insert>
    <!-- 사원조회 -->
    <select id="empList" resultType="employee" parameterType="employee">
