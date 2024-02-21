@@ -22,17 +22,14 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-var sender = "${emem.empno}"; // 변수를 문자열로 변환
 $(document).ready(function() {
     if(${alListAll}.length == 0) {
         alert('알림이 없습니다.');
     }
     $("#sendMsg").click(function() {
-        sendAlram(sender);
+        sendAlram("${emem.empno}");
     });
-	function sendAlram(sender) {
-	    window.open("sendAlram?sender=" + sender, "AlramWindow", "width=700 height=600 left=500 top=200");
-	}
+	
 });
 
 </script>
@@ -77,15 +74,12 @@ $(document).ready(function() {
 					
 				<div class="card shadow mb-4">
 					<div class="card-body">
-					<!-- 메뉴바 
 					<nav class="navbar">
 				      <ul class="nav_menu">
 				        <li><a href="">전체 알람</a></li>
-				        <li><a href="">조회 안한 알람</a></li>
-				        <li><a href="">조회 한 알람</a></li>
 				        <li><a href="">보낸 알람</a></li>
 				      </ul>
-				    </nav>-->
+				    </nav>
 				    <!-- 알람출력 -->
 							<c:forEach var="alram" items="${alListAll}">
 								<a class="dropdown-item d-flex align-items-center"
