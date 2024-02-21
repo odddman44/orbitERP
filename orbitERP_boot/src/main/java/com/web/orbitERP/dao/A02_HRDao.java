@@ -143,7 +143,7 @@ public interface A02_HRDao {
 	
 	int salDuplicationCheck(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
 	
-	Paystub getPaystubList(@Param("deptno") int deptno, 
+	List<Paystub> getPaystubList(@Param("deptno") int deptno, 
 					@Param("month") int month, @Param("year") int year );
 	
 	

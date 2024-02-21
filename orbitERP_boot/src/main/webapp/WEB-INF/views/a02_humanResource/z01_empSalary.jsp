@@ -361,6 +361,7 @@
                 }   
             }, // 첫 번째 열: payment_date
             { "data": "empno" },         // 두 번째 열: empno
+            {"data":"ename"},
             { 
                 "data": "base_salary",
                 "render": $.fn.dataTable.render.number(',', '.', 0),
@@ -598,6 +599,7 @@ table {
 
 							<th>지급일</th>
 							<th>사원번호</th>
+							<th>사원명</th>
 							<th>기본급</th>
 							<th>수당</th>
 							<th>공제</th>
