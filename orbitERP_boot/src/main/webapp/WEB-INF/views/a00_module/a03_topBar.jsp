@@ -5,9 +5,56 @@
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
 <%@ page import="jakarta.servlet.http.HttpSession"%>
+<!-- 실시간 알림용 스크립트 -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 <script type="text/javascript">
+	var socket = new SockJS('/ws');
+	var stompClient = Stomp.over(socket);
+
+	stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', function(greeting){
+            //console.log(greeting);
+            console.log(greeting.body);
+            console.log(JSON.parse(greeting.body).content);
+            var obj = JSON.parse(greeting.body);
+            console.log(obj) //{name: '김길동', msg: '너 이름이 뭐야?'}
+            var curName = document.getElementById('curName').value;
+            //접속중인 내가 보내고 싶은 사람 이름하고
+            if(curName==obj.name) //현재 사람하고 이름이 같으면
+            	alert(obj.msg+'\n새로운 알림이 도착했습니다.')
+            //document.querySelector("#show").innerHTML = JSON.parse(greeting.body).content+"<br>"
+
+        });
+    });
+	
+	function sendName() {
+        var name = document.getElementById('name').value; // 보낼사람 이름
+        var msg = document.getElementById('msg').value; // 보낼 메시지
+        //내가 보낸 메세지 확인
+        stompClient.send("/app/hello", {}, JSON.stringify({'name': name, 'msg':msg}));
+    }
+
+	function receiverList(checkedValues){ //받는사람 리스트 보내기
+		var receivers= JSON.stringify(checkedValues);
+		$.ajax({
+			type:"POST",
+			url:"/receiverList",
+			data:{reList:receivers},
+			dataType: "json",
+			success: function (data) {
+				console.log("성공")
+            },
+            error: function (err) {
+                console.log(err);
+                // Handle form submission error here
+            }
+		})
+	}
+	
+	
+	
 	var empno="${emem.empno}"
 	$(document).ready(function() {
 		var auth = "${emem.auth}";
@@ -18,16 +65,6 @@
 		realram(empno)
 		alert(reList)
 	});
-	function socketAlram(){
-		alert('하이')
-	}
-	/*function sendName() {
-    	
-        var name = document.getElementById('name').value; // 받을사람 이름
-        var msg = document.getElementById('msg').value; // 보낼 메시지(알림이 도착했습니다. 예정)
-        document.querySelector("#show").innerHTML += "나:"+msg+"<br>" //나에게 보여지는 내가 보낸 메시지
-        stompClient.send("/app/hello", {}, JSON.stringify({'name': name, 'msg':msg}));
-    }*/
 	
 	function realram(empno){
 		//탑바로 정보 보내기
@@ -116,8 +153,17 @@
 }
 </style>
 <nav
-	class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
+	class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" id="hiden">
+	<div id="al">
+	<input id="curName" value="${emem.empno }"/><br>
+ 	<input id="name" value="" /><br>
+ 	<input id="msg" value="제목 넣을 예정"/><br>
+ 	<button type="button" onclick="sendName()">전송</button><br>
+	</div>
+	<script>
+	document.getElementById('al').style.display = 'none';
+	</script>
+	 	
 	<!-- Sidebar Toggle (Topbar) -->
 	<button id="sidebarToggleTop"
 		class="btn btn-link d-md-none rounded-circle mr-3">

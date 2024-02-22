@@ -77,7 +77,7 @@
 		
 		$('#sendBtn').click(function() { // 보내기 버튼
 		    
-		    if ($("[name=title]").val() == "") {
+		    if ($("[name=altitle]").val() == "") {
 		        alert("제목을 입력하세요.");
 		        return;
 		    }
@@ -85,17 +85,17 @@
 		        alert("받는 사람을 선택하세요.");
 		        return;
 		    }
-		    if ($("[name=category]").val() == "") {
+		    if ($("[name=alcategory]").val() == "") {
 		        alert("카테고리를 선택하세요.");
 		        return;
 		    }
-		    if ($("[name=content]").val() == "") {
+		    if ($("[name=alcontent]").val() == "") {
 		        alert("내용를 선택하세요.");
 		        return;
 		    }
 		    
 
-		    var categoryVal = $("[name=category]").val()
+		    var categoryVal = $("[name=alcategory]").val()
 		    console.log(categoryVal)
 		    switch (categoryVal) {
 		        case "공지사항":
@@ -110,12 +110,10 @@
 		            $("[name=color]").val("info");
 		            $("[name=icon]").val("calendar-alt");
 		            break;
-		        case "개인":
+		        default: //개인 그 이외의 값
 		            $("[name=color]").val("primary");
 		            $("[name=icon]").val("file-alt");
 		            break;
-		        default:
-		            break; //핑크
 		    }
 		    console.log($("[name=color]").val())
 		    console.log($("[name=icon]").val())
@@ -141,21 +139,7 @@
 		    });
 		});
 	})
-	function receiverList(checkedValues){ //받는사람 리스트 보내기
-		var receivers= JSON.stringify(checkedValues);
-		$.ajax({
-			type:"POST",
-			url:"/receiverList",
-			data:{reList:receivers},
-			dataType: "json",
-			success: function (data) {
-            },
-            error: function (err) {
-                console.log(err);
-                // Handle form submission error here
-            }
-		})
-	}
+	
 	function table(){
 		$("#dataTable5").DataTable({
 	    	//"paging": true,        // 페이지 나누기 기능 사용
@@ -273,6 +257,10 @@
 <link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 </head>
 <!-- 알림보내기 페이지 -->
+<%@ include file="/WEB-INF/views/a00_module/a03_topBar.jsp" %> 
+<script>
+document.getElementById("hiden").style.display = "none";
+</script>
 <div class="notification-form">
   <div class="header">
     <h5>알림보내기</h5>
@@ -281,8 +269,8 @@
     <form id="frm01" class="form" method="post">
       <input type="hidden" name="id" value="0" />
       <div class="input-group mb-3">
-        <label for="title" class="input-group-text">제목</label>
-        <input type="text" name="title" class="form-control" />
+        <label for="altitle" class="input-group-text">제목</label>
+        <input type="text" name="altitle" class="form-control" />
       </div>
       <div class="input-group mb-3">
         <label for="sender" class="input-group-text">보내는사람</label>
@@ -296,8 +284,8 @@
       <div class="input-group mb-3">
       	<input type="text" name="color" class="form-control" style="display: none;" value=""/>
       	<input type="text" name="icon" class="form-control" style="display: none;" value=""/>
-        <label for="category" class="input-group-text">카테고리</label>
-        <select name="category" class="form-control">
+        <label for="alcategory" class="input-group-text">카테고리</label>
+        <select name="alcategory" class="form-control">
           <option value="">선택</option>
           <option value="공지사항">공지사항</option>
           <option value="회의">회의</option>
@@ -306,8 +294,8 @@
           </select>
       </div>
       <div class="input-group mb-3">
-        <label for="content" class="input-group-text">내용</label>
-        <textarea id="content" name="content" class="form-control" rows="8"></textarea>
+        <label for="alcontent" class="input-group-text">내용</label>
+        <textarea id="alcontent" name="alcontent" class="form-control" rows="8"></textarea>
       </div>
     </form>
   </div>

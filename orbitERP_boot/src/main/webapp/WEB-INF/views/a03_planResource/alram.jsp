@@ -110,7 +110,7 @@ $(document).ready(function() {
 										</span>
 										
 									</div>
-										<span class="font-weight-bold">${alram.title }</span>
+										<span class="font-weight-bold">${alram.altitle }</span>
 									</div>
 								</a>
 							</c:forEach>

@@ -54,7 +54,6 @@
  	받을사람:<input id="name" /><br>
  	메시지:<input id="msg" /><br>
  	<button type="button" onclick="sendName()">전송</button><br>
- 	<div id="show"></div>
 
 </body>
 </html>
