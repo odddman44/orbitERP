@@ -11,5 +11,5 @@ import com.web.orbitERP.vo.MBudget;
 // orbitERP.a03_dao.A07_BudgetDao
 @Mapper
 public interface A07_BudgetDao {
-	List<MBudget> getBudgetByDeptAndYear(@Param("deptno") int deptno, @Param("year") int year);
+	List<MBudget> budgetList(MBudget sch);
 }

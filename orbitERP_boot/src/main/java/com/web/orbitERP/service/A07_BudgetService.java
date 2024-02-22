@@ -16,8 +16,8 @@ public class A07_BudgetService {
 	private A07_BudgetDao dao;
     
 	// 특정 부서와 연도에 대한 예산 정보 조회
-    public List<MBudget> getBudgetByDeptAndYear(int deptno, int year) {
-        return dao.getBudgetByDeptAndYear(deptno, year);
+    public List<MBudget> budgetList(MBudget sch) {
+        return dao.budgetList(sch);
     }
 	
 }
