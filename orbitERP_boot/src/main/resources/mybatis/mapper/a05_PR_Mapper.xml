@@ -152,7 +152,6 @@
 	</insert>
 	
 	
-	
 	<!-- 탑바용 알람조회(안본것만 조회) -->
 	<select id="alList" parameterType="String" resultType="alram">
 		SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY

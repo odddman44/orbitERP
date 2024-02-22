@@ -16,17 +16,31 @@
 	stompClient.connect({}, function(frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/greetings', function(greeting){
-            //console.log(greeting);
-            console.log(greeting.body);
-            console.log(JSON.parse(greeting.body).content);
+            //console.log(greeting.body);
+            //console.log(JSON.parse(greeting.body).content);
             var obj = JSON.parse(greeting.body);
-            console.log(obj) //{rename: '김길동', msg: '너 이름이 뭐야?'}
+            //console.log(obj) //{rename: '김길동', msg: '너 이름이 뭐야?'}
             var curName = document.getElementById('curName').value;
             //접속중인 내가 보내고 싶은 사람 이름하고
-            if(curName==obj.rename) //현재 사람하고 이름이 같으면
-            	//hi()
-            	alert('새로운 알림이 도착했습니다.\n['+obj.msg+']')
-            //document.querySelector("#show").innerHTML = JSON.parse(greeting.body).content+"<br>"
+            if(curName==obj.rename){ //현재 사람하고 이름이 같으면
+	            const Toast = Swal.mixin({
+	                toast: true,
+	                position: 'top-right',
+	                showConfirmButton: false,
+	                timer: 1500,
+	                timerProgressBar: true,
+	                didOpen: (toast) => {
+	                    toast.addEventListener('mouseenter', Swal.stopTimer)
+	                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+	                }
+	            })
+	
+	            Toast.fire({
+	                icon: 'info',
+	                title: '새로운 알림이 도착했습니다.\n('+obj.msg+')'
+	            })
+            	realram(obj.rename)
+            }
 
         });
     });
@@ -34,7 +48,6 @@
 	function sendName() {
         var rename = document.getElementById('rename').value; // 보낼사람 이름
         var msg = document.getElementById('msg').value; // 보낼 메시지
-        //내가 보낸 메세지 확인
         stompClient.send("/app/hello", {}, JSON.stringify({'rename': rename, 'msg':msg}));
     }
 	
@@ -44,27 +57,8 @@
 			document.getElementById('rename').value = receiver.empno;
 			sendName()
 		});
-		
 	}
 	
-	/*function hi() {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'center-center',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-
-        Toast.fire({
-            icon: 'success',
-            title: '알림이 정상적으로 실행 되었습니다.'
-        })
-    }*/
 	
 	var empno="${emem.empno}"
 	$(document).ready(function() {
@@ -93,12 +87,14 @@
             			newAnchor +='<a class="dropdown-item d-flex align-items-center"><h6>알림이 없습니다.</h6></a>'
             		}else{
 		            	$.each(alList, function (idx, alram) {
-		            		newAnchor += '<a class="dropdown-item d-flex align-items-center" onclick="checkUp(' + alram.idx + ')">'
-		            		newAnchor += '<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">'
-		            		newAnchor += '<div class="icon-circle bg-'+alram.color+'">'
-		            		newAnchor += '<i class="text-white fas fa-'+alram.icon+'"></i></div></div>'
-		            		newAnchor += '<div><div class="small text-gray-500">'+alram.sender +'&nbsp;&nbsp;&nbsp;&nbsp;'+alram.create_date+'</div>'
-		            		newAnchor += '<span class="font-weight-bold">'+alram.altitle+'</span></div></a>'
+		            		if(idx<5){
+			            		newAnchor += '<a class="dropdown-item d-flex align-items-center" onclick="checkUp(' + alram.idx + ')">'
+			            		newAnchor += '<div class="mr-3" style="min-height: 60px; display: flex; align-items: center;">'
+			            		newAnchor += '<div class="icon-circle bg-'+alram.color+'">'
+			            		newAnchor += '<i class="text-white fas fa-'+alram.icon+'"></i></div></div>'
+			            		newAnchor += '<div><div class="small text-gray-500">'+alram.sender +'&nbsp;&nbsp;&nbsp;&nbsp;'+alram.create_date+'</div>'
+			            		newAnchor += '<span class="font-weight-bold">'+alram.altitle+'</span></div></a>'
+		            		}
 		                })
             		}
             		dropdownMenu.append(newAnchor);

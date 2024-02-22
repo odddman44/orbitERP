@@ -116,7 +116,7 @@
 		            break;
 		    }
 			$("[name=sender]").val('${sender.empno}')
-			receiverList(checkedValues,$("[name=altitle]").val())
+			receiverList(checkedValues,categoryVal)//알림보내기 empno,카테고리
 		    checkedValues.forEach(function (check) {
 		        $("[name=receiver]").val(check.empno);
 
