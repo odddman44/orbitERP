@@ -48,6 +48,16 @@
 	// form 하위에 있는 모든 요소객체들을  enter키 입력시, submit
 	// 되는 기본 이벤트 속성이 있다. ajax처리시 충돌되는 이 이벤트 속성을
 	// 아래의 코드로 방지 처리..
+	
+	// 체크된 급여 리스트를 저장할 배열
+	
+	var insertSalary = [] // empno이랑 net_pay 저장
+	
+	
+	window.onload = function() {
+	    // 페이지가 다시 로드될 때 배열 초기화
+	    insertSalary = [];
+	};
 	document.addEventListener('keydown', function(event) {
 		if (event.key === "Enter") {
 			event.preventDefault();
@@ -140,7 +150,7 @@
 	    var row = $(this).closest('tr');
 	    var empno = row.find('td:eq(0)').text();
 	    var ename = row.find('td:eq(1)').text()
-	    var net_pay = parseFloat(row.find('td:eq(5)').text());
+	    var net_pay = row.find('td:eq(5)').text();
 	   
 	    var html = "";
 	    html += "<tr class='table-light text-center'>";
@@ -148,13 +158,39 @@
 	    html += "<td>" + ename + "</td>";
 	    html += "<td>" + net_pay + "</td>";
 	    html += "<td><button type='button' class='btn btn-danger' id='delBtn'>제거</button></td>";
+	   	if(isExits(empno)){
+	   		alert("이미 선택한 사원의 급여정보가 등록되었습니다.")
+	   	}else{
+	    	$("#modalTable").append(html); // 수정된 부분: row 대신에 html을 append
+	    	// 배열에도 추가
+	    	 insertSalary.push({
+	 	    	empno : empno,
+	 	    	net_pay: net_pay
+	 	    })
+	 	    console.log("등록된 값 배열:" + insertSalary[0].empno)
+	 	    console.log("등록된 값 배열:" + insertSalary[0].net_pay)
+	 	    
+	 	    var size = insertSalary.length; // 배열의 크기
+			console.log("배열의 크기: "+size)
+	 	    $("#size").val(size)
+	   	}
+	    
+	    // 배열에 empno이랑 net_pay저장하기
 	   
-	    $("#modalTable").append(html); // 수정된 부분: row 대신에 html을 append
 	   
 	});
 		
 		$("#modalTable").on("click", "#delBtn", function() {
 		    var deleteSal = $(this).closest("tr").find("td:first").text();
+		    console.log("삭제하는 연봉 정보:"+deleteSal)
+		    
+		// 배열에서 일치하는 empno를 찾아 삭제
+	    for (var i = 0; i < insertSalary.length; i++) {
+	        if (insertSalary[i].empno === deleteSal) {
+	            insertSalary.splice(i); // 배열에서 해당 요소 삭제
+	            break;
+	        }
+	    }
 		    $(this).closest("tr").remove();
 		});
 })
@@ -168,6 +204,16 @@
 			x1 = x1.replace(rgx, '$1' + ',' + '$2');
 		}
 		return x1 + x2;
+	}
+	
+	// 배열에 존재하는 empno인지 확인하는 함수
+	function isExits(empno) {
+	    for (var i = 0; i < insertSalary.length; i++) {
+	        if (insertSalary[i].empno === empno) {
+	            return true; // 이미 존재하는 empno인 경우 true 반환
+	        }
+	    }
+	    return false; // empno가 존재하지 않는 경우 false 반환
 	}
 </script>
 <!-- DB테이블 플러그인 추가 -->
@@ -247,7 +293,7 @@
 												인원수</span>
 										</div>
 										<div class="input_value">
-											<input class="form-control" type="text" readonly /> <input
+											<input class="form-control" type="text" readonly id="size" /> <input
 												type="button" class="btn btn-dark" value="사원별 급여 조회"
 												data-toggle="modal" data-target="#salaryModal"
 												id="schSalary" />

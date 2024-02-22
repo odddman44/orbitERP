@@ -20,7 +20,79 @@
 	console.log(deptAuth);
 	
 	$(document).ready(function() {
+		
+		function fetchBudgetData(year, deptno) {
+	        $.ajax({
+	            url: '${path}/budgetSch',
+	            type: 'GET',
+	            dataType: 'json',
+	            data: { year: year, deptno: deptno },
+	            success: function(data) {
+	                var tbody = $("#budgetData");
+	                tbody.empty();
 
+	                // 데이터를 부서명과 연도별로 그룹화
+	                let budgetData = {};
+	                data.forEach(function(item) {
+	                    let key = `${item.dname}_${item.year}`;
+	                    if (!budgetData[key]) {
+	                        budgetData[key] = { dname: item.dname, year: item.year, amounts: Array(12).fill('-'), total: 0 };
+	                    }
+	                    budgetData[key].amounts[item.month - 1] = item.month_amount;
+	                    budgetData[key].total += parseInt(item.month_amount);
+	                });
+
+	                // 그룹화된 데이터를 테이블에 추가
+	                Object.values(budgetData).forEach(function(budget) {
+	                    var row = $('<tr></tr>');
+	                    row.append($('<td></td>').text(budget.dname)); // 부서명
+	                    row.append($('<td></td>').text(budget.year)); // 연도
+	                    budget.amounts.forEach(function(amount) {
+	                        row.append($('<td></td>').text(amount)); // 월별 예산액
+	                    });
+	                    row.append($('<td></td>').text(budget.total)); // 합계
+	                    tbody.append(row);
+	                });
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("Error: " + error);
+	                alert("데이터 로드 중 오류 발생");
+	            }
+	        });
+	    }
+
+	    // 초기 데이터 로드
+	    var currentYear = $('#yearSelect').val(); // 현재 선택된 연도
+	    fetchBudgetData(currentYear, 0);
+
+	    // 검색 버튼 이벤트
+	    $("#schBtn").click(function() {
+	        var year = $('#yearSelect').val();
+	        var deptno = $('#deptno').val();
+	        fetchBudgetData(year, deptno);
+	    });
+	    
+		// 예산 편성 버튼 클릭 이벤트 핸들러
+	    $("#newBtn").click(function() {
+	        // 모달 창 표시
+	        $("#newBudgetModal").modal('show');
+	    });
+		
+	    $("#confBtn").click(function() {
+	        var totalBudget = parseInt($("#totalBudget").val()); // 연간 예산 총액 입력값
+	        var baseMonthlyBudget = Math.floor(totalBudget / 12 / 10000) * 10000; // 10,000단위로 떨어지게 12로 나누고 내림
+	        var remainder = totalBudget - (baseMonthlyBudget * 12); // 전체에서 나눈 값의 합을 뺀 나머지
+	        var lastMonthAdditional = remainder; // 12월에 더할 나머지 값
+
+	        // 1월부터 11월까지의 월별 예산액 입력란에 기본 월별 예산액 할당
+	        for (var month = 1; month <= 11; month++) {
+	            $("#month" + month).val(baseMonthlyBudget);
+	        }
+
+	        // 12월의 예산액에 나머지를 더해서 할당
+	        $("#month12").val(baseMonthlyBudget + lastMonthAdditional);
+	    });
+	    
 	}); // $(document).ready 끝
 </script>
 	<!-- DB테이블 플러그인 추가 -->
@@ -65,15 +137,16 @@
 							<div class="card shadow">
 								<div class="card-header">
 									<h6 class="m-0 font-weight-bold text-primary">예산 편성 현황</h6>
-									<form id="frm01" class="form" method="POST">
+									<form id="frm01" class="form" method="GET">
 										<div class="form-row align-items-center">
 											<div class="col-auto">
 												<select id="yearSelect" class="form-control">
-													<option value="2024" selected>2024년</option>
+													<option value="0" selected>연도선택</option>
+													<option value="2024">2024년</option>
 													<option value="2023">2023년</option>
 												</select>
 											</div>
-											<label for="accName">부서명</label>
+											<label for="deptno">부서명</label>
 											<div class="col-auto">
 										        <select id="deptno" name="deptno" class="form-control">
 										        		<option value="0">전체</option>
@@ -90,18 +163,24 @@
 								</div>
 								<div class="card-body">
 									<div class="table-responsive">
-										<table class="table table-bordered" id="dataTable">
+										<table class="table table-hover table-striped table-bordered" id="dataTable">
 											<thead>
-												<tr>
-													<!-- 비워놓기? -->
+												<tr class="table-secondary text-center">
+													<th>부서명</th><th>연도</th>
+													<th>1월</th><th>2월</th><th>3월</th>
+													<th>4월</th><th>5월</th><th>6월</th>
+													<th>7월</th><th>8월</th><th>9월</th>
+													<th>10월</th><th>11월</th><th>12월</th>
+													<th>합계</th>
 												</tr>
 											</thead>
-											<tbody>
-												<tr>
-													<!-- 비워놓기? -->
-												</tr>
+											<tbody id="budgetData" style="text-align:right;">
+									
 											</tbody>
 										</table>
+										<div>
+											<button type="button" id="newBtn" class="btn btn-info">예산 편성</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -128,7 +207,100 @@
 
 	</div>
 	<!-- End of Page Wrapper -->
-
+<!-- 모달 창 -->
+<div class="modal fade" id="newBudgetModal" tabindex="-1" role="dialog" aria-labelledby="newBudgetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newBudgetModalLabel">월별 예산 편성</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="frm02" method="POST" class="text-left">
+				    <div class="form-group row">
+				    	<div class="col-md-4">
+					    <!-- 전표일자 입력 -->
+					        <label for="stdYear">기준년도</label>
+							<select id="stdYear" class="form-control" name="stdYear" required>
+								<option value="0" selected>연도선택</option>
+								<option value="2024">2024년</option>
+								<option value="2023">2023년</option>
+							</select>
+							<label for="accName">부서명</label>
+					        <select id="deptno" name="deptno" class="form-control">
+					        	<c:forEach var="dept" items="${dlist}">
+					        		<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
+					        	</c:forEach>
+					        </select>
+				        </div>
+				    </div>
+				    <hr>
+				    <h5>연간 예산 총액</h5>
+					<input type="number" id="totalBudget" class="form-control" style="display: inline-block; 
+							width: auto;" placeholder="예산 총액 입력">
+					<button type="button" id="confBtn" class="btn btn-success btn-icon-split">
+					    <span class="icon text-white-50"><i class="fas fa-flag"></i></span>
+					    <span class="text">확정</span>
+					</button>
+                    <br>
+		            <div class="table-responsive" >
+					   <table class="table table-hover table-striped table-bordered" style="width:100%;">
+						   <thead id="head1">
+				               <tr class="table-primary text-center">
+					               <th>1월</th>
+					               <th>2월</th>
+					               <th>3월</th>
+					               <th>4월</th>
+					               <th>5월</th>
+					               <th>6월</th>
+				               </tr>
+			               </thead>
+			               <tbody id="modalTbody1">
+			               <tr>
+							<td><input type="number" id="month1" class="form-control"></td>
+					        <td><input type="number" id="month2" class="form-control"></td>
+					        <td><input type="number" id="month3" class="form-control"></td>
+					        <td><input type="number" id="month4" class="form-control"></td>
+					        <td><input type="number" id="month5" class="form-control"></td>
+					        <td><input type="number" id="month6" class="form-control"></td>
+					       </tr>
+			               </tbody>
+						   <thead id="head2">
+				               <tr class="table-primary text-center">
+					               <th>7월</th>
+					               <th>8월</th>
+					               <th>9월</th>
+					               <th>10월</th>
+					               <th>11월</th>
+					               <th>12월</th>
+				               </tr>
+			               </thead>
+			               <tbody id="modalTbody2">
+			               <tr>
+							<td><input type="number" id="month7" class="form-control"></td>
+					        <td><input type="number" id="month8" class="form-control"></td>
+					        <td><input type="number" id="month9" class="form-control"></td>
+					        <td><input type="number" id="month10" class="form-control"></td>
+					        <td><input type="number" id="month11" class="form-control"></td>
+					        <td><input type="number" id="month12" class="form-control"></td>
+					       </tr>
+			               </tbody>
+					   </table>
+					</div>     
+				</form>
+            </div>
+            <hr style="border-color: #46bcf2;">
+            <div class="modal-footer d-flex justify-content-between" >
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" id="regFrmBtn" form="registerForm" class="btn btn-primary">예산등록</button>
+                <button type="button" id="uptBtn" form="registerForm" class="btn btn-info">수정</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 모달창 종료 -->
 
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> 

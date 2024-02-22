@@ -4,10 +4,13 @@ package com.web.orbitERP.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,12 +40,20 @@ public class A07_BudgetController {
     public String budgetList() {
         return "a07_budget\\a01_budgetList"; 
     }
-    @PostMapping("budgetSch")
-    public String getBudgetList(@RequestParam(value = "deptno", required = false) int deptno,
-    		@RequestParam(value = "year", required = false) int year, Model d) {
-    	List<MBudget> budgetList = service.getBudgetByDeptAndYear(deptno, year);
-    	d.addAttribute("budgetList", budgetList);
-    	return ""; 
+    
+//    // http://localhost:4444/budgetSch
+//    @GetMapping("budgetSch")
+//    public String getBudgetList(@ModelAttribute("sch") MBudget sch, Model d) {
+//    	List<MBudget> budgetList = service.getBudgetList(sch);
+//    	d.addAttribute("budgetList", budgetList);
+//    	return "pageJsonReport"; 
+//    }
+    // http://localhost:4444/budgetSch?deptno=10&year=2023
+    @GetMapping("budgetSch")
+    public ResponseEntity<?> getBudgetList(@RequestParam("deptno") int deptno, @RequestParam("year") int year) {
+    	List<MBudget> budgetList = service.getBudgetList(deptno, year);
+    	return ResponseEntity.ok(budgetList); 
     }
+    
     
 }

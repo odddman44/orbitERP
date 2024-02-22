@@ -70,6 +70,7 @@ public class A04_FinanceController {
 		return "a04_financeResource\\a01_accsubList";
 	}
 	/* 계정과목 상세보기*/
+	// http://localhost:4444/accsubDetail
 	@GetMapping("accsubDetail")
 	public String getAccsub(@RequestParam("acc_code") int acc_code, Model d) {
 		d.addAttribute("accsub", service.getAccsub(acc_code));
