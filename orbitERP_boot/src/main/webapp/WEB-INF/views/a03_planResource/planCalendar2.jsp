@@ -170,13 +170,17 @@ body {
 <link href="${path}/a00_com/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 </head>
-			<div class="col-xl-6 col-lg-6">
-			<div id="content">
-				<div class="card shadow mb-4">
-				<div class="card-body">
-				<h3 style="text-align: center; background-color: #87CEEB;">[ 연간 학원 스케줄 ]</h3>
+<div class="col-xl-6 col-lg-6">
+	<div id="content">
+		<div class="card shadow mb-4">
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h6 class="m-0 font-weight-bold text-primary">연간 일정</h6>
+				 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="${path}/planCalendar">연간 일정이동</a>
+			</div>
+			<div class="card-body">
+				<h3 style="text-align: center; background-color: #87CEEB;"></h3>
 				<div id='calendar'></div>
-				</div>
 			</div>
-			</div>
-			</div>
+		</div>
+	</div>
+</div>

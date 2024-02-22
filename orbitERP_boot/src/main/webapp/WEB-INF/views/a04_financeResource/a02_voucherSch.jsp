@@ -15,6 +15,7 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
  <!-- jQuery -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	var deptAuth = parseInt("${emem.deptno}");
@@ -422,9 +423,32 @@
         });
     }
  	// 다운로드
-    function  downloadVoucherDetail(voucherId) {
-        window.location.href = "${path}/downloadExcel?voucher_id="+voucherId;
-    }
+    function downloadVoucherDetail(voucherId) {
+	    Swal.fire({
+	        title: '다운로드 확인',
+	        text: "해당 전표를 다운로드 하시겠습니까?",
+	        icon: 'warning',
+	        showCancelButton: true,
+	        confirmButtonColor: '#3085d6',
+	        cancelButtonColor: '#d33',
+	        confirmButtonText: '다운로드',
+	        cancelButtonText: '취소'
+	    }).then((result) => {
+	    	if (result.isConfirmed) {
+	            // 다운로드 URL로 이동
+	            window.location.href = "${path}/downloadExcel?voucher_id=" + voucherId;
+	            // 다운로드 시작 알림
+	            Swal.fire({
+	                title: '다운로드 완료!',
+	                text: voucherId + '번 전표를 다운로드했습니다..!',
+	                icon: 'success',
+	                timer: 3000, // 알림이 3초 후에 자동으로 닫히도록 설정
+	                timerProgressBar: true, // 타이머 진행 상태를 보여주는 프로그레스 바
+	                showConfirmButton: false // 확인 버튼 없이 타이머로 자동 닫힘
+	            });
+	        }
+	    });
+	}
 </script>
 	<!-- DB테이블 플러그인 추가 -->
     <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">

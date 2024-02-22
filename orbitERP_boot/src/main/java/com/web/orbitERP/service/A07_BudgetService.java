@@ -21,5 +21,14 @@ public class A07_BudgetService {
     	System.out.println("##전달된 연도 : "+year);
         return dao.getBudgetList(deptno, year);
     }
+    
+    // 월별 예산 데이터 일괄 삽입
+    public int insertMonthlyBudgets(List<MBudget> budgets) {
+        int insertCount = 0;
+        for (MBudget budget : budgets) {
+            insertCount += dao.insertMonthlyBudget(budget);
+        }
+        return insertCount; // 삽입된 행의 수를 반환
+    }
 	
 }

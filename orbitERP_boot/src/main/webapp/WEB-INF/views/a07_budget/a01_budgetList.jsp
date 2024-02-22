@@ -20,10 +20,58 @@
 	console.log(deptAuth);
 	
 	$(document).ready(function() {
+		var currentYear = new Date().getFullYear();
+	    var startYear = 2023;
+	    var endYear = currentYear + 2;
+	 	// 조회 부분의 연도 선택에 옵션 동적 추가
+	    for (var year = startYear; year <= endYear; year++) {
+	        $('#yearSelect').append($('<option>', {
+	            value: year,
+	            text: year + '년'
+	        }));
+	    }
+		 // 등록 모달창의 연도 선택에 옵션 동적 추가
+        for (var year = currentYear; year <= endYear; year++) {
+            $('#stdYear').append($('<option>', {
+                value: year,
+                text: year + '년',
+                selected: year === currentYear // 현재 연도 기본 선택
+            }));
+        }
 		
-		function fetchBudgetData(year, deptno) {
+		// 연간 예산 총액 입력란과 월별 예산 입력란에 이벤트 핸들러 설정
+	    $("#totalBudget, .monthlyBudget").change(function() {
+	        updateBudgetDiff();
+	    });
+		 // 연간 예산 총액과 월별 예산액의 차이를 계산하고 표시하는 함수.
+	    function updateBudgetDiff() {
+	        var totalBudget = parseFloat($("#totalBudget").val()) || 0; // 연간 예산 총액
+	        var totalMonthlyBudget = 0; // 월별 예산액의 총합
+
+	        // 각 월별 예산액의 합계를 계산합니다.
+	        $(".monthlyBudget").each(function() {
+	            totalMonthlyBudget += parseFloat($(this).val()) || 0;
+	        });
+
+	        var diff = totalBudget - totalMonthlyBudget; // 차이 계산
+	        var diffText = "일치"; // 표시할 텍스트
+	        var color = "green"; // 텍스트 색상
+
+	        if (diff > 0) {
+	            diffText = "미달: " + diff.toLocaleString();
+	            color = "blue";
+	        } else if (diff < 0) {
+	            diffText = "초과: " + Math.abs(diff).toLocaleString();
+	            color = "red";
+	        }
+
+	        // 결과 표시
+	        $("#budgetDiff").text(diffText).css("color", color);
+	    }
+		 
+	    function fetchBudgetData(year, deptno) {
 	        $.ajax({
-	            url: '${path}/budgetSch',
+	            url: '${path}/budgetSch', // 서버 엔드포인트 URL로 변경 필요
 	            type: 'GET',
 	            dataType: 'json',
 	            data: { year: year, deptno: deptno },
@@ -31,26 +79,28 @@
 	                var tbody = $("#budgetData");
 	                tbody.empty();
 
-	                // 데이터를 부서명과 연도별로 그룹화
-	                let budgetData = {};
+	                // 부서명과 연도별로 그룹화된 데이터를 담을 객체 초기화
+	                let groupedData = {};
+
+	                // 데이터 그룹화
 	                data.forEach(function(item) {
-	                    let key = `${item.dname}_${item.year}`;
-	                    if (!budgetData[key]) {
-	                        budgetData[key] = { dname: item.dname, year: item.year, amounts: Array(12).fill('-'), total: 0 };
+	                    var key = item.dname + '_' + item.year;
+	                    if (!groupedData[key]) {
+	                        groupedData[key] = { dname: item.dname, year: item.year, amounts: Array(12).fill(0), total: 0 };
 	                    }
-	                    budgetData[key].amounts[item.month - 1] = item.month_amount;
-	                    budgetData[key].total += parseInt(item.month_amount);
+	                    groupedData[key].amounts[item.month - 1] = item.month_amount;
+	                    groupedData[key].total += item.month_amount;
 	                });
 
 	                // 그룹화된 데이터를 테이블에 추가
-	                Object.values(budgetData).forEach(function(budget) {
+	                Object.values(groupedData).forEach(function(group) {
 	                    var row = $('<tr></tr>');
-	                    row.append($('<td></td>').text(budget.dname)); // 부서명
-	                    row.append($('<td></td>').text(budget.year)); // 연도
-	                    budget.amounts.forEach(function(amount) {
-	                        row.append($('<td></td>').text(amount)); // 월별 예산액
+	                    row.append($('<td></td>').text(group.dname)); // 부서명
+	                    row.append($('<td></td>').text(group.year)); // 연도
+	                    group.amounts.forEach(function(amount, index) {
+	                        row.append($('<td></td>').text(amount ? amount.toLocaleString() : '-')); // 월별 예산액
 	                    });
-	                    row.append($('<td></td>').text(budget.total)); // 합계
+	                    row.append($('<td></td>').text(group.total.toLocaleString())); // 합계
 	                    tbody.append(row);
 	                });
 	            },
@@ -78,8 +128,8 @@
 	        $("#newBudgetModal").modal('show');
 	    });
 		
-	    $("#confBtn").click(function() {
-	        var totalBudget = parseInt($("#totalBudget").val()); // 연간 예산 총액 입력값
+	    $("#divideBtn").click(function() {
+	    	var totalBudget = parseInt($("#totalBudget").val()) || 0; // 연간 예산 총액 입력값
 	        var baseMonthlyBudget = Math.floor(totalBudget / 12 / 10000) * 10000; // 10,000단위로 떨어지게 12로 나누고 내림
 	        var remainder = totalBudget - (baseMonthlyBudget * 12); // 전체에서 나눈 값의 합을 뺀 나머지
 	        var lastMonthAdditional = remainder; // 12월에 더할 나머지 값
@@ -91,6 +141,44 @@
 
 	        // 12월의 예산액에 나머지를 더해서 할당
 	        $("#month12").val(baseMonthlyBudget + lastMonthAdditional);
+	        
+	        updateBudgetDiff(); // 예산 차이 업데이트 함수 호출
+	    });
+	    
+	 	// 예산 등록 버튼 클릭 이벤트
+	    $("#regFrmBtn").click(function() {
+	        var budgets = [];
+	        var year = $("#stdYear").val();
+	        var deptno = $("#deptno2").val();
+
+	        $(".monthlyBudget").each(function(index) {
+	            var monthAmount = $(this).val();
+	            if (monthAmount) {
+	                budgets.push({
+	                    year: year,
+	                    month: index + 1,
+	                    deptno: deptno,
+	                    month_amount: monthAmount
+	                });
+	            }
+	        });
+
+	        // AJAX 요청으로 서버에 데이터 전송
+	        $.ajax({
+	            url: '${path}/budgetInsert', // 서버 엔드포인트 URL
+	            type: 'POST',
+	            contentType: 'application/json', // 요청의 Content-Type
+	            data: JSON.stringify(budgets), // JSON 문자열로 변환
+	            dataType : 'json',
+	            success: function(response) {
+	                alert('예산 데이터가 성공적으로 등록되었습니다.');
+	                $("#newBudgetModal").modal('hide'); // 모달 닫기
+	                // 성공 후 필요한 동작 추가(예: 테이블 데이터 갱신 등)
+	            },
+	            error: function(xhr, status, error) {
+	                alert('예산 데이터 등록 중 오류가 발생했습니다. ' + error);
+	            }
+	        });
 	    });
 	    
 	}); // $(document).ready 끝
@@ -142,8 +230,6 @@
 											<div class="col-auto">
 												<select id="yearSelect" class="form-control">
 													<option value="0" selected>연도선택</option>
-													<option value="2024">2024년</option>
-													<option value="2023">2023년</option>
 												</select>
 											</div>
 											<label for="deptno">부서명</label>
@@ -221,15 +307,11 @@
                 <form id="frm02" method="POST" class="text-left">
 				    <div class="form-group row">
 				    	<div class="col-md-4">
-					    <!-- 전표일자 입력 -->
 					        <label for="stdYear">기준년도</label>
 							<select id="stdYear" class="form-control" name="stdYear" required>
-								<option value="0" selected>연도선택</option>
-								<option value="2024">2024년</option>
-								<option value="2023">2023년</option>
 							</select>
 							<label for="accName">부서명</label>
-					        <select id="deptno" name="deptno" class="form-control">
+					        <select id="deptno2" class="form-control">
 					        	<c:forEach var="dept" items="${dlist}">
 					        		<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
 					        	</c:forEach>
@@ -240,10 +322,11 @@
 				    <h5>연간 예산 총액</h5>
 					<input type="number" id="totalBudget" class="form-control" style="display: inline-block; 
 							width: auto;" placeholder="예산 총액 입력">
-					<button type="button" id="confBtn" class="btn btn-success btn-icon-split">
-					    <span class="icon text-white-50"><i class="fas fa-flag"></i></span>
-					    <span class="text">확정</span>
+					<button type="button" id="divideBtn" class="btn btn-success btn-icon-split">
+					    <span class="icon text-white-50"><i class="fas fa-divide"></i></span>
+					    <span class="text">균등분배</span>
 					</button>
+					<span id="budgetDiff" style="margin-left: 20px;"></span>
                     <br>
 		            <div class="table-responsive" >
 					   <table class="table table-hover table-striped table-bordered" style="width:100%;">
@@ -259,12 +342,12 @@
 			               </thead>
 			               <tbody id="modalTbody1">
 			               <tr>
-							<td><input type="number" id="month1" class="form-control"></td>
-					        <td><input type="number" id="month2" class="form-control"></td>
-					        <td><input type="number" id="month3" class="form-control"></td>
-					        <td><input type="number" id="month4" class="form-control"></td>
-					        <td><input type="number" id="month5" class="form-control"></td>
-					        <td><input type="number" id="month6" class="form-control"></td>
+							<td><input type="number" id="month1" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month2" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month3" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month4" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month5" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month6" class="form-control monthlyBudget"></td>
 					       </tr>
 			               </tbody>
 						   <thead id="head2">
@@ -279,12 +362,12 @@
 			               </thead>
 			               <tbody id="modalTbody2">
 			               <tr>
-							<td><input type="number" id="month7" class="form-control"></td>
-					        <td><input type="number" id="month8" class="form-control"></td>
-					        <td><input type="number" id="month9" class="form-control"></td>
-					        <td><input type="number" id="month10" class="form-control"></td>
-					        <td><input type="number" id="month11" class="form-control"></td>
-					        <td><input type="number" id="month12" class="form-control"></td>
+							<td><input type="number" id="month7" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month8" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month9" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month10" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month11" class="form-control monthlyBudget"></td>
+					        <td><input type="number" id="month12" class="form-control monthlyBudget"></td>
 					       </tr>
 			               </tbody>
 					   </table>
