@@ -34,15 +34,21 @@ public class A07_BudgetController {
     // 예산 정보 조회 및 결과 페이지로 이동
     // http://localhost:4444/budgetList
     @RequestMapping("budgetList")
-    public String budgetList() {
+    public String budgetList(@ModelAttribute("sch") MBudget sch, Model d) {
+    	List<MBudget> budgetList = service.budgetList(sch);
+    	d.addAttribute("budgetList", budgetList);
         return "a07_budget\\a01_budgetList"; 
     }
-    @PostMapping("budgetSch")
+    
+    // http://localhost:4444/budgetSch?deptno=10&year=2023
+    /*
+    @RequestMapping("budgetSch")
     public String getBudgetList(@RequestParam(value = "deptno", required = false) int deptno,
     		@RequestParam(value = "year", required = false) int year, Model d) {
     	List<MBudget> budgetList = service.getBudgetByDeptAndYear(deptno, year);
     	d.addAttribute("budgetList", budgetList);
-    	return ""; 
+    	return "pageJsonReport"; 
     }
+    */
     
 }

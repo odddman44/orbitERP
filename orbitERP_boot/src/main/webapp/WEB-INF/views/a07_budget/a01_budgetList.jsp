@@ -20,7 +20,52 @@
 	console.log(deptAuth);
 	
 	$(document).ready(function() {
+		// 데이터 조회 및 표시 함수
+	    function fetchBudgetData(year, deptno) {
+	        $.ajax({
+	            url: '${path}/budgetSch',
+	            type: 'GET', // GET 메소드 사용을 권장 (단순 조회의 경우)
+	            dataType: 'json',
+	            data: {
+	                year: year,
+	                deptno: deptno
+	            },
+	            success: function(data) {
+	                var tbody = $("#budgetData");
+	                tbody.empty(); // 기존 테이블 내용 초기화
+	                $.each(data, function(i, budget) {
+	                    var row = $('<tr></tr>');
+	                    row.append($('<td></td>').text(budget.dname)); // 부서명
+	                    row.append($('<td></td>').text(budget.year)); // 연도
 
+	                    // 월별 예산액 추가
+	                    for (var month = 1; month <= 12; month++) {
+	                        var monthAmount = budget.monthData[month - 1] || '0'; // 해당 월의 데이터가 없으면 '0' 표시
+	                        row.append($('<td></td>').text(monthAmount));
+	                    }
+
+	                    // 예산 총액 (이 예제에서는 서버 응답에 총액 정보를 포함하고 있다고 가정)
+	                    row.append($('<td></td>').text(budget.totalAmount));
+
+	                    tbody.append(row);
+	                });
+	            },
+	            error: function(xhr, status, error) {
+	                alert("데이터 로드 중 오류 발생: " + error);
+	            }
+	        });
+	    }
+
+	    // 페이지 로드 시 기본 데이터 조회 및 표시
+	    var currentYear = $('#yearSelect').val(); // 선택된 연도 또는 현재 연도
+	    fetchBudgetData(currentYear, 0); // 전체 부서에 대한 데이터 요청
+
+	    // 검색 버튼 클릭 이벤트
+	    $("#schBtn").click(function() {
+	        var year = $('#yearSelect').val(); // 선택된 연도
+	        var deptno = $('#deptno').val(); // 선택된 부서 번호
+	        fetchBudgetData(year, deptno); // 데이터 조회 및 표시
+	    });
 	}); // $(document).ready 끝
 </script>
 	<!-- DB테이블 플러그인 추가 -->
@@ -65,7 +110,7 @@
 							<div class="card shadow">
 								<div class="card-header">
 									<h6 class="m-0 font-weight-bold text-primary">예산 편성 현황</h6>
-									<form id="frm01" class="form" method="POST">
+									<form id="frm01" class="form" method="GET">
 										<div class="form-row align-items-center">
 											<div class="col-auto">
 												<select id="yearSelect" class="form-control">
@@ -73,7 +118,7 @@
 													<option value="2023">2023년</option>
 												</select>
 											</div>
-											<label for="accName">부서명</label>
+											<label for="deptno">부서명</label>
 											<div class="col-auto">
 										        <select id="deptno" name="deptno" class="form-control">
 										        		<option value="0">전체</option>
@@ -93,13 +138,24 @@
 										<table class="table table-bordered" id="dataTable">
 											<thead>
 												<tr>
-													<!-- 비워놓기? -->
+													<th>부서명</th>
+													<th>연도</th>
+													<th>1월</th>
+													<th>2월</th>
+													<th>3월</th>
+													<th>4월</th>
+													<th>5월</th>
+													<th>6월</th>
+													<th>7월</th>
+													<th>8월</th>
+													<th>9월</th>
+													<th>10월</th>
+													<th>11월</th>
+													<th>12월</th>
 												</tr>
 											</thead>
-											<tbody>
-												<tr>
-													<!-- 비워놓기? -->
-												</tr>
+											<tbody id="budgetData">
+											
 											</tbody>
 										</table>
 									</div>
