@@ -235,11 +235,4 @@ public class A03_PRController {
 			d.addAttribute("msg",service.sendAlramGo(alram));
 			return"pageJsonReport";
 		}
-		//알림보내기페이지에서 top으로 받는사람리스트 보내기
-		@GetMapping("receiverList")
-		public String receiverList(List<Receiver> reList,Model d) {
-			System.out.println(reList);
-			d.addAttribute(reList);
-			return "a01_main\\a01_index";
-		}
 }

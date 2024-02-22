@@ -8,6 +8,7 @@
 <!-- 실시간 알림용 스크립트 -->
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script type="text/javascript">
 	var socket = new SockJS('/ws');
 	var stompClient = Stomp.over(socket);
@@ -19,41 +20,51 @@
             console.log(greeting.body);
             console.log(JSON.parse(greeting.body).content);
             var obj = JSON.parse(greeting.body);
-            console.log(obj) //{name: '김길동', msg: '너 이름이 뭐야?'}
+            console.log(obj) //{rename: '김길동', msg: '너 이름이 뭐야?'}
             var curName = document.getElementById('curName').value;
             //접속중인 내가 보내고 싶은 사람 이름하고
-            if(curName==obj.name) //현재 사람하고 이름이 같으면
-            	alert(obj.msg+'\n새로운 알림이 도착했습니다.')
+            if(curName==obj.rename) //현재 사람하고 이름이 같으면
+            	//hi()
+            	alert('새로운 알림이 도착했습니다.\n['+obj.msg+']')
             //document.querySelector("#show").innerHTML = JSON.parse(greeting.body).content+"<br>"
 
         });
     });
 	
 	function sendName() {
-        var name = document.getElementById('name').value; // 보낼사람 이름
+        var rename = document.getElementById('rename').value; // 보낼사람 이름
         var msg = document.getElementById('msg').value; // 보낼 메시지
         //내가 보낸 메세지 확인
-        stompClient.send("/app/hello", {}, JSON.stringify({'name': name, 'msg':msg}));
+        stompClient.send("/app/hello", {}, JSON.stringify({'rename': rename, 'msg':msg}));
     }
-
-	function receiverList(checkedValues){ //받는사람 리스트 보내기
-		var receivers= JSON.stringify(checkedValues);
-		$.ajax({
-			type:"POST",
-			url:"/receiverList",
-			data:{reList:receivers},
-			dataType: "json",
-			success: function (data) {
-				console.log("성공")
-            },
-            error: function (err) {
-                console.log(err);
-                // Handle form submission error here
-            }
-		})
+	
+	function receiverList(receivers,msg){ //받는사람 리스트 받아오기
+			document.getElementById('msg').value = msg;
+		receivers.forEach(function(receiver) {
+			document.getElementById('rename').value = receiver.empno;
+			sendName()
+		});
+		
 	}
 	
-	
+	/*function hi() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'center-center',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        Toast.fire({
+            icon: 'success',
+            title: '알림이 정상적으로 실행 되었습니다.'
+        })
+    }*/
 	
 	var empno="${emem.empno}"
 	$(document).ready(function() {
@@ -63,7 +74,6 @@
 	        window.location.href = "${path}/login";
 	    }
 		realram(empno)
-		alert(reList)
 	});
 	
 	function realram(empno){
@@ -88,7 +98,7 @@
 		            		newAnchor += '<div class="icon-circle bg-'+alram.color+'">'
 		            		newAnchor += '<i class="text-white fas fa-'+alram.icon+'"></i></div></div>'
 		            		newAnchor += '<div><div class="small text-gray-500">'+alram.sender +'&nbsp;&nbsp;&nbsp;&nbsp;'+alram.create_date+'</div>'
-		            		newAnchor += '<span class="font-weight-bold">'+alram.title+'</span></div></a>'
+		            		newAnchor += '<span class="font-weight-bold">'+alram.altitle+'</span></div></a>'
 		                })
             		}
             		dropdownMenu.append(newAnchor);
@@ -124,12 +134,11 @@
 			success: function (data) {
 				var alram=data.alram
 				//모달값 리셋
-				$("[name=title]").val(alram.title)
+				$("[name=title]").val(alram.altitle)
 				$("[name=sender]").val(alram.sender)
-				$("[name=title]").val(alram.title)
 				$("[name=create_date]").val(alram.create_date)
-				$("[name=category]").val(alram.category)
-				$("[name=content]").val(alram.content)
+				$("[name=category]").val(alram.alcategory)
+				$("[name=content]").val(alram.alcontent)
 				$("#alarmModal").click()
             },
             error: function (err) {
@@ -154,14 +163,14 @@
 </style>
 <nav
 	class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" id="hiden">
+	<!-- 알림보내기위해 숨김처리된 입력창 -->
 	<div id="al">
 	<input id="curName" value="${emem.empno }"/><br>
- 	<input id="name" value="" /><br>
- 	<input id="msg" value="제목 넣을 예정"/><br>
- 	<button type="button" onclick="sendName()">전송</button><br>
+ 	<input id="rename" value="" /><br>
+ 	<input id="msg" value=""/><br>
 	</div>
 	<script>
-	document.getElementById('al').style.display = 'none';
+	document.getElementById('al').style.display = 'none'; //숨김처리
 	</script>
 	 	
 	<!-- Sidebar Toggle (Topbar) -->

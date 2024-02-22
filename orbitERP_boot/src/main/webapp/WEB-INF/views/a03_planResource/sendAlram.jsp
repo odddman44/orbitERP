@@ -115,10 +115,8 @@
 		            $("[name=icon]").val("file-alt");
 		            break;
 		    }
-		    console.log($("[name=color]").val())
-		    console.log($("[name=icon]").val())
 			$("[name=sender]").val('${sender.empno}')
-			receiverList(checkedValues)
+			receiverList(checkedValues,$("[name=altitle]").val())
 		    checkedValues.forEach(function (check) {
 		        $("[name=receiver]").val(check.empno);
 
