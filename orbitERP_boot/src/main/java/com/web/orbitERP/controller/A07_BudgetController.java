@@ -1,12 +1,13 @@
 package com.web.orbitERP.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,15 @@ public class A07_BudgetController {
     public ResponseEntity<?> getBudgetList(@RequestParam("deptno") int deptno, @RequestParam("year") int year) {
     	List<MBudget> budgetList = service.getBudgetList(deptno, year);
     	return ResponseEntity.ok(budgetList); 
+    }
+    
+    // 월별 예산 데이터 일괄 삽입 처리
+    @PostMapping("budgetInsert")
+    public ResponseEntity<?> insertMonthlyBudgets(@RequestBody List<MBudget> budgets) {
+        int insertCount = service.insertMonthlyBudgets(budgets);
+        Map<String, Object> response = new HashMap<>();
+        response.put("insertCount", insertCount);
+        return ResponseEntity.ok(response); // 성공 응답과 함께 삽입된 행의 수를 반환
     }
     
     
