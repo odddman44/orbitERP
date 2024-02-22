@@ -60,32 +60,20 @@
 					<!-- Page Heading -->
 					<div
 						class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-						<a href="#"
-							class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-							class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-					</div>
-					<!-- Content Row -->
-					<div class="row">
-						<%@ include file="/WEB-INF/views/a00_module/a04_main_row01.jsp"%>
+						<h1 class="h3 mb-0 text-gray-800 font-weight-bold">대시보드</h1>
 					</div>
 
 					<!-- Content Row -->
 					<div class="row">
-						<%@ include
-							file="/WEB-INF/views/a03_planResource/planCalendar2.jsp"%>
-						<%@ include
-							file="/WEB-INF/views/a02_humanResource/z03_mainAtt.jsp"%>
+						<%@ include file="/WEB-INF/views/a05_Bulletin\z02_mainBul.jsp"%>
+						<%@ include file="/WEB-INF/views/a02_humanResource/z03_mainAtt.jsp"%>
 					</div>
 
 					<!-- Content Row -->
 					<div class="row">
-						<%@ include
-							file="/WEB-INF/views/a04_financeResource/z02_barGraph.jsp"%>
-						<%@ include
-							file="/WEB-INF/views/a05_Bulletin\z02_mainBul.jsp"%>
+						<%@ include file="/WEB-INF/views/a04_financeResource/z02_barGraph.jsp"%>
+						<%@ include file="/WEB-INF/views/a03_planResource/planCalendar2.jsp"%>
 					</div>
-
 				</div>
 				<!-- /.container-fluid (페이지 내용 종료) -->
 

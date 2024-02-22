@@ -20,4 +20,9 @@
         ORDER BY
             b.MONTH
     </select>
+    <!-- 월별 예산 데이터 삽입 -->
+    <insert id="insertMonthlyBudget" parameterType="mBudget">
+        INSERT INTO M_BUDGET (YEAR, MONTH, DEPTNO, MONTH_AMOUNT)
+        VALUES (#{year}, #{month}, #{deptno}, #{month_amount})
+    </insert>
 </mapper>	

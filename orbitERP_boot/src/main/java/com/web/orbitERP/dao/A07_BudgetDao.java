@@ -12,4 +12,7 @@ import com.web.orbitERP.vo.MBudget;
 @Mapper
 public interface A07_BudgetDao {
 	List<MBudget> getBudgetList(@Param("deptno") int deptno, @Param("year") int year);
+	
+	// 월별 예산 데이터 삽입
+	int insertMonthlyBudget(MBudget ins);
 }
