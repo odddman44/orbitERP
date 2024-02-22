@@ -155,7 +155,7 @@
 	
 	<!-- 탑바용 알람조회(안본것만 조회) -->
 	<select id="alList" parameterType="String" resultType="alram">
-		SELECT IDX,e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON,CHECKED,CATEGORY
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
 		FROM ALARM a
 		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
 		WHERE RECEIVER =#{receiver} AND CHECKED ='N'
@@ -163,7 +163,7 @@
 	</select>
 	<!-- 알람페이지용 알람조회(전체 알람조회) -->
 	<select id="alListAll" parameterType="String" resultType="alram">
-		SELECT IDX,e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON,CHECKED,CATEGORY
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
 		FROM ALARM a
 		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
 		WHERE RECEIVER =#{receiver}
@@ -175,7 +175,7 @@
 	</update>
 	<!-- 알람 상세정보 -->
 	<select id="alDtail" parameterType="int" resultType="alram">
-		SELECT IDX,e.ENAME AS SENDER,RECEIVER,CONTENT,TITLE,CREATE_DATE,COLOR,ICON,CHECKED,CATEGORY
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
 		FROM ALARM a
 		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
 		WHERE IDX=#{idx}
@@ -188,7 +188,7 @@
 	</select>
    <insert id="sendAlramGo" parameterType="alram">
       INSERT INTO ALARM values(al_seq.nextval,#{sender},#{receiver},'N',
-      #{content},#{title},sysdate,#{color},#{icon},#{category})
+      #{alcontent},#{altitle},sysdate,#{color},#{icon},#{alcategory})
    </insert>
    <!-- 사원조회 -->
    <select id="empList" resultType="employee" parameterType="employee">

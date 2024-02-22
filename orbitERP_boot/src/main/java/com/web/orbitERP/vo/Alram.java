@@ -13,34 +13,63 @@ public class Alram {
 	private int idx;
 	private String sender;
 	private String receiver;
-	private String content;
-	private String title;
+	private String alcontent;
+	private String altitle;
 	private String create_date;
 	private String color;
 	private String icon;
 	private String checked;
-	private String category;
+	private String alcategory;
 	public Alram() {
 		// TODO Auto-generated constructor stub
 	}
-	
 
 
-	public Alram(int idx, String sender, String receiver, String content, String title, String create_date,
-			String color, String icon, String checked, String category) {
+	public Alram(int idx, String sender, String receiver, String alcontent, String altitle, String create_date,
+			String color, String icon, String checked, String alcategory) {
 		super();
 		this.idx = idx;
 		this.sender = sender;
 		this.receiver = receiver;
-		this.content = content;
-		this.title = title;
+		this.alcontent = alcontent;
+		this.altitle = altitle;
 		this.create_date = create_date;
 		this.color = color;
 		this.icon = icon;
 		this.checked = checked;
-		this.category = category;
+		this.alcategory = alcategory;
 	}
 
+
+
+	public String getAlcontent() {
+		return alcontent;
+	}
+
+
+	public void setAlcontent(String alcontent) {
+		this.alcontent = alcontent;
+	}
+
+
+	public String getAltitle() {
+		return altitle;
+	}
+
+
+	public void setAltitle(String altitle) {
+		this.altitle = altitle;
+	}
+
+
+	public String getAlcategory() {
+		return alcategory;
+	}
+
+
+	public void setAlcategory(String alcategory) {
+		this.alcategory = alcategory;
+	}
 
 
 	public String getChecked() {
@@ -52,20 +81,6 @@ public class Alram {
 	public void setChecked(String checked) {
 		this.checked = checked;
 	}
-
-
-
-	public String getCategory() {
-		return category;
-	}
-
-
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-
 
 	public String getColor() {
 		return color;
@@ -102,18 +117,6 @@ public class Alram {
 	}
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
 	}
 	public String getCreate_date() {
 		return create_date;
