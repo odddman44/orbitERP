@@ -176,7 +176,7 @@
 												return false; // Prevent form submission
 											}
 
-											if (payment_date > end_date) {
+											if (payment_date < end_date) {
 												alert("Payment date should be earlier than or equal to the end date.");
 												return false; // Prevent form submission
 											}
@@ -325,6 +325,8 @@
 										})
 										
 										
+										
+										
 
 					})
 
@@ -391,7 +393,7 @@
             $(row).on('click', function() {
             	var paymentDate = new Date(data.payment_date);
                 var formattedDate = paymentDate.getFullYear() + "-" + ("0" + (paymentDate.getMonth() + 1)).slice(-2);
-                goDetail(data.empno, formattedDate);
+                goSalaryDetail(data.empno, formattedDate);
             });
         }
     });
@@ -436,7 +438,7 @@
 		return x1 + x2;
 	}
 
-	function goDetail(empno, payment_dateStr) {
+	function goSalaryDetail(empno, payment_dateStr) {
 		console.log("전달받은 사원번호:" + empno)
 		console.log("전달받은 지급일:" + payment_dateStr)
 		$("#frm02")[0].reset();

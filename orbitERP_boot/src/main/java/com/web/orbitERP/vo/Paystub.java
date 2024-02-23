@@ -3,6 +3,7 @@ package com.web.orbitERP.vo;
 import java.util.Date;
 
 public class Paystub {
+	// insert 할때는 payment_dateStr, stub_name, empno, net_pay, deptno
 	private Date payment_date;
 	private String payment_dateStr;
 	private String stub_name;
@@ -12,7 +13,30 @@ public class Paystub {
 	// join을 활용해 가져오는 필드값들
 	private int count;
 	private int total_net_pay;
+	private String ename;
+	private String job;
 	
+	public Paystub(Date payment_date, String payment_dateStr, String stub_name, String empno, int net_pay, int deptno,
+			String ename, String job) {
+		super();
+		this.payment_date = payment_date;
+		this.payment_dateStr = payment_dateStr;
+		this.stub_name = stub_name;
+		this.empno = empno;
+		this.net_pay = net_pay;
+		this.deptno = deptno;
+		this.ename = ename;
+		this.job = job;
+	}
+
+	public String getEname() {
+		return ename;
+	}
+
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+
 	public Paystub() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -39,6 +63,17 @@ public class Paystub {
 		this.deptno = deptno;
 		this.count = count;
 		this.total_net_pay = total_net_pay;
+	}
+	
+	
+
+	public Paystub(String payment_dateStr, String stub_name, String empno, int net_pay, int deptno) {
+		super();
+		this.payment_dateStr = payment_dateStr;
+		this.stub_name = stub_name;
+		this.empno = empno;
+		this.net_pay = net_pay;
+		this.deptno = deptno;
 	}
 
 	public Date getPayment_date() {
@@ -103,6 +138,14 @@ public class Paystub {
 
 	public void setTotal_net_pay(int total_net_pay) {
 		this.total_net_pay = total_net_pay;
+	}
+
+	public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
 	}
 	
 	
