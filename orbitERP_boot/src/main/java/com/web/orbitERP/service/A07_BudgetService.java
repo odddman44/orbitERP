@@ -30,5 +30,18 @@ public class A07_BudgetService {
         }
         return insertCount; // 삽입된 행의 수를 반환
     }
-	
+
+    // 여러 개의 예산 데이터를 업데이트하는 메서드
+    public int updateBudget(List<MBudget> upt) {
+        int updateCount = 0;
+        for (MBudget budget : upt) {
+            updateCount += dao.updateBudget(budget);
+        }
+        return updateCount;
+    }
+
+    // 예산 삭제
+    public int deleteBudget(int year, int deptno) {
+        return dao.deleteBudget(year, deptno);
+    }
 }

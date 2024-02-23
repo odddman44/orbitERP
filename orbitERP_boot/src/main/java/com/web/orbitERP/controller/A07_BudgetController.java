@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,5 +66,40 @@ public class A07_BudgetController {
         return ResponseEntity.ok(response); // 성공 응답과 함께 삽입된 행의 수를 반환
     }
     
+    // http://localhost:4444/budgetDetails?deptno=10&year=2023
+    // 예산안 상세조회 (조회쿼리문 재활용)
+    @GetMapping("budgetDetails")
+    public ResponseEntity<?> budgetDetails(@RequestParam("year") int year, @RequestParam("deptno") int deptno) {
+        List<MBudget> budgetDetails = service.getBudgetList(deptno, year);
+        if (budgetDetails != null && !budgetDetails.isEmpty()) {
+            return ResponseEntity.ok(budgetDetails);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    // 예산 수정 처리
+    @PostMapping("updateBudget")
+    public ResponseEntity<?> updateMonthlyBudgets(@RequestBody List<MBudget> budgets) {
+        int updateCount = service.updateBudget(budgets);
+        Map<String, Object> response = new HashMap<>();
+        response.put("updateCount", updateCount);
+        if(updateCount > 0) {
+            return ResponseEntity.ok(response); // 성공 응답과 함께 업데이트된 행의 수를 반환
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예산 데이터 업데이트 실패");
+        }
+    }
+
+    // 예산 삭제
+    @PostMapping("deleteBudget")
+    public ResponseEntity<?> deleteBudget(@RequestParam("year") int year, @RequestParam("deptno") int deptno) {
+        int result = service.deleteBudget(year, deptno);
+        if(result > 0) {
+            return ResponseEntity.ok().body("예산 삭제 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예산 삭제 실패");
+        }
+    }
     
 }
