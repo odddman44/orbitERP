@@ -55,7 +55,6 @@ width:70%;
 			$("#schTch").hide()
 			$("#schStu1").hide() //학생변경하는 모달창
 			$("#gradeStu").hide()
-			$("#insertGrade").hide()
 			$(".score").hide() //id값은 중복될 수 없지만 class는 해당요소에 모두 적용가능하다!
 			$(".modal-title").text("수강학생조회");
 		}else{
@@ -111,6 +110,7 @@ width:70%;
 	    startDateInput.change(checkDateValidity);
 	    endDateInput.change(checkDateValidity);
 	    
+		
 	$("#uptBtn").click(function(){
 		var inputField = $('#tuition_fee');
         var valueWithCommas = inputField.val();
@@ -229,7 +229,9 @@ width:70%;
 	    $("#stuModal").modal("hide");//모달 닫기
 	    $(".modal-backdrop").remove();//뒷배경 제거
 	});
+	table('dataTable3')
 });
+		
 	// 강사 세션확인
 	<%--function sessCk(empno){
 		$.ajax({
@@ -274,8 +276,8 @@ width:70%;
 	function table(id){
 		$("#"+id).DataTable({
 	    	//"paging": true,        // 페이지 나누기 기능 사용
-	    	"pageLength": 5, 
-	        "lengthChange": false, // 한 페이지에 표시되는 행 수 변경 가능
+	    	"pageLength": 10, 
+	        "lengthChange": true, // 한 페이지에 표시되는 행 수 변경 가능
 	        "searching": false, // 검색 기능 사용
 	        "ordering": true, // 정렬 기능 사용
 	        "info": true, // 표시 건수 및 현재 페이지 표시
@@ -283,6 +285,7 @@ width:70%;
 	        "language" : {
 	        	 "emptyTable" : "검색한 데이터가 없습니다.",
 	        	 "info": "현재 _START_ - _END_ / 총 _TOTAL_건",
+	        	 "lengthMenu" : "_MENU_행 조회",
 	        	 "paginate": {
 	        		  	"next": "다음",
 	        			"previous": "이전"
@@ -744,19 +747,26 @@ width:70%;
 						<div class="modal-body">
 						<div class="card shadow mb-4">
 						<div class="card-header py-3">
+						성적 입력 후, Enter를 눌러주세요.
 						</div>
 						<div class="card-body">
 							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable2">
+								<table class="table table-bordered" id="dataTable3">
+								<th=20%>
+								<th=20%>
+								<th=20%>
+								<th=20%>
+								<th=20%>
 									<thead>
 										<tr>
-											<th>no</th>
-											<th>이름</th>
-											<th>학생번호</th>
-											<th>학년</th>
-											<th>전화번호</th>
-											<th class="score">점수</th>
-											<th>등급</th>
+											<th style="width: 5%;">no</th>
+											<th style="width: 15%;">이름</th>
+											<th style="width: 13%;">학번</th>
+											<th style="width: 18%;">학년</th>
+											<th style="width: 25%;">전화번호</th>
+											<th style="width: 10%;">기존점수</th>
+											<th class="score" style="width: 17%;">점수</th>
+											<th style="width: 20%;">등급</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -767,12 +777,70 @@ width:70%;
 											<td>${stu.sno}</td>
 											<td>${stu.final_degree}</td>
 											<td>${stu.phone}</td>
-											<td class="score"><input/></td>
-											<td>${stu.grade}</td>
+											<td>${stu.sscore}</td>
+											<td class="score">
+											 <input class="scoreInput" data-sno="${stu.sno}" data-index="${no.index}"
+											  id="sscore${no.index}" onkeyup="updateOnEnter(event, this)" style="width: 100%;"/>
+											 </td>
+                							<td id="grade${no.index}">${stu.grade}</td>
 											</tr>
 										</c:forEach>
 									</tbody>
 								</table>
+								<script>
+								function updateOnEnter(event, input) {
+									if (event.keyCode==13) {
+									// 현재 입력 필드의 인덱스 가져오기
+								    var index = input.getAttribute('data-index');
+							        // 학생 번호 가져오기
+							        var sno = input.getAttribute('data-sno');
+							        // 입력된 점수 가져오기
+							        var sscore = input.value;
+							        if (isNaN(sscore)) {
+							            alert("숫자를 입력하세요.");
+							            return;
+							        }
+							        var grade = '';
+							        
+							        if(sscore>=90){
+							        	grade = 'A'
+							        }else if(sscore>=70){
+							        	grade = 'B'
+							        }else if(sscore>=60){
+							        	grade = 'C'
+							        }else if(sscore>=50){
+							        	grade = 'D'
+							        }else{
+							        	grade = 'F'
+							        }
+							        // 해당 테이블 셀에 등급 업데이트
+							        $("#grade" + index).text(grade);
+							        
+							        upEnscore(sscore,grade,'${lecture.lecno}',sno)
+									}
+							    }
+								
+								function upEnscore(sscore,grade,lecno,sno){
+									$.ajax({
+										type: "POST",
+										url:"/setSscore",
+										data:{
+											sscore: sscore,
+											grade: grade,
+											lecno: lecno,
+											sno: sno
+										},
+										dataType:"text",
+										success: function (data) {
+											console.log(data)
+										},error: function (err) {
+							                console.log(err);
+							                // Handle form submission error here
+							            }
+										
+									})
+								}
+								</script>
 							</div>
 							</div>
 							<hr>
@@ -781,7 +849,6 @@ width:70%;
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">닫기</button>
-							<button type="button" class="btn btn-primary" id="insertGrade">성적등록</button>
 						</div>
 					</div>
 				</div>

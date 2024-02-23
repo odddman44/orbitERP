@@ -79,7 +79,12 @@ public class A03_PRController {
 				service.deleteEnroll(upt.getLecno())>0?"수강삭제":"삭제실패");
 		return "pageJsonReport";
 	}
-	
+	//성적 등록
+	@RequestMapping("setSscore")
+	public ResponseEntity<?> setSscore(Enrollment upt){
+		System.out.println(service.setSscore(upt));
+		return ResponseEntity.ok(service.setSscore(upt));
+	}
 	//강의삭제
 	@RequestMapping("lectureDelete")
 	public String lectureDelete(@RequestParam("lecno") int lecno, Model d) {
@@ -199,9 +204,12 @@ public class A03_PRController {
 		//http://localhost:4444/alram
 		@RequestMapping("alramAll")
 		public String alramAll(String receiver,Model d) {
+			System.out.println(receiver);
 			d.addAttribute("alListAll",service.alListAll(receiver));
+			//d.addAttribute("alListAll2",service.alListAll2(receiver));
 			return"a03_planResource\\alram";
 		}
+		
 		@RequestMapping("checkUp")
 		public ResponseEntity<?> checkUp(int idx) {
 			return ResponseEntity.ok(service.checkUp(idx));

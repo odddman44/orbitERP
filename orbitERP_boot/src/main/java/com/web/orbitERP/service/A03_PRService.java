@@ -50,6 +50,10 @@ public class A03_PRService {
 	public int updateLecture(Lecture upt) {
 		return dao.updateLecture(upt);
 	}
+	//성적 등록
+	public String setSscore(Enrollment upt) {
+		return dao.setSscore(upt)>0?"등록성공":"등록실패";
+	}
 	// 수강삭제
 	public int deleteEnroll(int lecno) {
 		return dao.deleteEnroll(lecno);
@@ -116,6 +120,9 @@ public class A03_PRService {
 	public List<Alram> alListAll(String receiver) {
 		return dao.alListAll(receiver);
 	}
+	//public List<Alram> alListAll2(String receiver) {
+	//	return dao.alListAll(receiver);
+	//}
 	public int checkUp(int idx) {
 		return dao.checkUp(idx);
 	}

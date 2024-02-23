@@ -120,6 +120,7 @@ body {
 										$("[name=end]").val(arg.endStr)
 										$("[name=allDay]").val(
 												arg.allDay ? 1 : 0)
+										$("[name=writer]").val(${emem.ename}')
 
 										$("#regBtn").show()
 										$("#uptBtn").hide()
@@ -328,7 +329,7 @@ body {
 											<span class="input-group-text  justify-content-center">
 												작성자</span>
 										</div>
-										<input name="writer" class="form-control" value="" />
+										<input name="writer" class="form-control" readonly/>
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend ">

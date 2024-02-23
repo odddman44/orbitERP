@@ -17,7 +17,33 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
  <style>
- 
+   .navbar {
+    background-color: #4E7CD9; /* 네비게이션 바 배경 색상 */
+    padding: 10px; /* 네비게이션 바 안쪽 여백 */
+  }
+
+  .nav_menu {
+    list-style-type: none; /* 리스트 스타일 제거 */
+    margin: 0;
+    padding: 0;
+    text-align: center; /* 텍스트 가운데 정렬 */
+  }
+
+  .nav_menu li {
+    display: inline-block; /* 항목을 옆으로 나란히 표시 */
+    margin-right: 20px; /* 각 항목 사이 여백 */
+  }
+
+  .nav_menu li a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #ffffff; /* 링크 텍스트 색상 */
+    font-weight: bold; /* 링크 텍스트 굵게 표시 */
+    font-size: 16px; /* 링크 텍스트 크기 */
+  }
+
+  .nav_menu li a:hover {
+    color: #f5f5f5; /* 링크에 호버 시 텍스트 색상 변경 */
+  }
  </style>
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
@@ -25,6 +51,7 @@
 $(document).ready(function() {
    	if(${alListAll}.length == 0) {
         alert('알림이 없습니다.');
+        $("#nulls").html("알림이 없습니다.");
     }
     
     $('#sendMsgg').click(function() {
@@ -80,7 +107,7 @@ $(document).ready(function() {
 				        <li><a href="">보낸 알람</a></li>
 				      </ul>
 				    </nav>
-				    <!-- 알람출력 -->
+				    <!-- 전체알람출력 -->
 							<c:forEach var="alram" items="${alListAll}">
 								<a class="dropdown-item d-flex align-items-center"
 								onclick="checkUp(${alram.idx})" id="ck1_${alram.idx }"
@@ -114,6 +141,8 @@ $(document).ready(function() {
 									</div>
 								</a>
 							</c:forEach>
+				    <!-- 보낸알람출력 -->
+							
 				</div>
 			</div>
 					

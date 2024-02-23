@@ -5,18 +5,31 @@ public class Enrollment {
 	private int enno;
 	private int sno;
 	private int lecno;
+	private int sscore;
 	private String empno;
 	private String grade;
 	public Enrollment() {
 		// TODO Auto-generated constructor stub
 	}
-	public Enrollment(int enno, int sno, int lecno, String empno, String grade) {
+	
+	public Enrollment(int enno, int sno, int lecno, int sscore, String empno, String grade) {
+		super();
 		this.enno = enno;
 		this.sno = sno;
 		this.lecno = lecno;
+		this.sscore = sscore;
 		this.empno = empno;
 		this.grade = grade;
 	}
+
+	public int getSscore() {
+		return sscore;
+	}
+
+	public void setSscore(int sscore) {
+		this.sscore = sscore;
+	}
+
 	public int getEnno() {
 		return enno;
 	}
