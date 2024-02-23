@@ -26,7 +26,7 @@
 		WHERE lecno = #{lecno}
 	</select>
 	<select id="getStuList" resultType="lectureStu" parameterType="int">
-		SELECT DISTINCT s.SNO ,s.NAME ,s.FINAL_DEGREE ,s.NAME,s.PHONE, e.GRADE 
+		SELECT DISTINCT s.SNO ,s.NAME ,s.FINAL_DEGREE ,s.NAME,s.PHONE, e.GRADE, e.SSCORE
 		FROM ENROLLMENT e
 		JOIN STUDENT s ON e.sno=s.sno
 		WHERE lecno = #{lecno}
@@ -56,6 +56,11 @@
 		lec_content=#{lec_content},
 		lec_teacher=#{lec_teacher}
 		WHERE lecno=#{lecno}
+	</update>
+	<!-- 수강테이블 학생성적 등록 -->
+	<update id="setSscore" parameterType="enrollment">
+		UPDATE ENROLLMENT SET SSCORE=#{sscore} , GRADE = #{grade}
+		WHERE LECNO = #{lecno} AND SNO =#{sno}
 	</update>
 	<!-- 수강테이블 삭제 -->
 	<delete id="deleteEnroll" parameterType="int">
@@ -168,6 +173,14 @@
 		WHERE RECEIVER =#{receiver}
 		ORDER BY a.CHECKED, a.CREATE_DATE DESC
 	</select>
+	<!-- 알람페이지용 알람조회(보낸 알람조회) 
+	<select id="alListAll2" parameterType="String" resultType="alram">
+		SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
+		FROM ALARM a
+		JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+		WHERE SENDER = #{receiver}
+		ORDER BY a.CHECKED, a.CREATE_DATE DESC
+	</select>-->
 	<!-- 알람 읽음처리 -->
 	<update id="checkUp" parameterType="int">
 		UPDATE ALARM SET CHECKED ='Y' WHERE IDX =${idx}

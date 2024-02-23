@@ -31,6 +31,7 @@ public interface A03_PRDao {
 	int getlecno();
 	//수정
 	int updateLecture(Lecture upt);
+	int setSscore(Enrollment upt); //성적등록
 	//삭제
 	int deleteLecture(@Param("lecno") int lecno);
 	int deleteEnroll(@Param("lecno") int lecno);
@@ -62,6 +63,7 @@ public interface A03_PRDao {
 	/*--알람 dao-------------------------------------------------------------*/
 	List<Alram> alList(@Param("receiver")String receiver);
 	List<Alram> alListAll(@Param("receiver")String receiver);
+	//List<Alram> alListAll2(@Param("receiver")String receiver);
 	int checkUp(@Param("idx")int idx);
 	Alram alDtail(@Param("idx")int idx);
 	Employee getSender(String sender);

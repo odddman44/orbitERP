@@ -9,6 +9,7 @@ public class LectureStu {
 	 private String phone;
 	 private String address;
 	 private String grade; //값을 전달하기 위해 추가함
+	 private int sscore; //값을 전달하기 위해 추가함
 	 
 
 	public LectureStu() {
@@ -67,6 +68,14 @@ public class LectureStu {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+
+	public int getSscore() {
+		return sscore;
+	}
+
+	public void setSscore(int sscore) {
+		this.sscore = sscore;
 	}
 	 
 }
