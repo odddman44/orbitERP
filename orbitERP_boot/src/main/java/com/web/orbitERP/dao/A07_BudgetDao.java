@@ -15,4 +15,9 @@ public interface A07_BudgetDao {
 	
 	// 월별 예산 데이터 삽입
 	int insertMonthlyBudget(MBudget ins);
+	
+	// 예산 수정
+    int updateBudget(MBudget upt);
+    // 예산 삭제
+    int deleteBudget(int year, int deptno);
 }

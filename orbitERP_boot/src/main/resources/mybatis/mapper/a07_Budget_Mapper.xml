@@ -25,4 +25,16 @@
         INSERT INTO M_BUDGET (YEAR, MONTH, DEPTNO, MONTH_AMOUNT)
         VALUES (#{year}, #{month}, #{deptno}, #{month_amount})
     </insert>
+    <!-- 예산 수정 -->
+    <update id="updateBudget" parameterType="mBudget">
+        UPDATE M_BUDGET
+        SET MONTH_AMOUNT = #{month_amount}
+        WHERE YEAR = #{year} AND MONTH = #{month} AND DEPTNO = #{deptno}
+    </update>
+    
+    <!-- 예산 삭제 -->
+    <delete id="deleteBudget">
+        DELETE FROM M_BUDGET
+        WHERE YEAR = #{year} AND DEPTNO = #{deptno}
+    </delete>
 </mapper>	

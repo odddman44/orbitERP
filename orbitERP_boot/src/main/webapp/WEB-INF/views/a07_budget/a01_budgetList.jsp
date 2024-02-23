@@ -39,35 +39,60 @@
             }));
         }
 		
+
+	 	// 숫자 입력 필드에 콤마 추가
+	    $(".monthlyBudget, #totalBudget").on('input', function() {
+            var value = $(this).val().replace(/,/g, ''); // 콤마 제거
+            var valueWithCommas = addCommas(value); // 콤마 추가
+            $(this).val(valueWithCommas);
+        });
+	 	
+	 	// 숫자에 콤마를 추가하는 함수
+        function addCommas(nStr) {
+            nStr = parseFloat(nStr); // 입력 값을 숫자로 변환
+            if (!nStr) { // 값이 0이거나 변환 불가능한 경우 공백 반환
+                return "";
+            }
+            nStr += ''; // 숫자를 문자열로 변환
+            var x = nStr.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+	 	
+    	// 콤마 제거하기
+        function removeComma(str) {
+            return str.replace(/,/g, '');
+        }
+		 
 		// 연간 예산 총액 입력란과 월별 예산 입력란에 이벤트 핸들러 설정
 	    $("#totalBudget, .monthlyBudget").change(function() {
 	        updateBudgetDiff();
 	    });
 		 // 연간 예산 총액과 월별 예산액의 차이를 계산하고 표시하는 함수.
 	    function updateBudgetDiff() {
-	        var totalBudget = parseFloat($("#totalBudget").val()) || 0; // 연간 예산 총액
+	        var totalBudget = parseInt(removeComma($("#totalBudget").val())) || 0; // 연간 예산 총액
 	        var totalMonthlyBudget = 0; // 월별 예산액의 총합
 
 	        // 각 월별 예산액의 합계를 계산합니다.
 	        $(".monthlyBudget").each(function() {
-	            totalMonthlyBudget += parseFloat($(this).val()) || 0;
+	            totalMonthlyBudget += parseInt(removeComma($(this).val())) || 0;
 	        });
 
 	        var diff = totalBudget - totalMonthlyBudget; // 차이 계산
-	        var diffText = "일치"; // 표시할 텍스트
-	        var color = "green"; // 텍스트 색상
-
-	        if (diff > 0) {
-	            diffText = "미달: " + diff.toLocaleString();
-	            color = "blue";
-	        } else if (diff < 0) {
-	            diffText = "초과: " + Math.abs(diff).toLocaleString();
-	            color = "red";
-	        }
-
-	        // 결과 표시
-	        $("#budgetDiff").text(diffText).css("color", color);
+            displayDiff(diff); // 차이 표시
 	    }
+		 
+		// 차이 표시 함수
+        function displayDiff(diff) {
+            var diffText = diff === 0 ? "일치" : diff > 0 ? "미달: " + addCommas(diff) : "초과: " + addCommas(Math.abs(diff));
+            var color = diff === 0 ? "green" : diff > 0 ? "blue" : "red";
+            $("#budgetDiff").text(diffText).css("color", color);
+        }
 		 
 	    function fetchBudgetData(year, deptno) {
 	        $.ajax({
@@ -86,7 +111,13 @@
 	                data.forEach(function(item) {
 	                    var key = item.dname + '_' + item.year;
 	                    if (!groupedData[key]) {
-	                        groupedData[key] = { dname: item.dname, year: item.year, amounts: Array(12).fill(0), total: 0 };
+	                    	groupedData[key] = {
+	                                dname: item.dname, 
+	                                year: item.year, 
+	                                deptno: item.deptno, // deptno 값을 포함시키기
+	                                amounts: Array(12).fill(0), 
+	                                total: 0
+	                            };
 	                    }
 	                    groupedData[key].amounts[item.month - 1] = item.month_amount;
 	                    groupedData[key].total += item.month_amount;
@@ -94,7 +125,7 @@
 
 	                // 그룹화된 데이터를 테이블에 추가
 	                Object.values(groupedData).forEach(function(group) {
-	                    var row = $('<tr></tr>');
+	                	var row = $('<tr></tr>').data('deptno', group.deptno) // 행에 deptno 데이터 속성 추가
 	                    row.append($('<td></td>').text(group.dname)); // 부서명
 	                    row.append($('<td></td>').text(group.year)); // 연도
 	                    group.amounts.forEach(function(amount, index) {
@@ -124,23 +155,30 @@
 	    
 		// 예산 편성 버튼 클릭 이벤트 핸들러
 	    $("#newBtn").click(function() {
+	    	$("#frm02")[0].reset();
 	        // 모달 창 표시
 	        $("#newBudgetModal").modal('show');
+	    	 // 모달창 제목 변경
+	        $('#newBudgetModalLabel').text('예산 편성').parent().css
+			({'background-color': '#5F04B4', 'color': '#ffffff'});
+	        $('#regFrmBtn').show();  // 등록 버튼 보이기
+	        $('#uptBtn').hide();     // 수정 버튼 숨기기
+	        $('#delBtn').hide();     // 삭제 버튼 숨기기
 	    });
 		
 	    $("#divideBtn").click(function() {
-	    	var totalBudget = parseInt($("#totalBudget").val()) || 0; // 연간 예산 총액 입력값
+	    	var totalBudget = parseInt(removeComma($("#totalBudget").val())) || 0; // 연간 예산 총액 입력값
 	        var baseMonthlyBudget = Math.floor(totalBudget / 12 / 10000) * 10000; // 10,000단위로 떨어지게 12로 나누고 내림
 	        var remainder = totalBudget - (baseMonthlyBudget * 12); // 전체에서 나눈 값의 합을 뺀 나머지
 	        var lastMonthAdditional = remainder; // 12월에 더할 나머지 값
 
 	        // 1월부터 11월까지의 월별 예산액 입력란에 기본 월별 예산액 할당
 	        for (var month = 1; month <= 11; month++) {
-	            $("#month" + month).val(baseMonthlyBudget);
+	            $("#month" + month).val(addCommas(baseMonthlyBudget));
 	        }
 
 	        // 12월의 예산액에 나머지를 더해서 할당
-	        $("#month12").val(baseMonthlyBudget + lastMonthAdditional);
+	        $("#month12").val(addCommas(baseMonthlyBudget + lastMonthAdditional));
 	        
 	        updateBudgetDiff(); // 예산 차이 업데이트 함수 호출
 	    });
@@ -152,33 +190,143 @@
 	        var deptno = $("#deptno2").val();
 
 	        $(".monthlyBudget").each(function(index) {
-	            var monthAmount = $(this).val();
+	            var monthAmount = removeComma($(this).val());
 	            if (monthAmount) {
 	                budgets.push({
 	                    year: year,
 	                    month: index + 1,
 	                    deptno: deptno,
-	                    month_amount: monthAmount
+	                    month_amount: parseFloat(monthAmount)
 	                });
 	            }
 	        });
+	     	// 모든 값이 올바르게 포맷되고 콤마가 제거되었는지 확인
+	        if (budgets.length > 0) {
+		        // AJAX 요청으로 서버에 데이터 전송
+		        $.ajax({
+		            url: '${path}/budgetInsert', // 서버 엔드포인트 URL
+		            type: 'POST',
+		            contentType: 'application/json', // 요청의 Content-Type
+		            data: JSON.stringify(budgets), // JSON 문자열로 변환
+		            dataType : 'json',
+		            success: function(response) {
+		                alert('예산 데이터가 성공적으로 등록되었습니다.');
+		                $("#newBudgetModal").modal('hide'); // 모달 닫기
+		                fetchBudgetData(year, deptno); // 최신 데이터로 테이블 갱신
+		                location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
+		            },
+		            error: function(xhr, status, error) {
+		                alert('예산 데이터 등록 중 오류가 발생했습니다. ' + error);
+		            }
+		        });
+	        } else {
+	        	alert("예산 필드를 올바르게 작성하세요.");
+	        }
+	    });
+	 	
+	 	// 테이블 행 더블클릭 이벤트 리스너
+	    $('#dataTable tbody').on('dblclick', 'tr', function() {
+	        var year = $(this).find('td:eq(1)').text().trim(); // 연도 정보 추출
+	        var deptno = parseInt($(this).data('deptno')); // 부서 번호 추출, data-deptno 속성 필요
 
-	        // AJAX 요청으로 서버에 데이터 전송
+	        // AJAX 요청으로 서버에서 예산 정보 조회
 	        $.ajax({
-	            url: '${path}/budgetInsert', // 서버 엔드포인트 URL
-	            type: 'POST',
-	            contentType: 'application/json', // 요청의 Content-Type
-	            data: JSON.stringify(budgets), // JSON 문자열로 변환
-	            dataType : 'json',
+	            url: '${path}/budgetDetails',
+	            type: 'GET',
+	            data: { year: year, deptno: deptno },
+	            dataType: 'json',
 	            success: function(response) {
-	                alert('예산 데이터가 성공적으로 등록되었습니다.');
-	                $("#newBudgetModal").modal('hide'); // 모달 닫기
-	                // 성공 후 필요한 동작 추가(예: 테이블 데이터 갱신 등)
+	                // 모달의 입력 필드에 조회한 예산 정보 채우기
+	                $('#stdYear').val(year);
+	                $('#deptno2').val(deptno);
+
+	                // 월별 예산액 초기화
+	                $('.monthlyBudget').each(function() {
+	                    $(this).val('');
+	                });
+
+	                // 월별 예산액 채우기
+	                response.forEach(function(budget) {
+	                    $('#month' + budget.month).val(budget.month_amount.toLocaleString());
+	                });
+
+	                // 총 예산액 계산
+	                var totalBudget = response.reduce(function(sum, budget) {
+	                    return sum + budget.month_amount;
+	                }, 0);
+
+	                $('#totalBudget').val(totalBudget.toLocaleString());
+
+	                // 모달창 제목 변경 및 버튼 상태 조정
+	                $('#newBudgetModalLabel').text('예산 수정/삭제').parent().css
+					({'background-color': '#D7DF01', 'color': '#ffffff'});
+	                $('#regFrmBtn').hide();
+	                $('#uptBtn').show();
+	                $('#delBtn').show();
+
+	                // 모달 표시
+	                $('#newBudgetModal').modal('show');
 	            },
 	            error: function(xhr, status, error) {
-	                alert('예산 데이터 등록 중 오류가 발생했습니다. ' + error);
+	                alert('예산 정보를 불러오는데 실패했습니다: ' + error);
 	            }
 	        });
+	    });
+	 	
+	    $("#uptBtn").click(function() {
+	        var year = $("#stdYear").val();
+	        var deptno = $("#deptno2").val();
+	        var budgets = $(".monthlyBudget").map(function() {
+	            return {
+	                year: year,
+	                deptno: deptno,
+	                month: $(this).data("month"), // data-month 속성에서 월 정보 가져옴
+	                month_amount: parseFloat(removeComma($(this).val())) // 콤마 제거 후 숫자로 변환
+	            };
+	        }).get();
+
+	        // 예산 수정 AJAX 요청
+	        $.ajax({
+	            url: '${path}/updateBudget',
+	            type: 'POST',
+	            contentType: 'application/json',
+	            data: JSON.stringify(budgets), // 수정된 부분: budgetData 대신 budgets 사용
+	            dataType: "json",
+	            success: function(response) {
+	                //alert("업데이트된 행의 수: " + response.updateCount);
+	                $("#newBudgetModal").modal('hide');
+	                fetchBudgetData(year, deptno); // 데이터 재조회
+	                location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
+	            },
+	            error: function(xhr, status, error) {
+	                alert('예산 수정 실패: ' + error);
+	            }
+	        });
+	    });
+
+		 // 예산 삭제 버튼 클릭 이벤트
+	    $("#delBtn").click(function() {
+	        var year = $("#stdYear").val();
+	        var deptno = $("#deptno2").val();
+
+	        // 사용자에게 삭제 확인 요청
+	        if(confirm("선택한 예산을 삭제하시겠습니까?")) {
+	            // 예산 삭제 AJAX 요청
+	            $.ajax({
+	                url: '${path}/deleteBudget',
+	                type: 'POST',
+	                contentType: 'application/json',
+	                data: JSON.stringify({ year: year, deptno: deptno }), // month 정보 제외
+	                success: function(response) {
+	                    alert(response);
+	                    $("#newBudgetModal").modal('hide');
+	                    fetchBudgetData(year, deptno); // 데이터 재조회
+	                },
+	                error: function(xhr, status, error) {
+	                    alert('예산 삭제 실패: ' + error);
+	                }
+	            });
+	        }
 	    });
 	    
 	}); // $(document).ready 끝
@@ -320,7 +468,7 @@
 				    </div>
 				    <hr>
 				    <h5>연간 예산 총액</h5>
-					<input type="number" id="totalBudget" class="form-control" style="display: inline-block; 
+					<input type="text" id="totalBudget" class="form-control" style="display: inline-block; 
 							width: auto;" placeholder="예산 총액 입력">
 					<button type="button" id="divideBtn" class="btn btn-success btn-icon-split">
 					    <span class="icon text-white-50"><i class="fas fa-divide"></i></span>
@@ -342,12 +490,12 @@
 			               </thead>
 			               <tbody id="modalTbody1">
 			               <tr>
-							<td><input type="number" id="month1" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month2" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month3" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month4" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month5" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month6" class="form-control monthlyBudget"></td>
+							<td><input type="text" id="month1" class="form-control monthlyBudget" data-month="1"></td>
+					        <td><input type="text" id="month2" class="form-control monthlyBudget" data-month="2"></td>
+					        <td><input type="text" id="month3" class="form-control monthlyBudget" data-month="3"></td>
+					        <td><input type="text" id="month4" class="form-control monthlyBudget" data-month="4"></td>
+					        <td><input type="text" id="month5" class="form-control monthlyBudget" data-month="5"></td>
+					        <td><input type="text" id="month6" class="form-control monthlyBudget" data-month="6"></td>
 					       </tr>
 			               </tbody>
 						   <thead id="head2">
@@ -362,12 +510,12 @@
 			               </thead>
 			               <tbody id="modalTbody2">
 			               <tr>
-							<td><input type="number" id="month7" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month8" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month9" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month10" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month11" class="form-control monthlyBudget"></td>
-					        <td><input type="number" id="month12" class="form-control monthlyBudget"></td>
+							<td><input type="text" id="month7" class="form-control monthlyBudget" data-month="7"></td>
+					        <td><input type="text" id="month8" class="form-control monthlyBudget" data-month="8"></td>
+					        <td><input type="text" id="month9" class="form-control monthlyBudget" data-month="9"></td>
+					        <td><input type="text" id="month10" class="form-control monthlyBudget" data-month="10"></td>
+					        <td><input type="text" id="month11" class="form-control monthlyBudget" data-month="11"></td>
+					        <td><input type="text" id="month12" class="form-control monthlyBudget" data-month="12"></td>
 					       </tr>
 			               </tbody>
 					   </table>
@@ -378,7 +526,8 @@
             <div class="modal-footer d-flex justify-content-between" >
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                 <button type="button" id="regFrmBtn" form="registerForm" class="btn btn-primary">예산등록</button>
-                <button type="button" id="uptBtn" form="registerForm" class="btn btn-info">수정</button>
+                <button type="button" id="uptBtn" form="registerForm" class="btn btn-success">수정</button>
+                <button type="button" id="delBtn" form="registerForm" class="btn btn-danger">삭제</button>
             </div>
         </div>
     </div>
