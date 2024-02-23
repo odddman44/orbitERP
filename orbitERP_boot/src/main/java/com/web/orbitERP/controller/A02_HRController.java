@@ -2,7 +2,6 @@ package com.web.orbitERP.controller;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A02_HRService;
-import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
+import com.web.orbitERP.vo.Paystub;
 import com.web.orbitERP.vo.Salary;
 import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
@@ -297,6 +296,21 @@ public class A02_HRController {
 		return "a02_humanResource\\z04_paystubInsert";
 	}
 	
+	@RequestMapping("insertPayStub")
+	public ResponseEntity<?> insertPaystub(Paystub ins){
+		return ResponseEntity.ok(service.insertPaystub(ins));
+	}
+	
+	// http://localhost:4444/detailPaystubFrm
+		@RequestMapping("updatePaystubFrm")
+		public String updatePaystubFrm(@RequestParam("stub_name") String stub_name, Model d) {
+			d.addAttribute("paystubList", service.getPaystubDetail(stub_name));
+			return "a02_humanResource\\z05_paystubUpdate";
+		}
+	@RequestMapping("deletePaystub")
+	public ResponseEntity<?> deletePaystub(@RequestParam("stub_name") String stub_name){
+		return ResponseEntity.ok(service.deletePaystub(stub_name));
+	}
 	
 	
 	
