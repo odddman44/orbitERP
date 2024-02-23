@@ -23,7 +23,7 @@
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-   	if('${alListAll}.length' == 0) {
+   	if(${alListAll}.length == 0) {
         alert('알림이 없습니다.');
     }
     
