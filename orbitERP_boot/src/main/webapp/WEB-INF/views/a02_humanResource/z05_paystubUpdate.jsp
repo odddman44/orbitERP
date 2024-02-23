@@ -141,30 +141,6 @@
 			        ]
 			     
 			    });
-		 	
-		 	// 테이블 변할 때마다 인원수랑 총액 바꾸기 이벤트
-			   $("#regEmp").on("input", "td", function(){
-				    var net_pays = [];
-				    var tot_net_pay = 0;
-				    
-				    $(this).find('tr').each(function(){
-				        var net_payWithComma = $(this).find('td:eq(2)').text();
-				        console.log(net_pays[0])
-				        // 콤마 제거
-				        var net_pay = parseFloat(net_payWithComma.replace(/,/g, '')); // 숫자로 변환하여 콤마 제거 후 할당
-				        // 배열에 추가
-				        net_pays.push(net_pay);
-				    });
-				    
-				    // 배열의 합을 계산
-				    for(var i = 0; i < net_pays.length; i++){
-				        tot_net_pay += net_pays[i];
-				    }
-				    
-				    
-				    $("#tot_net_pay").val(tot_net_pay)
-				    console.log("총 금액: "+tot_net_pay)
-				});
 			
 		})
 		
@@ -181,7 +157,7 @@
 	    html += "<td>" + empno + "</td>";
 	    html += "<td>" + ename + "</td>";
 	    html += "<td>" + net_pay + "</td>";
-	    html += "<td><button type='button' class='btn btn-danger' id='delBtn'>제거</button></td>";
+	    html += "<td><button type='button' class='btn btn-danger' id='delSalBtn'>제거</button></td>";
 	   	if(isExits(empno)){
 	   		alert("이미 선택한 사원의 급여정보가 등록되었습니다.")
 	   	}else{
@@ -204,7 +180,7 @@
 	   
 	});
 		
-		$("#modalTable").on("click", "#delBtn", function() {
+		$("#modalTable").on("click", "#delSalBtn", function() {
 		    var deleteSal = $(this).closest("tr").find("td:first").text();
 		    console.log("삭제하는 연봉 정보:"+deleteSal)
 		    
@@ -212,49 +188,40 @@
 	    for (var i = 0; i < insertSalary.length; i++) {
 	        if (insertSalary[i].empno === deleteSal) {
 	            insertSalary.splice(i); // 배열에서 해당 요소 삭제
-	            console.log("배열의 사이즈: "+insertSalary.length)
+	            cosole.log("배열의 사이즈: "+insertSalary.length)
 	            break;
 	        }
 	    }
 		    $(this).closest("tr").remove();
 		});
 		
-		// 등록 버튼 클릭시
-		$("#insBtn").click(function() {
-			
-			if($("#stub_name").val()==""){
-				alert("급여대장명을 입력하십시오.")
-				return false;
+		$("#delBtn").click(function(){
+			if(confirm("급여장부를 삭제하시겠습니가?\n 삭제를 진행하면 다시 복구할 수 없습니다.")){
+				$.ajax({
+					url:"/deletePaystub",
+					dataType:"json",
+					data:{
+						stub_name:$("#stub_name").val()
+					},
+					type:"POST",
+					success:function(data){
+						if(data>0){
+							alert("급여장부 삭제 성공")
+							window.close()
+						
+						
+						}else{
+							alert("급여 정보 삭제 실패")
+						}
+					},
+					error:function(err){
+						console.log("급여 삭제 중 에러 발생: "+err)
+					}
+				})
 			}
-			
-		    if (confirm("급여 대장을 등록하시겠습니까?")) {
-		        insertSalary.forEach(function(salary) {
-		        	$("#empno").val(salary.empno)
-		        	$("#net_pay").val(salary.net_pay)
-		        	// 콤마 제거
-		        	var net_payWithComma = $("#net_pay").val();
-		        	var net_pay = net_payWithComma.replace(/,/g, '');
-		        	$("#net_pay").val(net_pay)
-		        	// alert($("#frm01").serialize())
-		            $.ajax({
-		                url: "${path}/insertPayStub",
-		                data: $("#frm01").serialize(),
-		                dataType: "json",
-		                success: function(data) {
-		                    if (data > 0) {
-		                        alert("급여 장부 등록 성공");
-		                        window.close();
-		                    } else {
-		                        alert("급여 장부 등록 실패");
-		                    }
-		                },
-		                error: function(err) {
-		                    console.log(err);
-		                }
-		            });
-		        });
-		    }
-		});
+		})
+		
+	
 })
 	function addCommas(nStr) {
 		nStr += '';
@@ -277,6 +244,8 @@
 	    }
 	    return false; // empno가 존재하지 않는 경우 false 반환
 	}
+	
+
 </script>
 <!-- DB테이블 플러그인 추가 -->
 <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -315,7 +284,7 @@
 					<br>
 					<div
 						class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">급여대장 등록</h1>
+						<h1 class="h3 mb-0 text-gray-800">급여대장 상세 페이지</h1>
 					</div>
 					<div class="card shadow mb-4">
 						<div class="card-body">
@@ -326,16 +295,20 @@
 											<span class="input-group-text  justify-content-center">급여대장
 												명칭</span>
 										</div>
-										<input type="text" name="stub_name" id="stub_name" class="form-control">
-
+										
+											<input type="text" name="stub_name" id="stub_name" value="${param.stub_name}" readonly class="form-control">
+										
 									</div>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend">
 											<span class="input-group-text  justify-content-center">급여
 												지급일 </span>
 										</div>
+										<c:if test="${not empty paystubList}">
 										<input type="date" name="payment_dateStr" id="payment_dateStr"
+											value="<fmt:formatDate value='${paystubList[0].payment_date}' pattern='yyyy-MM-dd'/>"
 											class="form-control">
+										</c:if>
 
 									</div>
 									<div class="input-group mb-3">
@@ -343,9 +316,11 @@
 											<span class="input-group-text  justify-content-center">
 												부서번호</span>
 										</div>
-										<select name="deptno" id="deptno"
+										<select name="deptno" id="deptno" disabled
 											class="form-control form-control-user">
-											<option value="0">부서선택</option>
+											<c:if test="${not empty paystubList}">
+												<option>${paystubList[0].deptno}</option>
+											</c:if>
 											<c:forEach var="dept" items="${dlist}">
 												<option value="${dept.deptno}">${dept.dname}[${dept.deptno}]</option>
 											</c:forEach>
@@ -374,13 +349,23 @@
 											<tr class="table-light text-center">
 												<th>사원번호</th>
 												<th>사원명</th>
-												<th>실수령액</th>
+												<th>직급</th>
+												<th style="text-align: right;">실수령액</th>
 												<th>제거</th>
 											</tr>
 										</thead>
 										<tbody id="modalTable">
-
+											<c:forEach var="stub" items="${paystubList}">
+												<tr class="table-light text-center">
+													<td>${stub.empno}</td>
+													<td>${stub.ename}</td>
+													<td>${stub.job}</td>
+													<td style="text-align: right;"><fmt:formatNumber value="${stub.net_pay}" pattern="#,##0" /></td>
+													<td  ><button type='button' class='btn btn-danger' id='delSalBtn'>제거</button></td>
+												</tr>
+											</c:forEach>
 										</tbody>
+										
 									</table>
 
 									<div class="input-group mb-3">
@@ -395,9 +380,12 @@
 
 
 									<div style="text-align: right;">
-										<input type="button" class="btn btn-danger" value="닫기"
-											id="closeBtn" /> <input type="button" class="btn btn-info"
-											value="등록" id="insBtn" />
+										<input type="button" class="btn btn-warning" value="닫기"
+											id="closeBtn" /> 
+										<c:if test="${emem.auth eq '인사관리자' || emem.auth eq '총괄관리자'}">
+											<input type="button" class="btn btn-info" value="수정" id="uptBtn" />
+											<input type="button" class="btn btn-danger" value="삭제" id="delBtn" />
+										</c:if>
 									</div>
 								</form>
 							</div>

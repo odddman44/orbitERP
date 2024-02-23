@@ -516,5 +516,16 @@ public class A02_HRService {
 		return dao.getPaystubList(deptno, month, year);
 	}
 	
+	public int insertPaystub(Paystub ins) {
+		return dao.insertPayStub(ins);
+	}
+	
+	public List<Paystub> getPaystubDetail(@Param("stub_name") String stub_name){
+		return dao.getPaystubDetail(stub_name);
+	}
+	
+	public int deletePaystub(@Param("stub_name") String stub_name) {
+		return dao.deletePaystub(stub_name);
+	}
 
 }

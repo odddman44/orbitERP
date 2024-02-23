@@ -146,6 +146,12 @@ public interface A02_HRDao {
 	List<Paystub> getPaystubList(@Param("deptno") int deptno, 
 					@Param("month") int month, @Param("year") int year );
 	
+	int insertPayStub(Paystub ins);
+	
+	List<Paystub> getPaystubDetail(@Param("stub_name") String stub_name);
+	
+	int deletePaystub(@Param("stub_name") String stub_name);
+	
 	
 	
 	

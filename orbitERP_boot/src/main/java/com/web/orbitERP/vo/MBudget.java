@@ -2,7 +2,6 @@ package com.web.orbitERP.vo;
 
 // com.web.orbitERP.vo.MBudget
 public class MBudget {
-	private int mbudget_id;
     private int year;
     private int month;
     private int deptno;
@@ -12,21 +11,16 @@ public class MBudget {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public MBudget(int mbudget_id, int year, int month, int deptno, double month_amount, String dname) {
+	
+	public MBudget(int year, int month, int deptno, double month_amount, String dname) {
 		super();
-		this.mbudget_id = mbudget_id;
 		this.year = year;
 		this.month = month;
 		this.deptno = deptno;
 		this.month_amount = month_amount;
 		this.dname = dname;
 	}
-	public int getMbudget_id() {
-		return mbudget_id;
-	}
-	public void setMbudget_id(int mbudget_id) {
-		this.mbudget_id = mbudget_id;
-	}
+
 	public int getYear() {
 		return year;
 	}
