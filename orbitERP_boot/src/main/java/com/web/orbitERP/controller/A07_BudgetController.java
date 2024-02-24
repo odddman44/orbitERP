@@ -102,4 +102,11 @@ public class A07_BudgetController {
         }
     }
     
+    // 예산 정보 조회 및 결과 페이지로 이동
+    // http://localhost:4444/budgetComp
+    @RequestMapping("budgetComp")
+    public String budgetComp() {
+        return "a07_budget\\a02_budgetComp"; 
+    }
+    
 }
