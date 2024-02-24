@@ -39,7 +39,6 @@
             }));
         }
 		
-
 	 	// 숫자 입력 필드에 콤마 추가
 	    $(".monthlyBudget, #totalBudget").on('input', function() {
             var value = $(this).val().replace(/,/g, ''); // 콤마 제거
@@ -67,6 +66,30 @@
     	// 콤마 제거하기
         function removeComma(str) {
             return str.replace(/,/g, '');
+        }
+    	
+     // 예산 등록/수정/삭제 버튼 클릭 이벤트에 권한 확인 로직 추가
+        function checkAuthAndProceed(callback) {
+            if (deptAuth !== 1 && deptAuth !== 20) {
+                alert("권한이 없는 이용자입니다.");
+                return;
+            }
+            callback();
+        }
+
+        // 연간 예산과 월별 예산액의 합계 일치 확인
+        function isBudgetSumMatched() {
+            var totalBudget = parseInt(removeComma($("#totalBudget").val())) || 0;
+            var totalMonthlyBudget = 0;
+            $(".monthlyBudget").each(function() {
+                totalMonthlyBudget += parseInt(removeComma($(this).val())) || 0;
+            });
+
+            if (totalBudget !== totalMonthlyBudget) {
+                alert("연간 예산과 월별 예산액의 합계가 일치하지 않습니다.");
+                return false;
+            }
+            return true;
         }
 		 
 		// 연간 예산 총액 입력란과 월별 예산 입력란에 이벤트 핸들러 설정
@@ -155,6 +178,11 @@
 	    
 		// 예산 편성 버튼 클릭 이벤트 핸들러
 	    $("#newBtn").click(function() {
+	    	if (deptAuth !== 1 && deptAuth !== 20) {
+	            alert("권한이 없는 이용자입니다.");
+	            return; // 함수 실행 종료
+	        }
+	    	
 	    	$("#frm02")[0].reset();
 	        // 모달 창 표시
 	        $("#newBudgetModal").modal('show');
@@ -200,34 +228,45 @@
 	                });
 	            }
 	        });
-	     	// 모든 값이 올바르게 포맷되고 콤마가 제거되었는지 확인
-	        if (budgets.length > 0) {
-		        // AJAX 요청으로 서버에 데이터 전송
-		        $.ajax({
-		            url: '${path}/budgetInsert', // 서버 엔드포인트 URL
-		            type: 'POST',
-		            contentType: 'application/json', // 요청의 Content-Type
-		            data: JSON.stringify(budgets), // JSON 문자열로 변환
-		            dataType : 'json',
-		            success: function(response) {
-		                alert('예산 데이터가 성공적으로 등록되었습니다.');
-		                $("#newBudgetModal").modal('hide'); // 모달 닫기
-		                fetchBudgetData(year, deptno); // 최신 데이터로 테이블 갱신
-		                location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
-		            },
-		            error: function(xhr, status, error) {
-		                alert('예산 데이터 등록 중 오류가 발생했습니다. ' + error);
-		            }
-		        });
-	        } else {
-	        	alert("예산 필드를 올바르게 작성하세요.");
-	        }
+	        
+	        checkAuthAndProceed(function() {
+                if (!isBudgetSumMatched()) return;
+
+                // AJAX 요청 코드...
+		     	// 모든 값이 올바르게 포맷되고 콤마가 제거되었는지 확인
+		        if (budgets.length > 0) {
+			        // AJAX 요청으로 서버에 데이터 전송
+			        $.ajax({
+			            url: '${path}/budgetInsert', // 서버 엔드포인트 URL
+			            type: 'POST',
+			            contentType: 'application/json', // 요청의 Content-Type
+			            data: JSON.stringify(budgets), // JSON 문자열로 변환
+			            dataType : 'json',
+			            success: function(response) {
+			                alert('예산 데이터가 성공적으로 등록되었습니다.');
+			                $("#newBudgetModal").modal('hide'); // 모달 닫기
+			                fetchBudgetData(year, deptno); // 최신 데이터로 테이블 갱신
+			                location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
+			            },
+			            error: function(xhr, status, error) {
+			                alert('예산 데이터 등록 중 오류가 발생했습니다. ' + error);
+			            }
+			        });
+		        } else {
+		        	alert("예산 필드를 올바르게 작성하세요.");
+		        }
+            });
 	    });
 	 	
 	 	// 테이블 행 더블클릭 이벤트 리스너
 	    $('#dataTable tbody').on('dblclick', 'tr', function() {
 	        var year = $(this).find('td:eq(1)').text().trim(); // 연도 정보 추출
 	        var deptno = parseInt($(this).data('deptno')); // 부서 번호 추출, data-deptno 속성 필요
+	        
+	        if (deptAuth !== 1 && deptAuth !== 20) {
+	            alert("권한이 없는 이용자입니다.");
+	            return; // 함수 실행 종료
+	        }
 
 	        // AJAX 요청으로 서버에서 예산 정보 조회
 	        $.ajax({
@@ -284,49 +323,53 @@
 	                month_amount: parseFloat(removeComma($(this).val())) // 콤마 제거 후 숫자로 변환
 	            };
 	        }).get();
-
-	        // 예산 수정 AJAX 요청
-	        $.ajax({
-	            url: '${path}/updateBudget',
-	            type: 'POST',
-	            contentType: 'application/json',
-	            data: JSON.stringify(budgets), // 수정된 부분: budgetData 대신 budgets 사용
-	            dataType: "json",
-	            success: function(response) {
-	                //alert("업데이트된 행의 수: " + response.updateCount);
-	                $("#newBudgetModal").modal('hide');
-	                fetchBudgetData(year, deptno); // 데이터 재조회
-	                location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
-	            },
-	            error: function(xhr, status, error) {
-	                alert('예산 수정 실패: ' + error);
-	            }
-	        });
+	        checkAuthAndProceed(function() {
+                if (!isBudgetSumMatched()) return;
+                // AJAX 요청 코드...
+		        // 예산 수정 AJAX 요청
+		        $.ajax({
+		            url: '${path}/updateBudget',
+		            type: 'POST',
+		            contentType: 'application/json',
+		            data: JSON.stringify(budgets), // 수정된 부분: budgetData 대신 budgets 사용
+		            dataType: "json",
+		            success: function(response) {
+		                //alert("업데이트된 행의 수: " + response.updateCount);
+		                $("#newBudgetModal").modal('hide');
+		                fetchBudgetData(year, deptno); // 데이터 재조회
+		                location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
+		            },
+		            error: function(xhr, status, error) {
+		                alert('예산 수정 실패: ' + error);
+		            }
+		        });
+            });
 	    });
 
-		 // 예산 삭제 버튼 클릭 이벤트
+		// 예산 삭제 버튼 클릭 이벤트
 	    $("#delBtn").click(function() {
 	        var year = $("#stdYear").val();
 	        var deptno = $("#deptno2").val();
-
-	        // 사용자에게 삭제 확인 요청
-	        if(confirm("선택한 예산을 삭제하시겠습니까?")) {
-	            // 예산 삭제 AJAX 요청
-	            $.ajax({
-	                url: '${path}/deleteBudget',
-	                type: 'POST',
-	                contentType: 'application/json',
-	                data: JSON.stringify({ year: year, deptno: deptno }), // month 정보 제외
-	                success: function(response) {
-	                    alert(response);
-	                    $("#newBudgetModal").modal('hide');
-	                    fetchBudgetData(year, deptno); // 데이터 재조회
-	                },
-	                error: function(xhr, status, error) {
-	                    alert('예산 삭제 실패: ' + error);
-	                }
-	            });
-	        }
+	        checkAuthAndProceed(function() {
+                // AJAX 요청 코드...
+		        // 사용자에게 삭제 확인 요청
+		        if(confirm("선택한 예산을 삭제하시겠습니까?")) {
+		            // 예산 삭제 AJAX 요청
+		            $.ajax({
+		                url: '${path}/deleteBudget?year=' + year + '&deptno=' + deptno, // + 연산자를 사용하여 URL 구성
+		                type: 'POST',
+		                success: function(response) {
+		                    alert(response);
+		                    $("#newBudgetModal").modal('hide');
+		                    fetchBudgetData(year, deptno); // 데이터 재조회
+		                    location.reload(); // 페이지를 새로고침하여 최신 데이터 표시
+		                },
+		                error: function(xhr, status, error) {
+		                    alert('예산 삭제 실패: ' + error);
+		                }
+		            });
+		        }
+            });
 	    });
 	    
 	}); // $(document).ready 끝
@@ -457,6 +500,7 @@
 				    	<div class="col-md-4">
 					        <label for="stdYear">기준년도</label>
 							<select id="stdYear" class="form-control" name="stdYear" required>
+								<option value="2023">2023년</option>
 							</select>
 							<label for="accName">부서명</label>
 					        <select id="deptno2" class="form-control">
