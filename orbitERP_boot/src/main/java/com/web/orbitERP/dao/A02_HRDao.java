@@ -148,11 +148,13 @@ public interface A02_HRDao {
 	
 	int insertPayStub(Paystub ins);
 	
-	List<Paystub> getPaystubDetail(@Param("stub_name") String stub_name);
+	List<Paystub> getPaystubDetail(@Param("payment_dateStr") String payment_dateStr,
+								   @Param("deptno") int deptno);
 	
-	int deletePaystub(@Param("stub_name") String stub_name);
+	int deletePaystub(@Param("payment_dateStr") String payment_dateStr, @Param("deptno") int deptno);
 	
 	
+	int updatePaystub(Paystub upt);
 	
 	
 	

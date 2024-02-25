@@ -303,13 +303,20 @@ public class A02_HRController {
 	
 	// http://localhost:4444/detailPaystubFrm
 		@RequestMapping("updatePaystubFrm")
-		public String updatePaystubFrm(@RequestParam("stub_name") String stub_name, Model d) {
-			d.addAttribute("paystubList", service.getPaystubDetail(stub_name));
+		public String updatePaystubFrm(@RequestParam("payment_dateStr") String payment_dateStr,
+										@RequestParam("deptno") int deptno, Model d) {
+			d.addAttribute("paystubList", service.getPaystubDetail(payment_dateStr, deptno));
 			return "a02_humanResource\\z05_paystubUpdate";
 		}
 	@RequestMapping("deletePaystub")
-	public ResponseEntity<?> deletePaystub(@RequestParam("stub_name") String stub_name){
-		return ResponseEntity.ok(service.deletePaystub(stub_name));
+	public ResponseEntity<?> deletePaystub(@RequestParam("payment_dateStr") String payment_dateStr,
+											@RequestParam("deptno") int deptno){
+		return ResponseEntity.ok(service.deletePaystub(payment_dateStr, deptno));
+	}
+	
+	@RequestMapping("updatePaystub")
+	public ResponseEntity<?> updatePaystub(Paystub upt){
+		return ResponseEntity.ok(service.updatePaystub(upt));
 	}
 	
 	
