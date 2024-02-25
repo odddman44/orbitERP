@@ -23,6 +23,6 @@ public interface A07_BudgetDao {
     // 예산 삭제
     int deleteBudget(int year, int deptno);
     
-    // 비교용 손익 데이터
-    List<ActualExpense> getActualExpense(Map<String, Object> params);
+    // 실제 지출 정보 조회
+    List<ActualExpense> getActualExpense(int year, int deptno);
 }

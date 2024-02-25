@@ -16,12 +16,112 @@
  <!-- jQuery -->
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
-	var deptAuth = parseInt("${emem.deptno}");
-	console.log(deptAuth);
-	
-	$(document).ready(function() {
-	    
-	}); // $(document).ready 끝
+    var deptAuth = parseInt("${emem.deptno}");
+    console.log(deptAuth);
+
+    $(document).ready(function() {
+        // 연도 선택 드롭다운 목록에 옵션 추가
+        var currentYear = new Date().getFullYear();
+        initializeYearSelect(currentYear);
+        // 페이지 로딩 완료 후 자동으로 현재 년도, 모든 부서에 대한 데이터 조회
+        fetchDataAndDisplayTable(currentYear, 0);
+
+        // 검색 버튼 이벤트 핸들러
+        $("#schBtn").click(function() {
+            var selectedYear = $('#yearSelect').val();
+            var selectedDeptno = $('#deptno').val();
+            fetchDataAndDisplayTable(selectedYear, selectedDeptno);
+        });
+		
+        function initializeYearSelect(currentYear) {
+            for (var year = currentYear - 1; year <= currentYear + 2; year++) {
+                $('#yearSelect').append($('<option>', {
+                    value: year,
+                    text: year + '년',
+                    selected: year === currentYear
+                }));
+            }
+        }
+        
+        // 예산 데이터와 실제 지출 데이터 비교하여 테이블 생성
+        function fetchDataAndDisplayTable(year, deptno) {
+	        $.when(fetchBudgetData(year, deptno), fetchActualExpenses(year, deptno))
+	            .done(function(budgetDataResponse, actualExpensesResponse) {
+	                // 예산 데이터와 실제 지출 데이터 처리
+	                var budgetData = budgetDataResponse[0];
+	                var actualExpensesData = actualExpensesResponse[0];
+	                createComparisonTable(budgetData, actualExpensesData);
+	            });
+  	 	}
+        function fetchBudgetData(year, deptno) {
+            return $.ajax({
+                url: '${path}/budgetSch',
+                type: 'GET',
+                data: { year: year, deptno: deptno }
+            });
+        }
+
+        function fetchActualExpenses(year, deptno) {
+            return $.ajax({
+                url: '${path}/actualExpense',
+                type: 'GET',
+                data: { year: year, deptno: deptno }
+            });
+        }
+        
+        // 비교 테이블 생성 함수
+        function createComparisonTable(budgetList, actualExpenses) {
+            var table = $('#dataTable');
+            table.empty(); // 테이블 초기화
+
+            // 월별로 테이블 헤더와 데이터 행 생성
+            for(var month = 1; month <= 12; month++) {
+            	var monthBudget = budgetList.filter(item => item.month === month);
+                var monthExpenses = actualExpenses.filter(item => item.month === month);
+                // 테이블 헤더 생성
+                var row  = $('<thead id="compHead'+month+'"><tr class="table-info text-center">' +
+                    '<th rowspan="2">부서명</th>' +
+                    '<th colspan="4">'+month+'월 예산 실적</th>' +
+                    '</tr><tr class="table-secondary text-center">' +
+                    '<th>예산</th>' +
+                    '<th>실적</th>' +
+                    '<th>비교(예산-실적)</th>' +
+                    '<th>비율(실적/예산)</th>' +
+                    '</tr></thead>');
+                table.append(row);
+
+                // 해당 월에 대한 데이터만 필터링
+                var monthlyBudgetList = budgetList.filter(function(budget) {
+                    return budget.month === month;
+                });
+                var monthlyActualExpenses = actualExpenses.filter(function(expense) {
+                    return expense.month === month;
+                });
+
+                // 테이블 바디에 데이터 행 추가
+                var tbody = $('<tbody id="compBody'+month+'" style="text-align:right;"></tbody>');
+                monthlyBudgetList.forEach(function(budget) {
+                    var actual = monthlyActualExpenses.find(function(expense) {
+                        return expense.deptno === budget.deptno;
+                    }) || { totalDebitAmount: 0 };
+
+                    var diff = budget.month_amount - actual.totalDebitAmount;
+                    var ratio = actual.totalDebitAmount / budget.month_amount * 100 || 0;
+                    var diffColor = diff < 0 ? 'red' : 'blue'; // 차이에 따른 글씨 색상 결정
+
+
+                    tbody.append('<tr>' +
+                        '<td>' + budget.dname + '</td>' +
+                        '<td>' + budget.month_amount.toLocaleString() + '</td>' +
+                        '<td>' + actual.totalDebitAmount.toLocaleString() + '</td>' +
+                        '<td style="color:' + diffColor + ';">' + diff.toLocaleString() + '</td>' + // 색상 적용
+                        '<td>' + ratio.toFixed(2) + '%</td>' +
+                        '</tr>');
+                });
+                table.append(tbody);
+            }
+        }
+    }); // $(document).ready 끝
 </script>
 	<!-- DB테이블 플러그인 추가 -->
     <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -57,21 +157,16 @@
 				<div class="container-fluid">
 					<!-- Page Heading -->
 					<div class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">※ 예산 현황</h1>
+						<h1 class="h3 mb-0 text-gray-800">※ 예산 실적 비교</h1>
 					</div>
 					<!-- Content Row -->
 					<div class="row">
 						<div class="col-xl-12 col-lg-12">
 							<div class="card shadow">
 								<div class="card-header">
-									<h6 class="m-0 font-weight-bold text-primary">예산 편성 현황</h6>
+									<h6 class="m-0 font-weight-bold text-primary">예산 실적 비교표</h6>
 									<form id="frm01" class="form" method="GET">
 										<div class="form-row align-items-center">
-											<div class="col-auto">
-												<select id="yearSelect" class="form-control">
-													<option value="0" selected>연도선택</option>
-												</select>
-											</div>
 											<label for="deptno">부서명</label>
 											<div class="col-auto">
 										        <select id="deptno" name="deptno" class="form-control">
@@ -82,6 +177,11 @@
 										        </select>
 										    </div>
 											<div class="col-auto">
+												<select id="yearSelect" class="form-control">
+													<option value="0" selected>연도선택</option>
+												</select>
+											</div>
+											<div class="col-auto">
 												<button type="button" id="schBtn" class="btn btn-secondary">검색</button>
 											</div>
 										</div>
@@ -90,23 +190,15 @@
 								<div class="card-body">
 									<div class="table-responsive">
 										<table class="table table-hover table-striped table-bordered" id="dataTable">
-											<thead>
-												<tr class="table-secondary text-center">
-													<th>부서명</th><th>연도</th>
-													<th>1월</th><th>2월</th><th>3월</th>
-													<th>4월</th><th>5월</th><th>6월</th>
-													<th>7월</th><th>8월</th><th>9월</th>
-													<th>10월</th><th>11월</th><th>12월</th>
-													<th>합계</th>
+											<thead id="compHead">
+												<tr class="table-info text-center">
+													
 												</tr>
 											</thead>
-											<tbody id="budgetData" style="text-align:right;">
+											<tbody id="compBody" style="text-align:right;">
 									
 											</tbody>
 										</table>
-										<div>
-											<button type="button" id="newBtn" class="btn btn-info">예산 편성</button>
-										</div>
 									</div>
 								</div>
 							</div>
