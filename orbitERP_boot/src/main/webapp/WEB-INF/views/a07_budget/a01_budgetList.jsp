@@ -195,9 +195,12 @@
 	    });
 		
 	    $("#divideBtn").click(function() {
-	    	var totalBudget = parseInt(removeComma($("#totalBudget").val())) || 0; // 연간 예산 총액 입력값
-	        var baseMonthlyBudget = Math.floor(totalBudget / 12 / 10000) * 10000; // 10,000단위로 떨어지게 12로 나누고 내림
-	        var remainder = totalBudget - (baseMonthlyBudget * 12); // 전체에서 나눈 값의 합을 뺀 나머지
+	    	// 연간 예산 총액 입력값
+	    	var totalBudget = parseInt(removeComma($("#totalBudget").val())) || 0; 
+	    	// 10,000단위로 떨어지게 12로 나누고 내림
+	        var baseMonthlyBudget = Math.floor(totalBudget / 12 / 10000) * 10000; 
+	  	    // 전체에서 나눈 값의 합을 뺀 나머지
+	        var remainder = totalBudget - (baseMonthlyBudget * 12); 
 	        var lastMonthAdditional = remainder; // 12월에 더할 나머지 값
 
 	        // 1월부터 11월까지의 월별 예산액 입력란에 기본 월별 예산액 할당
