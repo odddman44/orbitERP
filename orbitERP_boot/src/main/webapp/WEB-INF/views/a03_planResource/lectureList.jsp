@@ -79,7 +79,6 @@
 						<h1 class="h3 mb-0 text-gray-800">☆ 강의조회</h1>
 						<div style="text-align: right;">
 								<input type="button" class="btn btn-info" value="강의등록" id="uptBtn" />
-								<input type="button" class="btn btn-info" value="강의과목등록" id="subBtn" />
 							</div>
 					</div>
 					<div class="card shadow mb-4">

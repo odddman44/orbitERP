@@ -55,10 +55,11 @@ $(document).ready(function() {
         sendAlram('${emem.empno}');
     })
     $('#alhiden2').hide();// 초기에 숨김처리
- // 버튼이 클릭되면 #alhiden의 가시성을 토글합니다
+    
     $('#toggleAlhiden1').click(function() {
        $('#alhiden1').show();
        $('#alhiden2').hide();
+       location.reload(true);
     });
     $('#toggleAlhiden2').click(function() {
        $('#alhiden1').hide();
