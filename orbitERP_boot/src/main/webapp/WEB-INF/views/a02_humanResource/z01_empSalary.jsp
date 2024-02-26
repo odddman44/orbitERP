@@ -697,7 +697,7 @@ table {
 										name="allowance"></td>
 									<td><input class="form-control text-right" type="text"
 										name="deduction" id="deduction"></td>
-									<td><input class="form-control text-right" type="text" id="net_pay"></td>
+									<td><input class="form-control text-right" type="text" readonly id="net_pay"></td>
 								</tr>
 							</tbody>
 						</table>

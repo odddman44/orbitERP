@@ -302,12 +302,20 @@ public class A02_HRController {
 	}
 	
 	// http://localhost:4444/detailPaystubFrm
+	// 모델 데이터로 처리
 		@RequestMapping("updatePaystubFrm")
 		public String updatePaystubFrm(@RequestParam("payment_dateStr") String payment_dateStr,
 										@RequestParam("deptno") int deptno, Model d) {
 			d.addAttribute("paystubList", service.getPaystubDetail(payment_dateStr, deptno));
 			return "a02_humanResource\\z05_paystubUpdate";
 		}
+	// json 버전으로 데이터 가져오기
+		// http://localhost:4444/detailPaystubFrmJson	
+	@RequestMapping("updatePaystubFrmJson")
+	public ResponseEntity<?> updatePaystubFrmJson(@RequestParam("payment_dateStr") String payment_dateStr,
+			@RequestParam("deptno") int deptno){
+		return ResponseEntity.ok(service.getPaystubDetail(payment_dateStr, deptno));
+	}
 	@RequestMapping("deletePaystub")
 	public ResponseEntity<?> deletePaystub(@RequestParam("payment_dateStr") String payment_dateStr,
 											@RequestParam("deptno") int deptno){

@@ -51,12 +51,35 @@
 	
 	// 체크된 급여 리스트를 저장할 배열
 	
-	var insertSalary = [] // empno이랑 net_pay 저장
+
+	var paystubList = [] // 기존에 있던 paystub ajax로 받아옴
+	
+	
+	// json으로 기존에 있던 사원별 급여리스트를 받아온다.
+	$.ajax({
+	    url: '${path}/updatePaystubFrmJson',
+	    type: 'post',
+	    data: {
+	        payment_dateStr: '${param.payment_dateStr}',
+	        deptno: '${param.deptno}'
+	    },
+	    dataType: 'json',
+	    success: function(data) {
+	        // 기존에 있던 데이터 받아오기
+	        console.log('ajax로 받아온 paystub', data);
+	        for(var i=0; i<data.length; i++){
+	            paystubList.push({
+	                empno: data[i].empno,
+	                net_pay: data[i].net_pay
+	            });
+	            console.log(paystubList.length);
+	        }
+	    }
+	});
 	
 	
 	window.onload = function() {
-	    // 페이지가 다시 로드될 때 배열 초기화
-	    insertSalary = [];
+	   
 	};
 	document.addEventListener('keydown', function(event) {
 		if (event.key === "Enter") {
@@ -156,21 +179,20 @@
 	    html += "<tr class='table-light text-center'>";
 	    html += "<td>" + empno + "</td>";
 	    html += "<td>" + ename + "</td>";
-	    html += "<td>" + net_pay + "</td>";
+	    html += "<td style='text-align: right;'>" + net_pay + "</td>";
 	    html += "<td><button type='button' class='btn btn-danger' id='delSalBtn'>제거</button></td>";
 	   	if(isExits(empno)){
+	   		console.log("새로등록되는 사원번호:"+empno)
 	   		alert("이미 선택한 사원의 급여정보가 등록되었습니다.")
 	   	}else{
 	    	$("#modalTable").append(html); // 수정된 부분: row 대신에 html을 append
 	    	// 배열에도 추가
-	    	 insertSalary.push({
+	    	 paystubList.push({
 	 	    	empno : empno,
 	 	    	net_pay: net_pay
 	 	    })
-	 	    console.log("등록된 값 배열:" + insertSalary[0].empno)
-	 	    console.log("등록된 값 배열:" + insertSalary[0].net_pay)
 	 	    
-	 	    var size = insertSalary.length; // 배열의 크기
+	 	    var size = paystubList.length; // 배열의 크기
 			console.log("배열의 크기: "+size)
 	 	    $("#size").val(size)
 	   	}
@@ -185,10 +207,10 @@
 		    console.log("삭제하는 연봉 정보:"+deleteSal)
 		    
 		// 배열에서 일치하는 empno를 찾아 삭제
-	    for (var i = 0; i < insertSalary.length; i++) {
-	        if (insertSalary[i].empno === deleteSal) {
-	            insertSalary.splice(i); // 배열에서 해당 요소 삭제
-	            cosole.log("배열의 사이즈: "+insertSalary.length)
+	    for (var i = 0; i < paystubList.length; i++) {
+	        if (paystubList[i].empno === deleteSal) {
+	        	paystubList.splice(i); // 배열에서 해당 요소 삭제
+	            console.log("배열의 사이즈: "+paystubList.length)
 	            break;
 	        }
 	    }
@@ -197,63 +219,63 @@
 		
 		$("#delBtn").click(function(){
 			if(confirm("급여장부를 삭제하시겠습니가?\n 삭제를 진행하면 다시 복구할 수 없습니다.")){
-			
-				// 비활성화 풀기
-							$("#frm01 [name='payment_dateStr']").prop('disabled', false);
-							$("#frm01 [name='deptno']").prop('disabled', false);
-				$.ajax({
-					url:"/deletePaystub",
-					dataType:"json",
-					data:{
-						payment_dateStr:$("#payment_dateStr").val(),
-						deptno:$("#deptno").val()
-					},
-					type:"POST",
-					success:function(data){
-						if(data>0){
-							alert("급여장부 삭제 성공")
-							window.close()
-						
-						
-						}else{
-							alert("급여 정보 삭제 실패")
-						}
-					},
-					error:function(err){
-						console.log("급여 삭제 중 에러 발생: "+err)
-					}
-				})
+				deletePaystub();
 			}
 		})
 		
 		$("#uptBtn").click(function(){
-			if(confirm("급여장부를 수정하시겠습니까?")){
-					$("#frm01 [name='payment_dateStr']").prop('disabled', false);
-					$("#frm01 [name='deptno']").prop('disabled', false);
-					
+		    if(confirm("급여장부를 수정하시겠습니까?")){
+		    	$("#frm01 [name='payment_dateStr']").prop('disabled', false);
+				$("#frm01 [name='deptno']").prop('disabled', false);
 					$.ajax({
-					url:"/updatePaystub",
-					dataType:"json",
-					data:$("#frm01").serialize(),
-					type:"POST",
-					success:function(data){
-						if(data>0){
-							alert("급여장부 수정 성공")
-							window.close()
-						
-						
-						}else{
-							alert("급여 정보 수정 실패")
+						url:"/deletePaystub",
+						dataType:"json",
+						data:{
+							payment_dateStr:$("#payment_dateStr").val(),
+							deptno:$("#deptno").val()
+						},
+						type:"POST",
+						success:function(data){
+							if(data>0){
+							
+						    	paystubList.forEach(function(salary){
+						    		
+					    			$("#empno").val(salary.empno)
+						        	$("#net_pay").val(salary.net_pay)
+						        	// 콤마 제거
+						        	var net_payWithComma = $("#net_pay").val();
+						        	var net_pay = net_payWithComma.replace(/,/g, '');
+						        	$("#net_pay").val(net_pay)
+					    		
+					    		   $.ajax({
+						                url: "${path}/insertPayStub",
+						                data: $("#frm01").serialize(),
+						                dataType: "json",
+						                success: function(data) {
+						                    if (data > 0) {
+						                        alert("급여 장부 수정 성공");
+						                        window.close();
+						                    } else {
+						                        alert("급여 장부 수정 실패");
+						                    }
+						                },
+						                error: function(err) {
+						                    console.log(err);
+						                }
+						            });
+					    	})
+							
+							}else{
+								alert("급여 정보 삭제 실패")
+							}
+						},
+						error:function(err){
+							console.log("급여 삭제 중 에러 발생: "+err)
 						}
-					},
-					error:function(err){
-						console.log("급여 삭제 중 에러 발생: "+err)
-					}
-				})
-					
-					
-			}
-		})
+					})
+		
+		    }
+		});
 		
 	
 })
@@ -271,13 +293,44 @@
 	
 	// 배열에 존재하는 empno인지 확인하는 함수
 	function isExits(empno) {
-	    for (var i = 0; i < insertSalary.length; i++) {
-	        if (insertSalary[i].empno === empno) {
+	    for (var i = 0; i < paystubList.length; i++) {
+	        if (paystubList[i].empno === empno) {
 	            return true; // 이미 존재하는 empno인 경우 true 반환
 	        }
 	    }
 	    return false; // empno가 존재하지 않는 경우 false 반환
 	}
+	
+	// paystub 삭제 함수
+	function deletePaystub(){
+		// 비활성화 풀기
+		$("#frm01 [name='payment_dateStr']").prop('disabled', false);
+		$("#frm01 [name='deptno']").prop('disabled', false);
+			$.ajax({
+				url:"/deletePaystub",
+				dataType:"json",
+				data:{
+					payment_dateStr:$("#payment_dateStr").val(),
+					deptno:$("#deptno").val()
+				},
+				type:"POST",
+				success:function(data){
+					if(data>0){
+						alert("급여장부 삭제 성공")
+						window.close()
+					
+					
+					}else{
+						alert("급여 정보 삭제 실패")
+					}
+				},
+				error:function(err){
+					console.log("급여 삭제 중 에러 발생: "+err)
+				}
+			})
+	}
+	
+
 	
 
 </script>
