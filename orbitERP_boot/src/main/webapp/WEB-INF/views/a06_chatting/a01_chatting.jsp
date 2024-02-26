@@ -100,8 +100,12 @@
 			alignOpt = "right"
 			msg = msgArr[1] // 받는 사람 아이디 생략 처리
 		}
-		var msgObj = $("<div></div>").text(msg).attr("align",
-				alignOpt).css("width",$("#chatArea").width())
+		var msgObj = $("<div class='text-container'></div>")
+	    .append($("<span></span>").text(msg))
+	    .attr("align", alignOpt)
+	    .css({
+	    	"width": $("#chatArea").width()
+	    });
 		$("#chatMessageArea").append(msgObj);
 		//alert("저장할 메시지:"+$("#chatMessageArea").html())
 	
@@ -151,6 +155,7 @@
 						if(delMessageToLocalStore()){
 							$("#chRooms").val("")
 							$("#chatGroup").text("")
+							location.reload();
 						}else{
 							connectorInfo()
 						}
@@ -332,8 +337,14 @@
 </head>
 
 <style>
+
+.card {
+	text-align:center;
+}
+
 .frm {
 	margin: auto;
+	
 }
 
 #chatArea {
@@ -345,7 +356,10 @@
 	margin: auto;
 	padding-right: 25px;
 }
-
+#chatGroup{
+	padding: auto;
+	text-align: center;
+}
 
 .text-container {
     margin-bottom: 10px;
@@ -372,6 +386,7 @@
 			<div id="content">
 	
 <div class="container">
+
 	<div class="input-group mb-3">	
 		<div class="input-group-prepend ">
 			<span id="chRoomBtn" class="input-group-text  justify-content-center">새로운방</span>
@@ -383,41 +398,50 @@
 		<input type="text" id="chRoom" 
 			class="form-control" placeholder="신규 채팅방 만들기" />		
 		<input type="text" id="id" 
-			class="form-control" placeholder="접속할 아이디 입력" />
+			class="form-control" value="${emem.ename}" readonly /><br>
 		<input id="enterBtn" type="button" class="btn btn-info" value="채팅방입장" />
 		<input id="exitBtn" type="button" class="btn btn-danger" value="채팅방나가기" />
 				
 	</div>	
+	
+	
+	
+	
+	
+	<div class="col-xl-5 frm" id="frm">
 	<div class="input-group mb-3">	
 		<div class="input-group-prepend ">
-			<span class="input-group-text  justify-content-center">
+			<span class="input-group-text ">
 				접속자</span>
 		</div>
 		<div class="input-group-append" id="chatM">
-			<div id="chatGroup"></div>
+			<div class="text-align-right" id="chatGroup"></div>
 		</div>			
 	</div>
+	
+	<div class="card shadow mb-4">
+	
+	<div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+	<h6 class="m-0 font-weight-bold text-primary">ORBIT MESSANGER</h6>
+	</div>
+	
+	<div class="card-body">
 	<div class="input-group mb-3">	
-		<div class="input-group-prepend ">
-			<span class="input-group-text  justify-content-center">
-				메시지</span>
-		</div>
+		
 		<div id="chatArea" style="overflow-x:hidden"
 			class="input-group-append">
 			<div id="chatMessageArea"></div>
 		</div>
 	</div>		
 	<div class="input-group mb-3">	
-		<div class="input-group-prepend ">
-			<span class="input-group-text  justify-content-center">
-				메시지</span>
-		</div>
+		
 		<input type="text" id="msg" class="form-control" 
 			placeholder="전송할 메시지 입력"/>
 		<input type="button" id="sndBtn" class="btn btn-success" 
-			value="메시지전송" />	
-		<input type="button" id="delBtn" class="btn btn-success" 
-			value="메시지삭제"  onclick="delMessageToLocalStore()"/>
+			value="전송" />	
+		</div>	
+	</div>	
+	</div>	
 	</div>	
 	</div>	
 	</div>	
