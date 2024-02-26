@@ -74,10 +74,8 @@ body {
                   var calendarEl = document.getElementById('calendar');
                   var today = new Date();
                   var todayTitle = today.toISOString().split("T")[0];
-
                   var calendar = new FullCalendar.Calendar(calendarEl, {
                      
-                           
                            locale : 'ko', // 한글로 변경
                            //한글 '일'표시 없애기
                            dayCellContent : function(info) {
@@ -109,6 +107,9 @@ body {
                            selectable : true,
                            selectMirror : true,
                            select : function(arg) {
+                        	   if (sessionCk !== '총괄관리자' && sessionCk !== '계획관리자') {
+                        	        return; // 아무 동작도 하지 않고 콜백을 종료합니다.
+                        	    }
                               // 날짜 클릭시 등록처리되는 이벤트
                               // form name값에 기본데이터를 넣어 등록하기위해 초기화 처리
                               $("#frm01")[0].reset()
@@ -125,15 +126,12 @@ body {
                                     arg.allDay ? 1 : 0)
                               $("#writer").val('계획관리자')
                               $("[name=writer]").val('PR0001')
-                              if(sessionCk!=='총괄관리자' && sessionCk!=='계획관리자'){
-                                 $("#regBtn").hide()
-                                 $("#uptBtn").hide()
-                                 $("#delBtn").hide()
-                              }else{
+                              
                                  $("#regBtn").show()
                                  $("#uptBtn").hide()
                                  $("#delBtn").hide()
-                              }
+                                 $("#alBtn").hide()
+                              
                               // 모달창 로딩을 위해 강제 클릭
                               $("#calModal").click()
 
@@ -150,10 +148,13 @@ body {
                                  $("#regBtn").hide()
                                  $("#uptBtn").hide()
                                  $("#delBtn").hide()
+                                 $("#alBtn").hide()
+                                 $("#frm01 :input").prop("readonly", true);
                               }else{
                                  $("#regBtn").hide()
                                  $("#uptBtn").show()
                                  $("#delBtn").show()
+                                 $("#alBtn").show()
                               }
 
                               $("#calModal").click()
@@ -265,6 +266,10 @@ body {
                      $("[name=allDay]").val(evt.allDay ? 1 : 0)
                   }
                });
+   function sendAlramPl(sender) {
+	   var pltitle=$("[name=title]").val()
+	    window.open("sendAlram2?sender=" + sender+"&altitle="+pltitle, "AlramWindow", "width=700 height=600 left=500 top=200");
+	}
 </script>
 <!-- Custom fonts for this template-->
 <link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
@@ -402,6 +407,7 @@ body {
                         <button type="button" id="regBtn" class="btn btn-primary">일정등록</button>
                         <button type="button" id="uptBtn" class="btn btn-info">일정수정</button>
                         <button type="button" id="delBtn" class="btn btn-warning">일정삭제</button>
+                        <button type="button" id="alBtn" class="btn btn-dark" onclick="sendAlramPl('${emem.empno}')">알림보내기</button>
                         <button type="button" id="clsBtn" class="btn btn-secondary"
                            data-dismiss="modal">Close</button>
                      </div>

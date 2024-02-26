@@ -268,7 +268,7 @@ document.getElementById("hiden").style.display = "none";
       <input type="hidden" name="id" value="0" />
       <div class="input-group mb-3">
         <label for="altitle" class="input-group-text">제목</label>
-        <input type="text" name="altitle" class="form-control" />
+        <input type="text" name="altitle" class="form-control" value="${altitle}"/>
       </div>
       <div class="input-group mb-3">
         <label for="sender" class="input-group-text">보내는사람</label>

@@ -118,6 +118,10 @@ $(document).ready(function() {
 								alert("강의명을 입력하세요")
 								return;
 							}
+							if ($("[name=lec_teacher").val() == "") {
+								alert("강사명을 입력하세요")
+								return;
+							}
 							if ($("[name=start_date]").val() == "") {
 								alert("개강일자를 입력하세요")
 								return;
