@@ -12,9 +12,13 @@
    $(document).ready(function() {
 	   var sessionCk="${emem.auth}"
 	   var sessionDeptno = "${emem.deptno}"
+	   
+		   $("#mycal").hide()
+	   
 	   if(sessionCk !== "총괄관리자" && sessionCk!=="계획관리자"){
 		   $("#session1").hide()
 		   $("#session2").hide()
+		   $("#mycal").show()
 	   }
 	   
 	  var hrmenu =  $('#collapseThree').find('.collapse-item');
@@ -144,7 +148,7 @@
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">영업계획:</h6>
             <a class="collapse-item" href="planCalendar">연간스케줄조회</a> <a
-               class="collapse-item" href="calendar">개인스케줄조회</a> 
+               class="collapse-item" href="calendar" id="mycal">개인스케줄조회</a> 
                <a class="collapse-item" onclick="sendAlram('${emem.empno}')">알림 보내기</a>
          </div>
       </div></li>
@@ -160,19 +164,6 @@
             <a class="collapse-item" href="lectureCalendar">강의스케줄조회</a> <a
                class="collapse-item" href="lectureList">강의조회</a> 
                <a class="collapse-item" href="lectureInsertFrm" id="session1">강의등록</a>
-         </div>
-      </div></li>
-   <li class="nav-item"><a class="nav-link collapsed" href="#"
-      data-toggle="collapse" data-target="#collapseUtilities05"
-      aria-expanded="true" aria-controls="collapseUtilities"> <i
-         class="fas fa-fw fa-folder"></i> <span>자원관리</span>
-   </a>
-      <div id="collapseUtilities05" class="collapse"
-         aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">자원관리:</h6>
-            <a class="collapse-item" href="#">강의실 관리</a> <a
-               class="collapse-item" href="#">사무실 관리</a>
          </div>
       </div></li>
    <!-- Divider -->

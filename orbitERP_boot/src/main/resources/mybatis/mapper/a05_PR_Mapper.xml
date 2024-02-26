@@ -110,7 +110,7 @@
          to_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') end1,
          content, backgroundcolor, textcolor, allday, url 
       FROM calendar
-      WHERE WRITER='PR0001'
+      WHERE WRITER='PR0001' AND WRITER ='AM0001'
    </select>
    <insert id="insertCalendar" parameterType="calendar">
       INSERT INTO calendar values(
