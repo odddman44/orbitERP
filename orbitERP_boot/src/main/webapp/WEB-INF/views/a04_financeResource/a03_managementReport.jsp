@@ -76,7 +76,7 @@
 					<br>
 					<!-- Page Heading -->
 					<div class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800">※ 월별 손익 계산서</h1>
+						<h1 class="h3 mb-0 text-gray-800">※ 연도별 손익 계산서</h1>
 					</div>
 					<!-- Content Row -->
 					<div class="row">

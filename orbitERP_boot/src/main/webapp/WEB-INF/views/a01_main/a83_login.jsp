@@ -85,23 +85,12 @@
 												class="form-control form-control-user" id="pwd" name="pwd"
 												placeholder='<spring:message code="pwd"/>'>
 										</div>
-										<div class="form-group">
-											<div class="custom-control custom-checkbox small">
-												<input type="checkbox" class="custom-control-input"
-													id="customCheck"> <label
-													class="custom-control-label" for="customCheck"><spring:message code="memory"/></label>
-											</div>
-										</div>
 										<button type="submit"
 											class="btn btn-primary btn-user btn-block"><spring:message code="log"/></button>
 										<hr>
 									</form>
-									<hr>
 									<div class="text-center">
 										<a class="small" href="${path}/mailToPasswordFrm"><spring:message code="amnesia" /></a>
-									</div>
-									<div class="text-center">
-										<a class="small" href="register.html"><spring:message code="reg" /></a>
 									</div>
 									<div class="text-center">
 										<select class="small" id="selectLan">
