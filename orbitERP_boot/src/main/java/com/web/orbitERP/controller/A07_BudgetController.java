@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A02_HRService;
 import com.web.orbitERP.service.A07_BudgetService;
+import com.web.orbitERP.vo.ActualExpense;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.MBudget;
 
@@ -43,13 +44,6 @@ public class A07_BudgetController {
         return "a07_budget\\a01_budgetList"; 
     }
     
-//    // http://localhost:4444/budgetSch
-//    @GetMapping("budgetSch")
-//    public String getBudgetList(@ModelAttribute("sch") MBudget sch, Model d) {
-//    	List<MBudget> budgetList = service.getBudgetList(sch);
-//    	d.addAttribute("budgetList", budgetList);
-//    	return "pageJsonReport"; 
-//    }
     // http://localhost:4444/budgetSch?deptno=10&year=2023
     @GetMapping("budgetSch")
     public ResponseEntity<?> getBudgetList(@RequestParam("deptno") int deptno, @RequestParam("year") int year) {
@@ -100,6 +94,22 @@ public class A07_BudgetController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예산 삭제 실패");
         }
+    }
+    
+    // 예산 정보 조회 및 결과 페이지로 이동
+    // http://localhost:4444/budgetComp
+    @RequestMapping("budgetComp")
+    public String budgetComp() {
+        return "a07_budget\\a02_budgetComp"; 
+    }
+    
+    // 실제 지출 데이터 조회
+    // http://localhost:4444/actualExpense?year=2023&deptno=0
+    @GetMapping("actualExpense")
+    public ResponseEntity<?> getActualExpenses(@RequestParam(value = "year", required = false) int year, 
+    										@RequestParam(value="deptno", required = false) int deptno) {
+        List<ActualExpense> actualExpenses = service.getActualExpenses(year, deptno);
+        return ResponseEntity.ok(actualExpenses); 
     }
     
 }

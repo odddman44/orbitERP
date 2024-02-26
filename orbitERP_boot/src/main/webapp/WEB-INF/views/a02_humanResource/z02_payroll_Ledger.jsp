@@ -42,58 +42,60 @@
 	}
 
 	
-	function searchStub(){
-	    $('#dataTable2').DataTable().destroy(); // 테이블 초기화
+	function searchStub() {
+    $('#dataTable2').DataTable().destroy(); // 테이블 초기화
 
-	    $('#dataTable2').DataTable({
-	        "paging": true,
-	        "searching": false,
-	        "ordering": true,
-	        "info": true,
-	        "pagingType": "full_numbers",
-	        "pageLength": 10,
-	        "ajax": {
-	            "url": "/paystubList",
-	            "type": "POST",
-	            "data": function() {
-	                return $("#frm03").serialize(); // 폼 데이터를 직렬화하여 전송
-	            },
-	            "dataType": "json",
-	            "dataSrc": "" // 데이터 소스로 사용할 JSON 배열의 위치를 지정
-	        },
-	        "columns": [
-	            { 
-	                "data": "payment_date",
-	                "render": function(data, type, row) {
-	                    // 데이터가 표시될 때 날짜 형식으로 변환하여 반환
-	                    if (type === 'display' || type === 'filter') {
-	                        var date = new Date(data);
-	                        return date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2);
-	                    }
-	                    return data;
-	                }   
-	            }, 
-	            { "data": "stub_name"},
-	            { "data": "deptno" },         // 두 번째 열: empno
-	            { "data": "count"}, 
-	            { 
-	                "data": "total_net_pay",
-	                "render": $.fn.dataTable.render.number(',', '.', 0),
-	                "className": "text-right"
-	            }    
-	        ], // 쉼표 추가
-	        "createdRow": function(row, data, index) {
-	            // 행 클릭 이벤트 처리
-	            $(row).on('click', function() {
-	                goDetail(data.stub_name);
-	            });
-	        } // 쉼표 추가
-	    });
-	}
-	 
-		function goDetail(stub_name){
-			window.open('/updatePaystubFrm?stub_name='+stub_name, width="400px", height="400px")
-		}
+    $('#dataTable2').DataTable({
+        "paging": true,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "pagingType": "full_numbers",
+        "pageLength": 10,
+        "ajax": {
+            "url": "/paystubList",
+            "type": "POST",
+            "data": function() {
+                return $("#frm03").serialize(); // 폼 데이터를 직렬화하여 전송
+            },
+            "dataType": "json",
+            "dataSrc": "" // 데이터 소스로 사용할 JSON 배열의 위치를 지정
+        },
+        "columns": [
+            { 
+                "data": "payment_date",
+                "render": function(data, type, row) {
+                    // 데이터가 표시될 때 날짜 형식으로 변환하여 반환
+                    if (type === 'display' || type === 'filter') {
+                        var date = new Date(data);
+                        return date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2);
+                    }
+                    return data;
+                }   
+            }, 
+            { "data": "stub_name"},
+            { "data": "deptno" },         // 두 번째 열: empno
+            { "data": "count"}, 
+            { 
+                "data": "total_net_pay",
+                "render": $.fn.dataTable.render.number(',', '.', 0),
+                "className": "text-right"
+            }    
+        ],
+        "createdRow": function(row, data, index) {
+            // 행 클릭 이벤트 처리
+            $(row).on('click', function() {
+            	var date = new Date(data.payment_date)
+                var payment_dateStr = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2);
+                goDetail(payment_dateStr, data.deptno);
+            });
+        }
+    });
+}
+
+function goDetail(payment_dateStr, deptno) {
+    window.open('/updatePaystubFrm?payment_dateStr=' + payment_dateStr + '&deptno=' + deptno, "", "width=400px, height=400px");
+}
 	 
 </script>
 <div class="col-xl-6 col-lg-6">
