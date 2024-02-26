@@ -43,9 +43,9 @@
 
 	if (msg != "") {
 		var sno = $("[name=sno]").val()
-		if (!confirm(msg + "\n계속 수정하시겠습니까?")) {
+			alert(msg) 
 			location.href = "${path}/studentList"
-		}
+		
 	}
 
 	$(document).ready(function() {

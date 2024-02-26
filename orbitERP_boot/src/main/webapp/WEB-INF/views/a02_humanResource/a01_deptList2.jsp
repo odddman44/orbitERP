@@ -129,7 +129,7 @@
 			success : function(data) {
 				if (data.isInsert > 0) {
 					alert("부서정보 등록 성공!")
-					location.href = "${path}/deptList.do"
+					location.href = "${path}/deptList"
 				}
 			}
 		})

@@ -19,8 +19,10 @@
 		}
 
 		$("#newBtn2").click(function() {
-			window.open('/insertPaystubFrm', width="400px", height="400px")
-		})
+		    window.open('/insertPaystubFrm', '_blank', 'width=1000,height=500'); // 옵션 객체를 제대로 설정
+
+		 
+		});
 		
 		$("#schBtnFrm").click(function(){
 			searchStub()
