@@ -747,7 +747,7 @@ width:70%;
                   <div class="modal-body">
                   <div class="card shadow mb-4">
                   <div class="card-header py-3">
-                  성적 입력 후, Enter를 눌러주세요.
+                  성적 입력 후, Enter를 눌러주세요.(총괄&계획관리자의 경우)
                   </div>
                   <div class="card-body">
                      <div class="table-responsive">
