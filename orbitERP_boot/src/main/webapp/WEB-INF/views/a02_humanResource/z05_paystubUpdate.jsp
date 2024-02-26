@@ -197,11 +197,16 @@
 		
 		$("#delBtn").click(function(){
 			if(confirm("급여장부를 삭제하시겠습니가?\n 삭제를 진행하면 다시 복구할 수 없습니다.")){
+			
+				// 비활성화 풀기
+							$("#frm01 [name='payment_dateStr']").prop('disabled', false);
+							$("#frm01 [name='deptno']").prop('disabled', false);
 				$.ajax({
 					url:"/deletePaystub",
 					dataType:"json",
 					data:{
-						stub_name:$("#stub_name").val()
+						payment_dateStr:$("#payment_dateStr").val(),
+						deptno:$("#deptno").val()
 					},
 					type:"POST",
 					success:function(data){
@@ -218,6 +223,35 @@
 						console.log("급여 삭제 중 에러 발생: "+err)
 					}
 				})
+			}
+		})
+		
+		$("#uptBtn").click(function(){
+			if(confirm("급여장부를 수정하시겠습니까?")){
+					$("#frm01 [name='payment_dateStr']").prop('disabled', false);
+					$("#frm01 [name='deptno']").prop('disabled', false);
+					
+					$.ajax({
+					url:"/updatePaystub",
+					dataType:"json",
+					data:$("#frm01").serialize(),
+					type:"POST",
+					success:function(data){
+						if(data>0){
+							alert("급여장부 수정 성공")
+							window.close()
+						
+						
+						}else{
+							alert("급여 정보 수정 실패")
+						}
+					},
+					error:function(err){
+						console.log("급여 삭제 중 에러 발생: "+err)
+					}
+				})
+					
+					
 			}
 		})
 		
@@ -270,7 +304,7 @@
 <link href="${path}/a00_com/css/custom-style.css" rel="stylesheet">
 </head>
 <body id="page-top">
-
+w
 	<!-- Page Wrapper -->
 	<div id="wrapper">
 
@@ -295,8 +329,9 @@
 											<span class="input-group-text  justify-content-center">급여대장
 												명칭</span>
 										</div>
-										
-											<input type="text" name="stub_name" id="stub_name" value="${param.stub_name}" readonly class="form-control">
+										<c:if test="${not empty paystubList}">
+											<input type="text" name="stub_name" id="stub_name" value="${paystubList[0].stub_name}" class="form-control">
+										</c:if>
 										
 									</div>
 									<div class="input-group mb-3">
@@ -305,7 +340,7 @@
 												지급일 </span>
 										</div>
 										<c:if test="${not empty paystubList}">
-										<input type="date" name="payment_dateStr" id="payment_dateStr"
+										<input type="date" name="payment_dateStr" id="payment_dateStr" disabled
 											value="<fmt:formatDate value='${paystubList[0].payment_date}' pattern='yyyy-MM-dd'/>"
 											class="form-control">
 										</c:if>
@@ -329,8 +364,7 @@
 											<span class="input-group-text  justify-content-center">
 												인원수</span>
 										</div>
-										<input type="hidden" id="empno" name="empno">
-										<input type="hidden" id="net_pay" name="net_pay">
+								
 										<div class="input_value">
 											<input class="form-control" type="text" readonly id="size" /> <input
 												type="button" class="btn btn-dark" value="사원별 급여 조회"
@@ -349,7 +383,7 @@
 											<tr class="table-light text-center">
 												<th>사원번호</th>
 												<th>사원명</th>
-												<th>직급</th>
+												<!--  <th>직급</th> -->
 												<th style="text-align: right;">실수령액</th>
 												<th>제거</th>
 											</tr>
@@ -359,9 +393,9 @@
 												<tr class="table-light text-center">
 													<td>${stub.empno}</td>
 													<td>${stub.ename}</td>
-													<td>${stub.job}</td>
+													<!-- <td>${stub.job}</td> -->
 													<td style="text-align: right;"><fmt:formatNumber value="${stub.net_pay}" pattern="#,##0" /></td>
-													<td  ><button type='button' class='btn btn-danger' id='delSalBtn'>제거</button></td>
+													<td><button type='button' class='btn btn-danger' id='delSalBtn'>제거</button></td>
 												</tr>
 											</c:forEach>
 										</tbody>

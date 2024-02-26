@@ -457,16 +457,29 @@
 		)
 	</insert>
 
-	<select id="getPaystubDetail" parameterType="string"
-		resultType="paystub">
-		SELECT ps.*, e.ename, e.job FROM PAYSTUB ps
-		INNER JOIN EMPLOYEE e ON ps.empno = e.empno
-		WHERE STUB_NAME = #{stub_name}
+	<select id="getPaystubDetail" resultType="paystub">
+		SELECT ps.*, e.ename,
+		e.job FROM PAYSTUB ps
+		INNER JOIN
+		EMPLOYEE e ON ps.empno = e.empno
+		WHERE
+		to_char(payment_date, 'yyyy-MM') = #{payment_dateStr}
+		AND ps.deptno =
+		#{deptno}
 	</select>
-	
-	<delete id="deletePaystub" parameterType="string">
-		DELETE FROM PAYSTUB p WHERE stub_name=#{stub_name}
+
+	<delete id="deletePaystub">
+		DELETE FROM PAYSTUB
+		WHERE payment_date = to_date(#{payment_dateStr}, 'yyyy-MM-dd')
+		AND deptno = #{deptno}
 	</delete>
+	
+	<update id="updatePaystub" parameterType="paystub">
+		UPDATE paystub SET
+		stub_name=#{stub_name}
+		WHERE payment_date = to_date(#{payment_dateStr}, 'yyyy-MM-dd')
+		AND deptno = #{deptno}
+	</update>
 
 
 

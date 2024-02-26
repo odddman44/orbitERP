@@ -520,12 +520,17 @@ public class A02_HRService {
 		return dao.insertPayStub(ins);
 	}
 	
-	public List<Paystub> getPaystubDetail(@Param("stub_name") String stub_name){
-		return dao.getPaystubDetail(stub_name);
+	public List<Paystub> getPaystubDetail(@Param("payment_dateStr") String payment_dateStr,
+			   @Param("deptno") int deptno){
+		return dao.getPaystubDetail(payment_dateStr, deptno);
 	}
 	
-	public int deletePaystub(@Param("stub_name") String stub_name) {
-		return dao.deletePaystub(stub_name);
+	public int deletePaystub(@Param("payment_dateStr") String payment_dateStr, @Param("deptno") int deptno) {
+		return dao.deletePaystub(payment_dateStr, deptno);
+	}
+	
+	public int updatePaystub(Paystub upt) {
+		return dao.updatePaystub(upt);
 	}
 
 }

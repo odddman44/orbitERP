@@ -1,10 +1,12 @@
 package com.web.orbitERP.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.web.orbitERP.vo.ActualExpense;
 import com.web.orbitERP.vo.MBudget;
 
 
@@ -20,4 +22,7 @@ public interface A07_BudgetDao {
     int updateBudget(MBudget upt);
     // 예산 삭제
     int deleteBudget(int year, int deptno);
+    
+    // 실제 지출 정보 조회
+    List<ActualExpense> getActualExpense(int year, int deptno);
 }

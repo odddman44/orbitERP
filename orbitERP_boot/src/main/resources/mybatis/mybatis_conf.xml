@@ -36,5 +36,6 @@
 		<typeAlias alias="insertLecCal" type="com.web.orbitERP.vo.InsertLecCal"/>
 		<typeAlias alias="alram" type="com.web.orbitERP.vo.Alram"/>
 		<typeAlias alias="mBudget" type="com.web.orbitERP.vo.MBudget"/>
+		<typeAlias alias="actualExpense" type="com.web.orbitERP.vo.ActualExpense"/>
 	</typeAliases>
 </configuration>

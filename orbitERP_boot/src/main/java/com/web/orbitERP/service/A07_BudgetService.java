@@ -1,11 +1,14 @@
 package com.web.orbitERP.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.orbitERP.dao.A07_BudgetDao;
+import com.web.orbitERP.vo.ActualExpense;
 import com.web.orbitERP.vo.MBudget;
 
 
@@ -43,5 +46,10 @@ public class A07_BudgetService {
     // 예산 삭제
     public int deleteBudget(int year, int deptno) {
         return dao.deleteBudget(year, deptno);
+    }
+    
+    // 실제 지출 정보 조회
+    public List<ActualExpense> getActualExpenses(int year, int deptno) {
+        return dao.getActualExpense(year, deptno);
     }
 }
