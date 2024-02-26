@@ -239,6 +239,12 @@ public class A03_PRController {
          d.addAttribute("sender",service.getSender(sender));
          return"a03_planResource\\sendAlram";
       }
+      @RequestMapping("sendAlram2")
+      public String sendAlram2(String sender,String altitle ,Model d) {
+    	  d.addAttribute("sender",service.getSender(sender));
+    	  d.addAttribute("altitle",altitle);
+    	  return"a03_planResource\\sendAlram";
+      }
       //사원정보조회
       @RequestMapping("schEmp")
       public String schEmp(@ModelAttribute("sch")Employee sch,Model d) {

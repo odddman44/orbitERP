@@ -130,6 +130,7 @@ body {
                                  $("#regBtn").show()
                                  $("#uptBtn").hide()
                                  $("#delBtn").hide()
+                                 $("#alBtn").hide()
                               
                               // 모달창 로딩을 위해 강제 클릭
                               $("#calModal").click()
@@ -147,11 +148,13 @@ body {
                                  $("#regBtn").hide()
                                  $("#uptBtn").hide()
                                  $("#delBtn").hide()
+                                 $("#alBtn").hide()
                                  $("#frm01 :input").prop("readonly", true);
                               }else{
                                  $("#regBtn").hide()
                                  $("#uptBtn").show()
                                  $("#delBtn").show()
+                                 $("#alBtn").show()
                               }
 
                               $("#calModal").click()
@@ -263,6 +266,10 @@ body {
                      $("[name=allDay]").val(evt.allDay ? 1 : 0)
                   }
                });
+   function sendAlramPl(sender) {
+	   var pltitle=$("[name=title]").val()
+	    window.open("sendAlram2?sender=" + sender+"&altitle="+pltitle, "AlramWindow", "width=700 height=600 left=500 top=200");
+	}
 </script>
 <!-- Custom fonts for this template-->
 <link href="${path}/a00_com/vendor/fontawesome-free/css/all.min.css"
@@ -400,6 +407,7 @@ body {
                         <button type="button" id="regBtn" class="btn btn-primary">일정등록</button>
                         <button type="button" id="uptBtn" class="btn btn-info">일정수정</button>
                         <button type="button" id="delBtn" class="btn btn-warning">일정삭제</button>
+                        <button type="button" id="alBtn" class="btn btn-dark" onclick="sendAlramPl('${emem.empno}')">알림보내기</button>
                         <button type="button" id="clsBtn" class="btn btn-secondary"
                            data-dismiss="modal">Close</button>
                      </div>
