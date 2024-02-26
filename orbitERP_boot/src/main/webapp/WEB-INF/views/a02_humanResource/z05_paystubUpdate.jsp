@@ -45,48 +45,46 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-	// form 하위에 있는 모든 요소객체들을  enter키 입력시, submit
-	// 되는 기본 이벤트 속성이 있다. ajax처리시 충돌되는 이 이벤트 속성을
-	// 아래의 코드로 방지 처리..
+
 	
 	// 체크된 급여 리스트를 저장할 배열
+	var paystubList = [] // 기존에 있던 paystub ajax로 받아옴
+
+	
 	
 
-	var paystubList = [] // 기존에 있던 paystub ajax로 받아옴
 	
 	
-	// json으로 기존에 있던 사원별 급여리스트를 받아온다.
-	$.ajax({
-	    url: '${path}/updatePaystubFrmJson',
-	    type: 'post',
-	    data: {
-	        payment_dateStr: '${param.payment_dateStr}',
-	        deptno: '${param.deptno}'
-	    },
-	    dataType: 'json',
-	    success: function(data) {
-	        // 기존에 있던 데이터 받아오기
-	        console.log('ajax로 받아온 paystub', data);
-	        for(var i=0; i<data.length; i++){
-	            paystubList.push({
-	                empno: data[i].empno,
-	                net_pay: data[i].net_pay
-	            });
-	            console.log(paystubList.length);
-	        }
-	    }
-	});
 	
-	
-	window.onload = function() {
-	   
-	};
-	document.addEventListener('keydown', function(event) {
-		if (event.key === "Enter") {
-			event.preventDefault();
-		}
-	});
 	$(document).ready(function() {
+		
+		
+		
+		
+		// json으로 기존에 있던 사원별 급여리스트를 받아온다.
+		$.ajax({
+		    url: '${path}/updatePaystubFrmJson',
+		    type: 'post',
+		    data: {
+		        payment_dateStr: '${param.payment_dateStr}',
+		        deptno: '${param.deptno}'
+		    },
+		    dataType: 'json',
+		    success: function(data) {
+		        // 기존에 있던 데이터 받아오기
+		        console.log('ajax로 받아온 paystub', data);
+		        for(var i=0; i<data.length; i++){
+		            paystubList.push({
+		                empno: data[i].empno,
+		                net_pay: data[i].net_pay
+		            });
+		           
+		        }
+
+		    }
+		});
+		
+		
 		var sessionCk = "${emem.auth}"
 		if (sessionCk !== "총괄관리자" && sessionCk !== "인사관리자") {
 			alert('급여대장 입력은 인사관리자 혹은 총괄관리자만 가능합니다.')
@@ -98,6 +96,10 @@
 				window.close();
 			}
 		})
+		
+        for(var i=0; paystubList.length;i++){
+        	console.log("기존에 등록된 사원번호:"+paystubList[i])
+        }
 		
 	
 		
@@ -223,57 +225,38 @@
 			}
 		})
 		
-		$("#uptBtn").click(function(){
-		    if(confirm("급여장부를 수정하시겠습니까?")){
-		    	$("#frm01 [name='payment_dateStr']").prop('disabled', false);
-				$("#frm01 [name='deptno']").prop('disabled', false);
-					$.ajax({
-						url:"/deletePaystub",
-						dataType:"json",
-						data:{
-							payment_dateStr:$("#payment_dateStr").val(),
-							deptno:$("#deptno").val()
-						},
-						type:"POST",
-						success:function(data){
-							if(data>0){
-							
-						    	paystubList.forEach(function(salary){
-						    		
-					    			$("#empno").val(salary.empno)
-						        	$("#net_pay").val(salary.net_pay)
-						        	// 콤마 제거
-						        	var net_payWithComma = $("#net_pay").val();
-						        	var net_pay = net_payWithComma.replace(/,/g, '');
-						        	$("#net_pay").val(net_pay)
-					    		
-					    		   $.ajax({
-						                url: "${path}/insertPayStub",
-						                data: $("#frm01").serialize(),
-						                dataType: "json",
-						                success: function(data) {
-						                    if (data > 0) {
-						                        alert("급여 장부 수정 성공");
-						                        window.close();
-						                    } else {
-						                        alert("급여 장부 수정 실패");
-						                    }
-						                },
-						                error: function(err) {
-						                    console.log(err);
-						                }
-						            });
-					    	})
-							
-							}else{
-								alert("급여 정보 삭제 실패")
-							}
-						},
-						error:function(err){
-							console.log("급여 삭제 중 에러 발생: "+err)
-						}
-					})
-		
+		$("#uptBtn").click(function() {
+		    if (confirm("급여장부를 수정하시겠습니까?")) {
+		        $("#frm01 [name='payment_dateStr']").prop('disabled', false);
+		        $("#frm01 [name='deptno']").prop('disabled', false);
+
+		        paystubList.forEach(function(salary) {
+		            $("#empno").val(salary.empno);
+		            $("#net_pay").val(salary.net_pay);
+		            // 콤마 제거
+		            var net_payWithComma = $("#net_pay").val();
+		            var net_pay = net_payWithComma.replace(/,/g, '');
+		            $("#net_pay").val(net_pay);
+
+		            $.ajax({
+		                url: "${path}/insertPayStub",
+		                data: $("#frm01").serialize(),
+		                dataType: "json",
+		                success: function(data) {
+		                    if (data > 0) {
+		                        alert("급여 장부 수정 성공");
+		                        // 창을 닫음
+		                        opener.parent.location='/salaryManage';
+		                        window.close();
+		                    } else {
+		                        alert("급여 장부 수정 실패");
+		                    }
+		                },
+		                error: function(err) {
+		                    console.log(err);
+		                }
+		            });
+		        });
 		    }
 		});
 		
@@ -317,6 +300,7 @@
 				success:function(data){
 					if(data>0){
 						alert("급여장부 삭제 성공")
+						opener.parent.location='/salaryManage';
 						window.close()
 					
 					
@@ -419,10 +403,10 @@ w
 										</div>
 								
 										<div class="input_value">
-											<input class="form-control" type="text" readonly id="size" /> <input
+											<input class="form-control" type="text" readonly id="size" /> 
+											<input
 												type="button" class="btn btn-dark" value="사원별 급여 조회"
-												data-toggle="modal" data-target="#salaryModal"
-												id="schSalary" />
+												data-toggle="modal" data-target="#salaryModal" id="schSalary" />
 										</div>
 									</div>
 									<hr>
@@ -441,6 +425,9 @@ w
 												<th>제거</th>
 											</tr>
 										</thead>
+										<!-- 입력을 위한 input들 -->
+										<input type="hidden" name="empno" id="empno">
+										<input type="hidden" name="net_pay" id="net_pay">
 										<tbody id="modalTable">
 											<c:forEach var="stub" items="${paystubList}">
 												<tr class="table-light text-center">

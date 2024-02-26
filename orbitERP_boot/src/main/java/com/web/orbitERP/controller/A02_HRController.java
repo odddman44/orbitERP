@@ -269,6 +269,7 @@ public class A02_HRController {
 	
 	@PostMapping("updateSalary")
 	public ResponseEntity<?> updateSalary(Salary upt){
+		
 		return ResponseEntity.ok(service.updateSalary(upt));
 	}
 	
@@ -298,6 +299,12 @@ public class A02_HRController {
 	
 	@RequestMapping("insertPayStub")
 	public ResponseEntity<?> insertPaystub(Paystub ins){
+		
+		// 기존 정보 삭제
+		String payment_dateStr = ins.getPayment_dateStr();
+		int deptno = ins.getDeptno();
+		
+		service.deletePaystub(payment_dateStr, deptno);
 		return ResponseEntity.ok(service.insertPaystub(ins));
 	}
 	

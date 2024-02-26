@@ -243,6 +243,7 @@
 		                success: function(data) {
 		                    if (data > 0) {
 		                        alert("급여 장부 등록 성공");
+		                        opener.parent.location='/salaryManage';
 		                        window.close();
 		                    } else {
 		                        alert("급여 장부 등록 실패");
