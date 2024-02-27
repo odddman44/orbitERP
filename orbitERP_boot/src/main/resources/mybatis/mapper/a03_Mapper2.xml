@@ -458,26 +458,35 @@
 	</insert>
 
 	<select id="getPaystubDetail" resultType="paystub">
-		SELECT ps.*, e.ename,
-		e.job FROM PAYSTUB ps
+		SELECT
+		ps.*,
+		e.ename,
+		e.job,
+		(SELECT COUNT(*) FROM PAYSTUB WHERE to_char(payment_date, 'yyyy-MM') =
+		#{payment_dateStr} AND deptno = #{deptno}) AS count,
+		(SELECT SUM(net_pay) FROM PAYSTUB WHERE to_char(payment_date, 'yyyy-MM') =
+		#{payment_dateStr} AND deptno = #{deptno}) AS total_net_pay
+		FROM
+		PAYSTUB ps
 		INNER JOIN
 		EMPLOYEE e ON ps.empno = e.empno
 		WHERE
 		to_char(payment_date, 'yyyy-MM') = #{payment_dateStr}
-		AND ps.deptno =
-		#{deptno}
+		AND ps.deptno = #{deptno}
 	</select>
 
 	<delete id="deletePaystub">
 		DELETE FROM PAYSTUB
-		WHERE payment_date = to_date(#{payment_dateStr}, 'yyyy-MM-dd')
+		WHERE payment_date =
+		to_date(#{payment_dateStr}, 'yyyy-MM-dd')
 		AND deptno = #{deptno}
 	</delete>
-	
+
 	<update id="updatePaystub" parameterType="paystub">
 		UPDATE paystub SET
 		stub_name=#{stub_name}
-		WHERE payment_date = to_date(#{payment_dateStr}, 'yyyy-MM-dd')
+		WHERE payment_date = to_date(#{payment_dateStr},
+		'yyyy-MM-dd')
 		AND deptno = #{deptno}
 	</update>
 

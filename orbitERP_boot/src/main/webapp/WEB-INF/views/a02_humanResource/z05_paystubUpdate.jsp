@@ -176,6 +176,8 @@
 	    var empno = row.find('td:eq(0)').text();
 	    var ename = row.find('td:eq(1)').text()
 	    var net_pay = row.find('td:eq(5)').text();
+	    
+	   
 	   
 	    var html = "";
 	    html += "<tr class='table-light text-center'>";
@@ -186,6 +188,7 @@
 	   	if(isExits(empno)){
 	   		console.log("새로등록되는 사원번호:"+empno)
 	   		alert("이미 선택한 사원의 급여정보가 등록되었습니다.")
+	   		
 	   	}else{
 	    	$("#modalTable").append(html); // 수정된 부분: row 대신에 html을 append
 	    	// 배열에도 추가
@@ -194,6 +197,7 @@
 	 	    	net_pay: net_pay
 	 	    })
 	 	    
+	 
 	 	    var size = paystubList.length; // 배열의 크기
 			console.log("배열의 크기: "+size)
 	 	    $("#size").val(size)
@@ -207,6 +211,8 @@
 		$("#modalTable").on("click", "#delSalBtn", function() {
 		    var deleteSal = $(this).closest("tr").find("td:first").text();
 		    console.log("삭제하는 연봉 정보:"+deleteSal)
+		   
+		    
 		    
 		// 배열에서 일치하는 empno를 찾아 삭제
 	    for (var i = 0; i < paystubList.length; i++) {
@@ -403,7 +409,7 @@ w
 										</div>
 								
 										<div class="input_value">
-											<input class="form-control" type="text" readonly id="size" /> 
+											<input class="form-control" type="text" value= "${paystubList[0].count}" readonly id="size" /> 
 											<input
 												type="button" class="btn btn-dark" value="사원별 급여 조회"
 												data-toggle="modal" data-target="#salaryModal" id="schSalary" />
@@ -447,10 +453,9 @@ w
 											<span class="input-group-text  justify-content-center">총
 												금액</span>
 										</div>
-										<div id="app">
-										<input type="text" v-model="tot_net_pay" value="{{tot_net_pay}}" class="form-control"
-											readonly>
-										</div>
+										
+										<input type="text" id="tot_net_pay" value="<fmt:formatNumber value='${paystubList[0].total_net_pay}' pattern="#,##0"/>" class="form-control" readonly>
+										
 
 									</div>
 
