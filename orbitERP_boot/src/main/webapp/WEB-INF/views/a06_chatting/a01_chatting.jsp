@@ -125,15 +125,6 @@
 
 	}	
 	$(document).ready(function(){
-
-		$(".nav-link").click(function(event) {
-	        // 기본 동작 방지
-	        event.preventDefault();
-	        // 콘솔에 메시지 출력
-	        console.log("링크가 클릭되었습니다.");
-	        // 또는 다른 동작 수행
-	        // 예: 다른 페이지로 이동
-	        // window.location.href = $(this).attr("href");
 	    
 		$("#enterBtn").click(function(){
 			conFun()
