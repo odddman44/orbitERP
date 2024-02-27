@@ -192,11 +192,11 @@ button {
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>
-			<!-- End of Footer -->
+	<!-- End of Footer -->
 
 		</div>
 		<!-- End of Content Wrapper -->
