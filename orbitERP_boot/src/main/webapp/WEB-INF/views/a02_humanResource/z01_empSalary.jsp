@@ -149,6 +149,8 @@
 												// net_pay 필드에 값을 설정합니다.
 												$('#net_pay').val(
 														formattedNetPay);
+											}else if((allowance == 0 || allowance == '') && (deduction == 0 || deduction == '')){
+												$('#net_pay').val(baseSalary)
 											}
 
 										});
@@ -172,17 +174,17 @@
 													"end_date").val());
 
 											if (payment_date < start_date) {
-												alert("Payment date should be later than or equal to the start date.");
+												alert("급여지급일은 근무시작일보다 이후 날짜여야 합니다.");
 												return false; // Prevent form submission
 											}
 
 											if (payment_date < end_date) {
-												alert("Payment date should be earlier than or equal to the end date.");
+												alert("급여지급일은 근무종료일보다 이후 날짜여야 합니다.");
 												return false; // Prevent form submission
 											}
 
 											if (end_date < start_date) {
-												alert("End date should be later than or equal to the start date.");
+												alert("급여종료일은 근무시작일보다 이후 날짜여야 합니다.");
 												return false; // Prevent form submission
 											}
 
@@ -224,6 +226,14 @@
 
 													// 일자를 뺀 값 구하기
 													var yearMonth = dateObject.getFullYear() + "-" + ("0" + (dateObject.getMonth() + 1)).slice(-2);
+													// 상여, 공제 기본 값 설정
+													if($("#allowance").val()==null || $("#allowance").val()==""){
+														$("#allowance").val("0")
+													}
+													if($("#deduction").val()==null || $("#deduction").val()==""){
+														$("#deduction").val("0")
+													}
+													
 													removeComma(); // 콤마 제거
 													$.ajax({
 													    type: "POST",
@@ -259,6 +269,15 @@
 											 
 											if(confirm("급여 정보를 수정하시겠습니까?")){
 												removeComma(); // 콤마 제거하기
+												// 상여, 공제가 비어있는 경우 기본값 설정
+												
+												if($("#allowance").val()==null || $("#allowance").val()==""){
+													$("#allowance").val("0")
+												}
+												if($("#deduction").val()==null || $("#deduction").val()==""){
+													$("#deduction").val("0")
+												}
+												
 												// 비활성화 풀기
 													 $("#frm02 [name='payment_dateStr']").prop('disabled', false);
 													 $("#frm02 select[name='empno']").prop('disabled', false);
