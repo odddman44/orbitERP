@@ -19,7 +19,7 @@
 		}
 
 		$("#newBtn2").click(function() {
-		    window.open('/insertPaystubFrm', '_blank', 'width=1000,height=500'); // 옵션 객체를 제대로 설정
+		    window.open('/insertPaystubFrm', '_blank', 'width=1000' ,'height=500'); 
 
 		 
 		});
@@ -96,7 +96,7 @@
 }
 
 function goDetail(payment_dateStr, deptno) {
-    window.open('/updatePaystubFrm?payment_dateStr=' + payment_dateStr + '&deptno=' + deptno, "", "width=400px, height=400px");
+    window.open('/updatePaystubFrm?payment_dateStr=' + payment_dateStr + '&deptno=' + deptno, "", "width=1000", "height=500");
 }
 	 
 </script>
