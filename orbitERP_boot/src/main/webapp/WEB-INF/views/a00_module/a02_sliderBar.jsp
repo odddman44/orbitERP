@@ -115,8 +115,8 @@
          aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">학생관리:</h6>
-            <a class="collapse-item" href="studentList">학생정보관리</a> <a
-               class="collapse-item" href="#">학생출결관리</a>
+            <a class="collapse-item" href="studentList">학생정보관리</a>
+              
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"

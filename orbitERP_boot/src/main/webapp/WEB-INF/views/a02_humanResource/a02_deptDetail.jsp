@@ -189,6 +189,7 @@ button {
 						</div>
 						<br> <br>
 						<div class="row justify-content-end">
+						<c:if test="${emem.auth eq '인사관리자' || emem.auth eq '총괄관리자'}">
 							<div class="col-auto">
 								<input type="button" class="btn btn-primary" value="수정"
 									id="uptBtn" />
@@ -197,6 +198,7 @@ button {
 								<input type="button" class="btn btn-primary" value="삭제"
 									id="delBtn" />
 							</div>
+						</c:if>
 							<div class="col-auto">
 								<input type="button" class="btn btn-info" value="부서조회화면"
 									id="goListBtn" />

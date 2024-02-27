@@ -106,11 +106,13 @@ function goDetail(payment_dateStr, deptno) {
 			class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 
 			<h6 class="m-0 font-weight-bold text-primary">급여대장 조회</h6>
-			<button type="button" id="newBtn2"
-				class="btn btn-primary btn-icon-split">
-				<span class="icon text-white-50"><i class="fas fa-check"></i></span>
-				<span class="text">신규</span>
-			</button>
+				<c:if test="${emem.auth eq '인사관리자' || emem.auth eq '총괄관리자'}">
+					<button type="button" id="newBtn2"
+						class="btn btn-primary btn-icon-split">
+						<span class="icon text-white-50"><i class="fas fa-check"></i></span>
+						<span class="text">신규</span>
+					</button>
+			</c:if>
 		</div>
 
 
