@@ -58,6 +58,8 @@
 			        $('#registerModalLabel').text('신규 전표 등록').parent().css
 					({'background-color': '#2ECDCD', 'color': '#ffffff'});
 			        $('#regFrmBtn').show();  // 등록 버튼 보이기
+			        $('#addRowBtn').show();  // 행 추가 버튼 숨기기
+		            $('#delRowBtn').show();  // 행 삭제 버튼 숨기기
 			        $('#uptBtn').hide();     // 수정 버튼 숨기기
 			    }
 		});
@@ -115,6 +117,20 @@
 	        	var acc_code = $(this).find('input[name="acc_code"]').val();
 	            var debit = $(this).find('input[name="debit_amount"]').val() || 0;
 	            var credit = $(this).find('input[name="credit_amount"]').val() || 0;
+	            
+	        	 // 계정 코드 유효성 검사
+		        if (!acc_code) {
+		            alert("계정 코드를 입력해주세요.");
+		            isValid = false;
+		            return false; // each 반복 중단
+		        }
+		    	 
+		     	// 차변과 대변 금액 유효성 검사
+		        if (parseFloat(debit) <= 0 && parseFloat(credit) <= 0) {
+		            alert("차변 혹은 대변에 적절한 금액을 입력해주세요.");
+		            isValid = false;
+		            return false; // each 반복 중단
+		        }
 	            
 	            // 합계 계산
 	            totalDebit += parseFloat(debit);
@@ -366,6 +382,8 @@
 	            $('#registerModalLabel').text('전표 수정').parent().css
 				({'background-color': '#868a83', 'color': '#ffffff'});
 	            $('#regFrmBtn').hide();  // 등록 버튼 숨기기
+	            $('#addRowBtn').hide();  // 행 추가 버튼 숨기기
+	            $('#delRowBtn').hide();  // 행 삭제 버튼 숨기기
 	         	// 권한에 따른 수정 버튼 활성화/비활성화
 	            if (deptAuth !== 1 && deptAuth !== 20) {
 	                $('#uptBtn').hide(); // 수정 버튼 숨기기
