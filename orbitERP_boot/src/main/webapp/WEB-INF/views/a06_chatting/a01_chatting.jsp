@@ -126,8 +126,15 @@
 	}	
 	$(document).ready(function(){
 
-		
-
+		$(".nav-link").click(function(event) {
+	        // 기본 동작 방지
+	        event.preventDefault();
+	        // 콘솔에 메시지 출력
+	        console.log("링크가 클릭되었습니다.");
+	        // 또는 다른 동작 수행
+	        // 예: 다른 페이지로 이동
+	        // window.location.href = $(this).attr("href");
+	    
 		$("#enterBtn").click(function(){
 			conFun()
 		})
@@ -449,6 +456,29 @@
 
 
 </div>
+
+<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top"> <i
+		class="fas fa-angle-up"></i>
+	</a>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="${path}/a00_com/vendor/jquery/jquery.min.js"></script>
+	<script
+		src="${path}/a00_com/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="${path}/a00_com/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="${path}/a00_com/js/sb-admin-2.min.js"></script>
+
+	<!-- Page level plugins -->
+	<script src="${path}/a00_com/vendor/chart.js/Chart.min.js"></script>
+
+	<!-- Page level custom scripts -->
+	<script src="${path}/a00_com/js/demo/chart-area-demo.js"></script>
+	<script src="${path}/a00_com/js/demo/chart-pie-demo.js"></script>
 
 </body>
 </html>

@@ -27,11 +27,11 @@
 			}			
 		}
 		$("#regBtn").click(function() {
-			if ($("[name=title]").val() == "") {
+			if ($("#fif").val() == "" || $("#fif").val() == null) {
 				alert("제목을 등록하세요")
 				return;
 			}
-			if ($("[name=content]").val() == "") {
+			if ($("#gil").val() == "" || $("#gil").val() == null) {
 				alert("내용을 등록하세요")
 				return;
 			}
@@ -41,7 +41,7 @@
 		})
 		$("#mainBtn").click(function() {
 			//alert("초기 리스트 화면 이동")
-			location.href = "${path}/boardList"
+			location.href = "${path}/bulList"
 		})
 	})
 </script>
@@ -106,7 +106,7 @@ button {
 							</div>
 							<div class="col-md-11">
 								<input class="form-control form-control-user"
-									value="${bulletin.title}" name="title" />
+									value="${bulletin.title}" name="title" id="fif" />
 							</div>
 						</div>
 						<br>
@@ -137,7 +137,7 @@ button {
 								<label>내용</label>
 							</div>
 							<div class="col-md-11">
-								<textarea class="form-control" name="content">${bulletin.content}</textarea>
+								<textarea class="form-control" id="gil" name="content">${bulletin.content}</textarea>
 							</div>
 						</div>
 						<br> <br>
@@ -148,7 +148,7 @@ button {
 							</div>
 							<div class="col-auto">
 								<input type="button" class="btn btn-info" value="게시판 리스트"
-									id="goListBtn" />
+									id="mainBtn" />
 							</div>
 						</div>
 					</form>
@@ -158,16 +158,6 @@ button {
 
 			</div>
 			<!-- End of Main Content -->
-
-			<!-- Footer -->
-			<footer class="sticky-footer bg-white">
-				<div class="container my-auto">
-					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
-					</div>
-				</div>
-			</footer>
-			<!-- End of Footer -->
 
 		</div>
 		<!-- End of Content Wrapper -->
