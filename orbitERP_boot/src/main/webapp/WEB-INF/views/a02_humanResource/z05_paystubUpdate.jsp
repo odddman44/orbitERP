@@ -85,10 +85,10 @@
 		});
 		
 		
-		var sessionCk = "${emem.auth}"
-		if (sessionCk !== "총괄관리자" && sessionCk !== "인사관리자") {
-			alert('급여대장 입력은 인사관리자 혹은 총괄관리자만 가능합니다.')
-			window.location.href = "main"
+		var sessionCk = "${emem.deptno}"
+		if (sessionCk !== "1" && sessionCk !== "10") {
+			alert('급여대장 수정은 인사관리자 혹은 총괄관리자만 가능합니다.')
+			window.close();
 		}
 
 		$("#closeBtn").click(function() {
@@ -447,8 +447,10 @@ w
 											<span class="input-group-text  justify-content-center">총
 												금액</span>
 										</div>
-										<input type="text" id="tot_net_pay" class="form-control"
+										<div id="app">
+										<input type="text" v-model="tot_net_pay" value="{{tot_net_pay}}" class="form-control"
 											readonly>
+										</div>
 
 									</div>
 
