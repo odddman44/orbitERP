@@ -165,16 +165,17 @@
 				})	
 			}
 		})
-		function sendMsg(){
-			wsocket.send($("#id").val()+":"+$("#msg").val())
-			$("#msg").val("")			
+		function sendMsg() {
+		    var message = $("#msg").val().trim(); // 메시지 내용을 가져옴 (공백 제거)
+		    if (message !== "") { // 메시지가 비어있지 않은 경우에만 전송
+		        wsocket.send($("#id").val() + ":" + message);
+		        $("#msg").val("");
+		    }
 		}
 
 		$("#chRoom").show()
 		$("#chRooms").hide()			
-		$("#chRoomBtn").click(
-			
-			function(){
+		$("#chRoomBtn").click(function(){
 				//alert("##현재 방 종류:"+$(this).text())
 				if($(this).text()=="새로운방"){
 					$(this).text("방선택")
@@ -191,8 +192,8 @@
 					$("#chRooms").hide()
 											
 				}
-			}
-		)		
+			});
+		
 		$("#chRooms").change(function(){
 			var room = $(this).val()
 			if(room!=""){
@@ -259,6 +260,7 @@
 			$("#id").val("")
 	    	localStorage.setItem('chatMessages', "");
 	    	localStorage.setItem('account', "");
+	    	location.reload();
 	    	return true;
 		}else{
 			return false;
@@ -402,18 +404,15 @@
 				
 	</div>	
 	
-	
-	
-	
-	
+		
 	<div class="col-xl-5 frm" id="frm">
 	<div class="input-group mb-3">	
 		<div class="input-group-prepend ">
-			<span class="input-group-text ">
+			<span class="input-group-text">
 				접속자</span>
 		</div>
 		<div class="input-group-append" id="chatM">
-			<div class="text-align-right" id="chatGroup"></div>
+			<div id="chatGroup"></div>
 		</div>			
 	</div>
 	
@@ -432,13 +431,13 @@
 		</div>
 	</div>		
 	<div class="input-group mb-3">	
-		
+
 		<input type="text" id="msg" class="form-control" 
 			placeholder="전송할 메시지 입력"/>
 		<input type="button" id="sndBtn" class="btn btn-success" 
 			value="전송" />	
-		</div>	
 	</div>	
+	
 	</div>	
 	</div>	
 	</div>	
