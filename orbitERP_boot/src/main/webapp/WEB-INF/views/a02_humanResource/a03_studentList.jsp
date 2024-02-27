@@ -42,6 +42,10 @@
 				alert("학년을 입력하세요")
 				return;
 			}
+			if($("#frm02 [name=reg_date").val()==""){
+				alert("등록일자를 입력하세요")
+				return;
+			}
 			if(confirm("학생 정보를 등록하시겠습니까?")){
 				//alert("게시물을 등록합니다.")
 				$("form").submit()				
@@ -267,8 +271,21 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="final_degree" class="col-sm-3 col-form-label">학년</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control form-control-user"
-									name="final_degree" />
+								<select class="form-control form-control-user" name="final_degree">
+									<option>초등 1학년</option>
+									<option>초등 2학년</option>
+									<option>초등 3학년</option>
+									<option>초등 4학년</option>
+									<option>초등 5학년</option>
+									<option>초등 6학년</option>
+									<option>중등 1학년</option>
+									<option>중등 2학년</option>
+									<option>중등 3학년</option>
+									<option>고등 1학년</option>
+									<option>고등 2학년</option>
+									<option>고등 3학년</option>
+									<option>성인</option>
+								</select>
 							</div>
 						</div>
 						<br>
