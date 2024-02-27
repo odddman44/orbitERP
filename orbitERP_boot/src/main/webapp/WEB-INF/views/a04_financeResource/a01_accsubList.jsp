@@ -295,7 +295,7 @@
 		                    <form id="frm01" class="form"  method="post">
 								<input type="hidden" name="curPage" value="${sch.curPage}">
 						  	<nav class="navbar navbar-expand-sm navbar-light bg-light">
-							    <input type="number" placeholder="계정코드 입력" id="acc_codeSch" name="acc_code" value="" class="form-control mr-sm-2" />
+							    <input type="number" placeholder="계정코드 입력" id="acc_codeSch" name="acc_code" value="${sch.acc_code}" class="form-control mr-sm-2" />
 							    <input placeholder="계정과목명 입력" name="acc_name" value="${sch.acc_name}" class="form-control mr-sm-2" />
 							    <!--  <input placeholder="계정종류 입력" name="acc_type" value="${sch.acc_type}" class="form-control mr-sm-2" /> -->
 							     <!-- 계정종류 드롭다운 메뉴 -->
