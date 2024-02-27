@@ -443,10 +443,22 @@
 	</div>	
 	</div>	
 	</div>	
+	
+	<!-- Footer -->
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
+	<!-- End of Footer -->
+	
 	</div>	
 
 
 </div>
+
 
 <!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> <i

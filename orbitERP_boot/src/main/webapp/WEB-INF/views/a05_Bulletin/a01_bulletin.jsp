@@ -233,18 +233,23 @@ table {
 			<!-- Content Row -->
 			<div class="row"></div>
 
+<!-- Footer -->
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
+	<!-- End of Footer -->
+
 		</div>
 		<!-- /.container-fluid (페이지 내용 종료) -->
 
 	</div>
 	<!-- End of Main Content -->
 
-	</div>
-	<!-- End of Content Wrapper -->
-
-	</div>
-	<!-- End of Page Wrapper -->
-
+	
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>
