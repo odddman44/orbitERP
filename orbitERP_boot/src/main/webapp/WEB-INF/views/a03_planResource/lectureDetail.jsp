@@ -47,6 +47,7 @@ width:70%;
       var snoList=[] //등록처리된 sno들
       
    $(document).ready(function() {
+	  if($("[name=lec_snum]").val()==0) alert("수강학생이 없습니다.")
       var sessionCk="${emem.auth}"//로그인된 session값
       if(sessionCk!=='총괄관리자' && sessionCk!=='계획관리자'){
          $("#uptBtn").hide()
@@ -395,7 +396,7 @@ width:70%;
            snoList.splice(index, 1);
        }
        $("#tot").text('수강학생('+snoList.length+')') //삭제시 총 수 변경
-       console.log(snoList)
+       if(snoList.length==0) alert('수강학생이 없습니다.')
    }
    function sendAlramLec(sender) {
 	   var lectitle=$("[name=lec_name]").val()

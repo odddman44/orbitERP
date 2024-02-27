@@ -105,6 +105,14 @@ body {
                               center : 'title',
                               right : 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                            },
+                           //공휴일 추가 코드 넣기
+                           eventSources : [ {
+                              googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com',
+                              className : 'ko_holiday',
+                              overlap: true,
+                                display: 'background',
+                                backgroundColor: "#e31b23"
+                           } ],
                            initialDate : todayTitle,
                            navLinks : true, // can click day/week names to navigate views
                            selectable : true,
@@ -160,14 +168,6 @@ body {
                            // 맨 마지막 한 주 없애기
                            fixedWeekCount : false,
 
-                           //공휴일 추가 코드 넣기
-                           eventSources : [ {
-                              googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com',
-                              className : 'ko_holiday',
-                              overlap: true,
-                                display: 'background',
-                                backgroundColor: "#e31b23"
-                           } ],
                            
                            events : function(info, successCallback,
                                  failureCallBack) {
@@ -223,6 +223,7 @@ body {
                            // 새로운 일정 추가..(서버에서 controller로 넘겨온 데이터)
                            // 다시 추가 처리..
                            calendar.addEventSource(data.mycallist)
+                           window.location.reload();
                         },
                         error : function(err) {
                            console.log(err)
