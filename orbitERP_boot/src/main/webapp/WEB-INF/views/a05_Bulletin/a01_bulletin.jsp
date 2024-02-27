@@ -122,7 +122,7 @@ table {
 								<input type="hidden" name="curPage" value="${sch.curPage}" />
 								<div class="input-group-append">
 									<input type="text" class="form-control bg-light border-1 small"
-										name="title" placeholder="제목검색" value="" aria-label="Search"
+										name="title" placeholder="제목검색" value="${sch.title}" aria-label="Search"
 										aria-describedby="basic-addon2"/>
 
 										<button class="btn btn-primary" type="submit">
