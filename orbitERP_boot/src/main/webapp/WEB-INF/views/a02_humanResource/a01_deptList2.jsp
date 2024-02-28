@@ -129,7 +129,7 @@
 			success : function(data) {
 				if (data.isInsert > 0) {
 					alert("부서정보 등록 성공!")
-					location.href = "${path}/deptList.do"
+					location.href = "${path}/deptList"
 				}
 			}
 		})
@@ -251,8 +251,10 @@ table {
 			<!-- Content Row -->
 
 			<div style="text-align: right;">
+			<c:if test="${emem.auth eq '인사관리자'}">
 				<input data-toggle="modal" data-target="#exampleModalCenter"
-					type="button" class="btn btn-info" value="부서등록" id="refBtn" />
+					type="button" class="btn btn-success" value="부서등록" id="refBtn" />
+			</c:if>
 			</div>
 
 			<!-- Content Row -->
@@ -266,12 +268,12 @@ table {
 
 	<!-- Footer -->
 	<footer class="sticky-footer bg-white">
-		<div class="container my-auto">
-			<div class="copyright text-center my-auto">
-				<span>Copyright &copy; Your Website 2021</span>
-			</div>
-		</div>
-	</footer>
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
 	<!-- End of Footer -->
 
 	</div>

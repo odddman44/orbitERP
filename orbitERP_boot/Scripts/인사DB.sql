@@ -281,6 +281,211 @@ SELECT * FROM ERPMEM e ;
 UPDATE ERPMEM SET pwd = '5555' WHERE EMPNO = 'HR0001';
 
 SELECT * FROM ERPMEM e ;
+
+SELECT * FROM EMPLOYEE e ;
+
+-- 사원 테이블에서 급여 컬럼 삭제
+ALTER TABLE employee
+DROP COLUMN salary;
+
+-- 급여 테이블 만들기
+CREATE TABLE salary (
+    payment_date DATE, -- 지급일
+    empno VARCHAR2(20), -- 사원번호
+    base_salary NUMBER, -- 기본급
+    allowance NUMBER, -- 수당
+    deduction NUMBER, -- 공제
+    net_pay NUMBER, -- 실수령약
+    -- 공제
+    start_date DATE, -- 업무시작일
+    end_date DATE, -- 업무 종료일
+    deptno NUMBER(2,0),
+    CONSTRAINT fk_empno2 FOREIGN KEY (empno) REFERENCES employee(empno),
+    CONSTRAINT fk_deptno2 FOREIGN KEY (deptno) REFERENCES dept(deptno),
+    CONSTRAINT pk_payment_empno PRIMARY KEY (payment_date, empno)
+);
+
+DROP TABLE salary;
+
+SELECT * FROM salary;
+
+CREATE OR REPLACE TRIGGER calculate_net_pay
+BEFORE INSERT OR UPDATE OF base_salary, allowance, deduction ON salary
+FOR EACH ROW
+BEGIN
+    :NEW.net_pay := :NEW.base_salary + :NEW.allowance - :NEW.deduction;
+END;
+
+-- 급여 항목 insert
+INSERT INTO salary (payment_date, empno, base_salary, allowance, deduction, start_date, end_date, deptno)
+VALUES (
+    TO_DATE('2024-02-10', 'YYYY-MM-DD'),
+    'FM0001',
+    500000,
+    18000,
+    80000,
+    TO_DATE('2023-01-01', 'YYYY-MM-DD'),
+    TO_DATE('2023-01-31', 'YYYY-MM-DD'),
+    20
+);
+
+/*
+ INSERT INTO salary (payment_date, empno, base_salary, allowance, deduction, start_date, end_date, deptno)
+	VALUES (
+    TO_DATE(#{payment_dateStr}, 'YYYY-MM-DD'),
+    #{empno},
+    #{base_salary},
+    #{allowance},
+    #{deduction},
+    TO_DATE(#{start_dateStr}, 'YYYY-MM-DD'),
+    TO_DATE(#{end_dateStr}, 'YYYY-MM-DD'),
+    #{deptno}
+)
+ * */
+
+DELETE FROM salary WHERE empno = 'FM0001';
+SELECT * FROM salary;
+
+	SELECT COUNT(*)
+		FROM salary
+		WHERE 1=1
+		AND deptno = 10
+		AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02';
+	
+		SELECT *
+		FROM (
+		SELECT ROWNUM cnt, s.*, d.dname
+		FROM
+		salary s, DEPT d
+		WHERE 1=1
+		AND s.DEPTNO = d.DEPTNO
+		AND s.deptno = 10
+		AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02'
+		) WHERE cnt BETWEEN 1 AND 10;
+	
+
+SELECT  TO_CHAR(payment_date, 'YYYY-MM-DD') AS PAYMENT_DATE,
+		TO_CHAR(end_date, 'YYYY-MM-DD') AS end_date,
+		TO_CHAR(start_date, 'YYYY-MM-DD') AS start_date,
+		empno, base_salary, allowance, deduction, net_pay
+		FROM salary
+WHERE empno = 'HR0001'
+AND TO_CHAR(payment_date, 'YYYY-MM') = '2024-02';
+
+SELECT * FROM SALARY s ;
+
+SELECT * FROM ATTENDANCE a ;
+
+DELETE FROM ATTENDANCE a WHERE dep_time IS NULL;
+
+SELECT a.*,
+    TO_CHAR(TRUNC((DEP_TIME - ARR_TIME) * 24) - 1, 'FM00') || '시간 ' || 
+    TO_CHAR(ROUND(MOD((DEP_TIME - ARR_TIME) * 24 * 60, 60)), 'FM00') || '분' AS tot_workhours
+FROM ATTENDANCE a 
+WHERE EMPNO = 'HR0001'
+AND work_date = to_date('2024-02-19','YYYY-MM-DD');
+/*
+ SELECT * FROM ATTENDANCE
+	WHERE EMPNO = #{empno}
+	AND work_date = to_date(#{work_date},'YYYY-MM-DD')
+ * */
+
+UPDATE salary SET 
+PAYMENT_DATE = to_date('2024-02-11', 'YYYY-MM-DD'),
+empno = 'PR0001',
+BASE_SALARY = 3200000,
+ALLOWANCE = 0,
+DEDUCTION = 100000,
+START_DATE = to_date('2024-01-02', 'YYYY-MM-DD'),
+end_date = to_date('2024-01-30', 'YYYY-MM-DD'),
+deptno = 40
+WHERE empno = 'PR0001'
+AND PAYMENT_DATE = to_date('2024-02-10', 'YYYY-MM-DD');
+
+/*
+ UPDATE salary SET 
+PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD'),
+empno = #{empno},
+BASE_SALARY = #{base_salary}
+ALLOWANCE = #{allowance},
+DEDUCTION = #{deduction},
+START_DATE = to_date(#{start_dateStr}, 'YYYY-MM-DD'),
+end_date = to_date(#{end_dateStr}, 'YYYY-MM-DD'),
+deptno = #{deptno}
+WHERE empno = #{empno}
+AND PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+
+ * */
+
+SELECT * FROM SALARY s ;
+
+DELETE FROM SALARY
+WHERE payment_date = to_date('2024-02-11', 'YYYY-MM-DD')
+AND empno = 'PR0001';
+
+/*
+ DELETE FROM SALARY
+WHERE payment_date = to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+AND empno = #{empno}
+ * */
+
+-- 급여명세서 테이블 만들기
+
+CREATE TABLE paystub (
+    payment_date DATE, -- 급여 지급일, 신고 귀속
+    stub_name varchar2(100), -- 명세서 이름
+    empno varchar2(20), -- 사원번호
+    deptno NUMBER(2,0), -- 부서번호
+    net_pay NUMBER, -- 총액
+    CONSTRAINT pk_paystub PRIMARY KEY (payment_date, empno),
+    CONSTRAINT fk_paystub_dept FOREIGN KEY (deptno) REFERENCES dept(deptno),
+    CONSTRAINT fk_paystub_emp FOREIGN KEY (empno) REFERENCES employee(empno)
+);
+
+DROP TABLE paystub;
+
+
+SELECT * FROM PAYSTUB ;
+
+SELECT * FROM EMPLOYEE e ;
+
+SELECT * FROM SALARY s  WHERE deptno = 10 AND to_char(s.PAYMENT_DATE, 'YYYY-MM') = '2024-02';
+
+SELECT * FROM ALARM a ;
+
+INSERT INTO PAYSTUB values(
+	to_date('2024-02', 'YYYY-MM'), '인사팀 2월 급여', 'HR2311', 10, 5075500);
+
+SELECT DISTINCT  payment_date, stub_name, deptno, count(*) AS count, SUM(net_pay) AS total_net_pay
+FROM PAYSTUB
+WHERE deptno = 10 
+AND EXTRACT(YEAR FROM PAYMENT_DATE) = 2024
+AND EXTRACT(MONTH FROM PAYMENT_DATE) = 2
+GROUP BY payment_date, stub_name, deptno;
+
+SELECT * FROM ATTENDANCE a ;
+
+UPDATE ATTENDANCE 
+SET DEP_TIME = TO_DATE('2024-02-20 18:10', 'YYYY-MM-DD HH24:MI')
+WHERE EMPNO = 'HR0001'
+AND to_char(WORK_DATE, 'YYYY-MM-DD') = '2024-02-20';
+
+
+SELECT s.*, e.ename, d.dname
+FROM salary s
+JOIN DEPT d ON s.DEPTNO = d.DEPTNO
+JOIN Employee e ON e.empno = s.empno
+WHERE 1=1
+    AND s.deptno = 10
+    AND EXTRACT(YEAR FROM s.PAYMENT_DATE) = '2024'
+    AND EXTRACT(MONTH FROM s.PAYMENT_DATE) = '2'
+ORDER BY s.payment_date DESC;
+
+
+	
+SELECT * FROM VOUCHER v ;
+
+
     
 
 

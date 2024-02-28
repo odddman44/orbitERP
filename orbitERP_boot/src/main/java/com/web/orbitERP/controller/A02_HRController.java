@@ -9,17 +9,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A02_HRService;
-import com.web.orbitERP.vo.Attendance;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Dept;
 import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
+import com.web.orbitERP.vo.Paystub;
+import com.web.orbitERP.vo.Salary;
+import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
 import com.web.orbitERP.vo.StudentSch;
@@ -43,6 +44,14 @@ public class A02_HRController {
 	public List<Dept> getDeptList(){
 		return service.getDeptList(new Dept());
 	}
+	
+	// http://localhost:4444/elist
+	@GetMapping("elist")
+	public ResponseEntity<?> getEmpListByDeptno(int deptno){
+		System.out.println("전달받은 deptno"+deptno);
+		return ResponseEntity.ok(service.getEmpListByDeptno(deptno));
+	}
+
 
 	// 부서 상세 정보
 	// http://localhost:4444/deptDetail
@@ -228,6 +237,105 @@ public class A02_HRController {
 		return ResponseEntity.ok(service.checkOut(work_date, empno));
 		
 	}
+	
+	// http://localhost:4444/salaryManage
+	@RequestMapping("salaryManage")
+	public String salaryManage() {
+		return "a02_humanResource\\a11_salaryManagement";
+	}
+	
+	// http://localhost:4444/salaryList
+	@RequestMapping("salaryList")
+	public ResponseEntity<?> SalaryList(@ModelAttribute("sch") SalarySch sch) {
+		List<SalarySch> salary = service.getSalaryList(sch);
+		return ResponseEntity.ok(salary);
+	}
+	
+	@PostMapping("insertSalary")
+	public ResponseEntity<?> insertSalary(Salary ins){
+		return ResponseEntity.ok(service.insertSalary(ins));
+	}
+	
+	@RequestMapping("salaryDetail") 
+	public ResponseEntity<?> salaryDetail(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
+		return ResponseEntity.ok(service.salaryDetail(empno, payment_dateStr));
+	}
+	
+	@PostMapping("detailAttendance")
+	public ResponseEntity<?> detailAttendance(@RequestParam("work_date") String work_date,
+									@RequestParam("empno") String empno){
+		return ResponseEntity.ok(service.detailAttendance(work_date, empno));
+	}
+	
+	@PostMapping("updateSalary")
+	public ResponseEntity<?> updateSalary(Salary upt){
+		
+		return ResponseEntity.ok(service.updateSalary(upt));
+	}
+	
+	@PostMapping("deleteSalary")
+	public ResponseEntity<?> deleteSalary(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
+		return ResponseEntity.ok(service.deleteSalary(empno, payment_dateStr));
+	}
+	
+	@RequestMapping("salDuplicationCheck")
+	public ResponseEntity<?> salDuplicationCheck(@RequestParam("empno") String empno, @RequestParam("payment_dateStr") String payment_dateStr){
+	    return ResponseEntity.ok(service.salDuplicationCheck(empno, payment_dateStr));
+	}
+	
+	// http://localhost:4444/paystubList
+	@RequestMapping("paystubList")
+	public ResponseEntity<?> getPaystubList(@RequestParam("deptno") int deptno, 
+	                                         @RequestParam("year") int year ,
+	                                         @RequestParam("month") int month){
+	    return ResponseEntity.ok(service.getPaystubList(deptno, year, month));
+	}
+	
+	// http://localhost:4444/insertPaystubFrm
+	@RequestMapping("insertPaystubFrm")
+	public String insertPaystubFrm() {
+		return "a02_humanResource\\z04_paystubInsert";
+	}
+	
+	@RequestMapping("insertPayStub")
+	public ResponseEntity<?> insertPaystub(Paystub ins){
+		
+		// 기존 정보 삭제
+		String payment_dateStr = ins.getPayment_dateStr();
+		int deptno = ins.getDeptno();
+		
+		service.deletePaystub(payment_dateStr, deptno);
+		return ResponseEntity.ok(service.insertPaystub(ins));
+	}
+	
+	// http://localhost:4444/detailPaystubFrm
+	// 모델 데이터로 처리
+		@RequestMapping("updatePaystubFrm")
+		public String updatePaystubFrm(@RequestParam("payment_dateStr") String payment_dateStr,
+										@RequestParam("deptno") int deptno, Model d) {
+			d.addAttribute("paystubList", service.getPaystubDetail(payment_dateStr, deptno));
+			return "a02_humanResource\\z05_paystubUpdate";
+		}
+	// json 버전으로 데이터 가져오기
+		// http://localhost:4444/detailPaystubFrmJson	
+	@RequestMapping("updatePaystubFrmJson")
+	public ResponseEntity<?> updatePaystubFrmJson(@RequestParam("payment_dateStr") String payment_dateStr,
+			@RequestParam("deptno") int deptno){
+		return ResponseEntity.ok(service.getPaystubDetail(payment_dateStr, deptno));
+	}
+	@RequestMapping("deletePaystub")
+	public ResponseEntity<?> deletePaystub(@RequestParam("payment_dateStr") String payment_dateStr,
+											@RequestParam("deptno") int deptno){
+		return ResponseEntity.ok(service.deletePaystub(payment_dateStr, deptno));
+	}
+	
+	@RequestMapping("updatePaystub")
+	public ResponseEntity<?> updatePaystub(Paystub upt){
+		return ResponseEntity.ok(service.updatePaystub(upt));
+	}
+	
+	
+	
 
 	
 

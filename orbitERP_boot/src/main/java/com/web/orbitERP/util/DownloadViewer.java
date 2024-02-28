@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.AbstractView;
 public class DownloadViewer extends AbstractView {
 	// 다운로드 할 경로 설정(공통)
 	// @Value("${file.upload}")
-	private String path = "C:/a01_springbt/workplace/orbitERP_boot/src/main/webapp/z02_upload/" ;
+	private String path = "C:/a01_springbt/workspace2/orbitERP/orbitERP_boot/src/main/resources/static/z02_bulletinUploads/";
 	
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, 

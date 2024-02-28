@@ -1,11 +1,13 @@
 package com.web.orbitERP.controller;
 
 import java.io.File;
-
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.orbitERP.service.A01_MainService;
@@ -24,6 +27,7 @@ import com.web.orbitERP.vo.Erpmem;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+
 public class A05_BulletinController {
 
 	@Autowired(required = false)
@@ -31,11 +35,28 @@ public class A05_BulletinController {
 	   // 리스트 출력
 	      // http://localhost:4444/bulList
 	      // http://211.63.89.67:4444/orbitERP/bulList
-	      @RequestMapping("bulList")
+		@RequestMapping("bulList")
 	      public String bulList(@ModelAttribute("sch") BulletinSch sch, Model d) {
 	         d.addAttribute("bulList", service.bulList(sch));
 	         return "a05_Bulletin\\a01_bulletin";
 	      }
+		
+		@RequestMapping(value = "bulletinList", produces = MediaType.TEXT_HTML_VALUE)
+		@ResponseBody
+		public String bulletinList(BulletinSch search) {
+		    List<Bulletin> bulletinList = service.bulList(search);
+		    StringBuilder html = new StringBuilder();	  
+		    for (Bulletin bul : bulletinList) {
+		        html.append("<tr ondblclick=\"goDetail(").append(bul.getNo()).append(")\">");	       
+		       
+		        html.append("<td>").append(bul.getTitle()).append("</td>");
+		        html.append("<td>").append(new SimpleDateFormat("yyyy-MM-dd").format(bul.getRegdte())).append("</td>");
+		        html.append("<td>").append(bul.getReadcnt()).append("</td>");
+		        html.append("</tr>");
+		    }	  
+		    return html.toString();
+		}
+	      
 	      // 상세화면 조회
 	      @RequestMapping("bulletinDetail")
 	      public String getBulletin(@RequestParam("no") int no, Model d) {
@@ -76,14 +97,14 @@ public class A05_BulletinController {
 	      
 	      @GetMapping("fileupload01")
 	      public String fileupload01Frm() {
-	         return "z02_bulletinUploads";
+	         return "a05_Bulletin\\z01_bulFileUpload";
 	      }
 	      
 	      @PostMapping("fileupload01")
-	         public String fileupload01(@RequestParam("report") MultipartFile[] reports, Model d) {
-	            if (reports != null && reports.length > 0) {
+	         public String fileupload01(@RequestParam("report") MultipartFile[] GECK, Model d) {
+	            if (GECK != null && GECK.length > 0) {
 	               try {
-	                  for (MultipartFile mf : reports) {
+	                  for (MultipartFile mf : GECK) {
 	                     String fname = mf.getOriginalFilename();
 	                     if (fname != null && !fname.equals("")) {
 	                        mf.transferTo(new File(path + fname));
@@ -100,7 +121,7 @@ public class A05_BulletinController {
 	            } else {
 	               d.addAttribute("msg", "파일등록 실패");
 	            }
-	         return "z02_bulletinUploads";
+	         return "a05_Bulletin\\z01_bulFileUpload";
 	      }
 
 	   // 업로드 파일 다운로드

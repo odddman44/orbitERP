@@ -25,6 +25,14 @@
 			location.href="${path}/accList"
 		}
 		
+		$('#accListSch').click(function() {
+	        var accCodeInput = $('#acc_codeSch');
+	        if (accCodeInput.val().trim() === '') {
+	            accCodeInput.val('0'); // 공백일 경우 기본값으로 '0'을 설정
+	        }
+	        $('#frm01').submit(); // 폼 제출
+	    });
+		
 	    // 페이지 로드 시 이전에 선택된 base_acc 값을 설정
 	    var selectedBaseAcc = "${sch.base_acc}"; // 서버 측에서 전달된 base_acc 값
 	    if (selectedBaseAcc) {
@@ -287,15 +295,24 @@
 		                    <form id="frm01" class="form"  method="post">
 								<input type="hidden" name="curPage" value="${sch.curPage}">
 						  	<nav class="navbar navbar-expand-sm navbar-light bg-light">
-							    <input type="number" placeholder="계정코드 입력" name="acc_code" value="0" class="form-control mr-sm-2" />
+							    <input type="number" placeholder="계정코드 입력" id="acc_codeSch" name="acc_code" value="${sch.acc_code}" class="form-control mr-sm-2" />
 							    <input placeholder="계정과목명 입력" name="acc_name" value="${sch.acc_name}" class="form-control mr-sm-2" />
-							    <input placeholder="계정종류 입력" name="acc_type" value="${sch.acc_type}" class="form-control mr-sm-2" />
+							    <!--  <input placeholder="계정종류 입력" name="acc_type" value="${sch.acc_type}" class="form-control mr-sm-2" /> -->
+							     <!-- 계정종류 드롭다운 메뉴 -->
+				                <select name="acc_type" class="form-control mr-sm-2">
+				                    <option value="">계정분류</option>
+				                    <option value="자산" ${sch.acc_type == '자산' ? 'selected' : ''}>자산</option>
+				                    <option value="자본" ${sch.acc_type == '자본' ? 'selected' : ''}>자본</option>
+				                    <option value="부채" ${sch.acc_type == '부채' ? 'selected' : ''}>부채</option>
+				                    <option value="손익" ${sch.acc_type == '손익' ? 'selected' : ''}>손익</option>
+				                    <option value="원가" ${sch.acc_type == '원가' ? 'selected' : ''}>원가</option>
+				                </select>
 							    <select name="base_acc" class="form-control">
 								    <option value="">전체</option>
 								    <option value="기준">기준</option>
 								    <option value="추가">추가</option>
 								</select>
-							    <button class="btn btn-info" type="submit">Search</button>
+							    <button class="btn btn-info" type="button" id="accListSch">Search</button>
 						 	</nav>
 						 	<div class="input-group mt-3 mb-0">	
 								<span class="input-group-text">총 : ${sch.count}건</span>
@@ -388,7 +405,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>

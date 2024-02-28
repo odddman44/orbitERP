@@ -118,6 +118,10 @@ $(document).ready(function() {
 								alert("강의명을 입력하세요")
 								return;
 							}
+							if ($("[name=lec_teacher").val() == "") {
+								alert("강사명을 입력하세요")
+								return;
+							}
 							if ($("[name=start_date]").val() == "") {
 								alert("개강일자를 입력하세요")
 								return;
@@ -157,6 +161,21 @@ $(document).ready(function() {
 							                snoList.forEach(function (sno) {
 							                    insertEnroll(sno, lecno, $("[name=empno]").val());
 							                });
+							            	//강의 배경색상 정하기
+							            	var backgroundColor=""
+							            	switch ($("[name=lec_code]").val()){
+							            	case "JAVA":backgroundColor="#FFD1DC";break;//핑크
+							            	case "C": backgroundColor="#98FB98"; break;//그린
+							            	case "국어": backgroundColor="#FFFACD"; break;//옐로우
+							            	case "영어": backgroundColor="#E6E6FA"; break;//퍼플
+							            	case "수학": backgroundColor="#FFD700"; break;//오렌지
+							            	case "C++": backgroundColor="#98FF98"; break;//민트
+							            	case "Javascript": backgroundColor="#E0B0FF"; break;//라벤더
+							            	case "Python": backgroundColor="#FF6F61"; break;//코랄
+							            	default: backgroundColor="#FFD1DC"; break;//핑크
+							            	}
+							            	//강의캘린더 등록
+							            	insertCalendar(lecno,backgroundColor)
 							            	if (!confirm(data.msg + "\n계속 등록하시겠습니까?")) {
 							                    location.href = "lectureList";
 							                } else {
@@ -204,8 +223,8 @@ $(document).ready(function() {
 			    $(".modal-backdrop").remove();//뒷배경 제거
 			});
 			
-			var lecCodeMapping = { // 강의 코드와 강사과목이 다른걸 맞춰주기 위해서
-					  'KOR': '국어',
+			/*var lecCodeMapping = { // 강의 코드와 강사과목이 다른걸 맞춰주기 위해서
+					  '국어': '국어',
 					  'ENG': '영어',
 					  'MATH': '수학',
 					  'PHY': '물리',
@@ -216,11 +235,11 @@ $(document).ready(function() {
 					  'PY': 'Python',
 					  'C': 'C'
 					  // 계속 추가 예정
-					};
+					};*/
 			$("#schTch").click(function(){
-				var selectedSubject = lecCodeMapping[$("[name=lec_code]").val()];
-				//등록페이지에서 받아온 강의코드를 mapping
-				$("[name=subject]").val(selectedSubject);
+				/*var selectedSubject = lecCodeMapping[$("[name=lec_code]").val()];
+				//등록페이지에서 받아온 강의코드를 mapping*/
+				$("[name=subject]").val($("[name=lec_code]").val());
 				//form에 넣고
 				//console.log($("[name=subject]").val())
 				//subject에 들어갈 수 없으면 자동으로 null됨
@@ -236,10 +255,29 @@ $(document).ready(function() {
 		
 });
 
+//강의캘린더에 insert
+function insertCalendar(lecno,backgroundColor){
+	$.ajax({
+    	type: "POST",
+        url: "/insLecCal",
+        data: {
+        	lecno: lecno,
+        	backgroundColor: backgroundColor
+        },
+        dataType: "text",
+        success: function (data) {
+        	console.log(data)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+	})
+}
+
 //수강테이블 insert
 function insertEnroll(sno,lecno,empno) {
     $.ajax({
-    	//type: "POST",
+    	type: "POST",
         url: "/insertEnroll",
         data: {
             sno: sno,
@@ -436,14 +474,14 @@ function deleteStu(button) {
 										</div>
 										<select class="custom-select" id="lecCodeSelect"
 											name="lec_code">
-											<option value="JAVA">JAVA</option>
-											<option value="JS">Javascript</option>
-											<option value="C">C</option>
-											<option value="C++">C++</option>
-											<option value="PY">Python</option>
-											<option value="KOR">국어</option>
-											<option value="ENG">영어</option>
-											<option value="MATH">수학</option>
+											<option>JAVA</option>
+											<option>Javascript</option>
+											<option>C</option>
+											<option>C++</option>
+											<option>Python</option>
+											<option>국어</option>
+											<option>영어</option>
+											<option>수학</option>
 										</select>
 									</div>
 									<div class="input-group mb-3">
@@ -691,7 +729,7 @@ function deleteStu(button) {
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>

@@ -11,15 +11,36 @@
 <script type="text/javascript">
    $(document).ready(function() {
 	   var sessionCk="${emem.auth}"
+	   var sessionDeptno = "${emem.deptno}"
+	   
+		   $("#mycal").hide()
+	   
 	   if(sessionCk !== "총괄관리자" && sessionCk!=="계획관리자"){
 		   $("#session1").hide()
 		   $("#session2").hide()
+		   $("#mycal").show()
 	   }
+	   
+	  var hrmenu =  $('#collapseThree').find('.collapse-item');
+	  if(sessionCk !== "총괄관리자" && sessionDeptno!=="10"){
+		  
+		  hrmenu.each(function() {
+	            $(this).click(function(event) {
+	                // 기본 클릭 동작을 막습니다.
+	                event.preventDefault();
+	                // 클릭되지 않음을 알리는 메시지를 표시합니다.
+	                alert('인사팀 소속 직원 혹은 총괄관리지만 접근할 수 있는 항목입니다.');
+	            });
+	        });
+	  }
    });
 
    function goMypage(empno) {
       location.href = "mypage?empno" + empno
    }
+   function sendAlram(sender) {
+	    window.open("sendAlram?sender=" + sender, "AlramWindow", "width=700 height=600 left=500 top=200");
+	}
 </script>
 <link
    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
@@ -79,7 +100,7 @@
             <h6 class="collapse-header">직원관리:</h6>
             <a class="collapse-item" href="empList">직원정보관리</a> <a
                class="collapse-item" href="attendanceList">직원근태정보관리</a> <a
-               class="collapse-item" href="#">급여정보관리</a>
+               class="collapse-item" href="salaryManage">급여정보관리</a>
          </div>
       </div></li>
 
@@ -94,8 +115,8 @@
          aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">학생관리:</h6>
-            <a class="collapse-item" href="studentList">학생정보관리</a> <a
-               class="collapse-item" href="#">학생출결관리</a>
+            <a class="collapse-item" href="studentList">학생정보관리</a>
+              
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
@@ -127,8 +148,8 @@
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">영업계획:</h6>
             <a class="collapse-item" href="planCalendar">연간스케줄조회</a> <a
-               class="collapse-item" href="calendar">개인스케줄조회</a> 
-               <a class="collapse-item" href="#">알림 보내기</a>
+               class="collapse-item" href="calendar" id="mycal">개인스케줄조회</a> 
+               <a class="collapse-item" onclick="sendAlram('${emem.empno}')">알림 보내기</a>
          </div>
       </div></li>
    <li class="nav-item"><a class="nav-link collapsed" href="#"
@@ -143,20 +164,6 @@
             <a class="collapse-item" href="lectureCalendar">강의스케줄조회</a> <a
                class="collapse-item" href="lectureList">강의조회</a> 
                <a class="collapse-item" href="lectureInsertFrm" id="session1">강의등록</a>
-               <a class="collapse-item" href="#" id="session2">알림 보내기</a>
-         </div>
-      </div></li>
-   <li class="nav-item"><a class="nav-link collapsed" href="#"
-      data-toggle="collapse" data-target="#collapseUtilities05"
-      aria-expanded="true" aria-controls="collapseUtilities"> <i
-         class="fas fa-fw fa-folder"></i> <span>자원관리</span>
-   </a>
-      <div id="collapseUtilities05" class="collapse"
-         aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">자원관리:</h6>
-            <a class="collapse-item" href="#">강의실 관리</a> <a
-               class="collapse-item" href="#">사무실 관리</a>
          </div>
       </div></li>
    <!-- Divider -->
@@ -187,8 +194,8 @@
          aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
          <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">예산관리:</h6>
-            <a class="collapse-item" href="#">예산 편성</a> <a class="collapse-item"
-               href="#">예산-실적비교</a>
+            <a class="collapse-item" href="budgetList">예산 편성</a> <a class="collapse-item"
+               href="budgetComp">예산-실적비교</a>
          </div>
       </div></li>
 

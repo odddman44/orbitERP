@@ -5,81 +5,72 @@
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <fmt:requestEncoding value="utf-8" />
 <script>
-/*
-	$(document).ready(function() {
-		// 기본 연도 설정
-        var defaultYear = 2024;
-        // 초기 차트 데이터 로드
-        fetchSalesAndPurchasesData(defaultYear);
-		
-		// 연도선택 이벤트 핸들러
-		$("#yearSelect2").change(function(){
-			var selectedYear = $(this).val();
-			fetchSalesAndPurchasesData(selectedYear);
-		});
-		
-		function fetchSalesAndPurchasesData(year){
-			$.ajax({
-				url: '' + year,
-				method: 'GET',
-				dataType: 'json',
-				success: function(response){
-					console.log("서버 응답 데이터 : ", response);
-					var salesData = response.map(function(item) {
-						return item.sales; 
-					});
-		            var purchaseData = response.map(function(item) {
-		            	return item.purchases; 
-		            });
-		            updateChart(salesData, purchaseData);
-				},
-				error: function(xhr, status, err){
-					console.error("데이터 fetch 오류 : ", err);
-				}
-			});
-		}
-		
-		function updateChart(salesData, purchaseData){
-			console.log("매출 데이터: ", salesData);
-		    console.log("매입 데이터: ", purchaseData);
-			var ctx = document.getElementById('myChart').getContext('2d');
-			if(window.barChart != undefined){
-				console.log("이전 차트 인스턴스 제거"); // 차트 인스턴스 존재 확인
-				window.barChart.destroy();
-			}
-			window.barChart = new Chart(ctx, {
-			    type: 'line', // 차트의 타입
-			    data: {
-			        labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'], // x축 레이블
-			        datasets: [{
-			            label: '매출',
-			            data: salesData, // 매출 데이터 배열
-			            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-			            borderColor: 'rgba(54, 162, 235, 1)',
-			            borderWidth: 1
-			        }, {
-			            label: '매입',
-			            data: purchaseData, // 매입 데이터 배열
-			            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-			            borderColor: 'rgba(255, 99, 132, 1)',
-			            borderWidth: 1
-			        }]
-			    },
-			    
-			    options: {
-			    	responsive: true,
-			        maintainAspectRatio: false,
-			        scales: {
-			            y: {
-			            	beginAtZero: true
-			            }
-			        }
-			    }
-			});
-			console.log("차트 생성 완료"); // 차트 생성 확인
-		}
-	});
-*/
+$(document).ready(function() {
+    // 기본 연도 설정
+    var defaultYear = new Date().getFullYear(); // 현재 연도를 기본값으로 설정
+    // 초기 차트 데이터 로드
+    fetchNetIncomeData(defaultYear);
+    
+    // 연도 선택 이벤트 핸들러
+    $("#yearSelect2").change(function(){
+        var selectedYear = $(this).val();
+        fetchNetIncomeData(selectedYear);
+    });
+    
+    function fetchNetIncomeData(year){
+        $.ajax({
+            url: '/netIncomeGraph?year=' + year, 
+            method: 'GET',
+            dataType: 'json',
+            success: function(response){
+                console.log("서버 응답 데이터 : ", response);
+                var months = response.map(function(item) {
+                    return item.month + '월';
+                });
+                var netIncomes = response.map(function(item) {
+                    return item.netincomes;
+                });
+                updateChart(months, netIncomes);
+            },
+            error: function(xhr, status, err){
+                console.error("데이터 fetch 오류 : ", err);
+            }
+        });
+    }
+    
+    function updateChart(months, netIncomes){
+        console.log("순이익 데이터: ", netIncomes);
+        var ctx = document.getElementById('myChart2').getContext('2d');
+        if(window.lineChart != undefined){
+            console.log("이전 차트 인스턴스 제거");
+            window.lineChart.destroy();
+        }
+        window.lineChart = new Chart(ctx, {
+            type: 'line', // 차트의 타입을 라인으로 변경
+            data: {
+                labels: months, // x축 레이블로 월 사용
+                datasets: [{
+                    label: '순이익',
+                    data: netIncomes, // 순이익 데이터 배열
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false // 라인 아래 영역 채우기 비활성화
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        console.log("차트 생성 완료");
+    }
+});
 </script>
 <div class="col-xl-6 col-lg-6">
 	<div class="card shadow mb-4">

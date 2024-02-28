@@ -93,23 +93,7 @@
 			}
 		})
 
-		$('#frm01').submit(function(event) {
-			// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
-			var inputField = $('#sal');
-			var valueWithCommas = inputField.val();
-			// 콤마를 제거합니다.
-			var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-			// 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
-			inputField.val(valueWithoutCommas);
-		});
-
-		// 연봉 입력창에 자동으로 , 넣기
-		$('#sal').on('input', function() {
-			var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
-			if (!isNaN(input)) { // 입력 값이 숫자인 경우
-				$(this).val(addCommas(input)); // 콤마 추가
-			}
-		});
+	
 
 		// 사진 미리보기
 		$("#profileInput").on("change", function() {
@@ -210,14 +194,6 @@
 								<input readonly class="form-control form-control-user"
 									value="${employee.job}" name="job">
 
-							</div>
-							<label for="salary" class="col-sm-1 col-form-label">연봉</label>
-							<div class="col-sm-3">
-
-								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
-								<input class="form-control form-control-user" name="salary"
-									readonly id="sal"
-									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
 							</div>
 
 						</div>
@@ -327,12 +303,12 @@
 
 	<!-- Footer -->
 	<footer class="sticky-footer bg-white">
-		<div class="container my-auto">
-			<div class="copyright text-center my-auto">
-				<span>Copyright &copy; Your Website 2021</span>
-			</div>
-		</div>
-	</footer>
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
 	<!-- End of Footer -->
 
 	</div>

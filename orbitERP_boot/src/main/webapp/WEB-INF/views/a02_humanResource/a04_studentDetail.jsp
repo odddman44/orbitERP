@@ -43,13 +43,20 @@
 
 	if (msg != "") {
 		var sno = $("[name=sno]").val()
-		if (!confirm(msg + "\n계속 수정하시겠습니까?")) {
+			alert(msg) 
 			location.href = "${path}/studentList"
-		}
+		
 	}
 
 	$(document).ready(function() {
 		var sno = $("[name=sno]").val();
+		
+		// 로그인된 세션 
+		var auth="${emem.auth}"
+		if(auth!=="인사관리자" && auth!=="총괄관리자"){
+			$("#delBtn").hide()
+			$("#uptBtn").hide()
+			}
 
 		// 부서리스트로 화면으로 이동
 		// 부서리스트로 화면으로 이동
@@ -256,7 +263,7 @@ button {
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>

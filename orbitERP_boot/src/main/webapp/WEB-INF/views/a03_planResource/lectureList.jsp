@@ -79,7 +79,6 @@
 						<h1 class="h3 mb-0 text-gray-800">☆ 강의조회</h1>
 						<div style="text-align: right;">
 								<input type="button" class="btn btn-info" value="강의등록" id="uptBtn" />
-								<input type="button" class="btn btn-info" value="강의과목등록" id="subBtn" />
 							</div>
 					</div>
 					<div class="card shadow mb-4">
@@ -138,7 +137,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>

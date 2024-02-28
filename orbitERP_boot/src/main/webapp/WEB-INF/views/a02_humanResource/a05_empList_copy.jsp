@@ -63,7 +63,7 @@
 					}
 				})
 
-				$('#frm02').submit(function(event) {
+				/*$('#frm02').submit(function(event) {
 					// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
 					var inputField = $('#sal');
 					var valueWithCommas = inputField.val();
@@ -71,7 +71,7 @@
 					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
 					// 콤마가 제거된 값을 다시 입력 필드에 설정합니다.
 					inputField.val(valueWithoutCommas);
-				});
+				});*/
 
 				$("#regFrmBtn").click(
 						function() {
@@ -104,12 +104,20 @@
 								$("#frm02 [name=job]").focus()
 								return;
 							}
+							if ($("#frm02 [name=hiredate]").val() == "") {
+								alert("입사일을 입력하십시오.")
+								$("#frm02 [name=hiredate]").focus()
+								return;
+							}
+							
 							if ($("#jumin1").val() == "") {
 								alert("주민번호 앞자리를 입력하세요")
+								$("#jumin1").focus()
 								return;
 							}
 							if ($("#jumin2").val() == "") {
 								alert("주민번호 뒷자리를 입력하세요")
+								$("#jumin2").focus()
 								return;
 							}
 
@@ -117,14 +125,14 @@
 								alert("직급을 입력하세요")
 								return;
 							}
-							if ($("#frm02 [name=salary]").val() == "") {
-								alert("연봉을 입력하세요")
+					
+						
+							if($("#phone1").val()=="" || $("#phone2").val()=="" || $("#phone3").val()==""){
+								alert("휴대폰 번호를 입력해주세요.")
+								$("#phone1").focus()
 								return;
 							}
-							if ($("#frm02 [name=email]").val() == "") {
-								alert("이메일을 입력하세요")
-								return;
-							}
+							
 							if (confirm("사원 정보를 등록하시겠습니까?")) {
 								//alert("게시물을 등록합니다.")
 								var jumin1 = $('#jumin1').val();
@@ -136,7 +144,7 @@
 
 								var phone1 = $('#phone1').val();
 								var phone2 = $('#phone2').val();
-								var phone3 = $('#phone2').val();
+								var phone3 = $('#phone3').val();
 								// 3개 합친값
 								var phone = phone1 + "-" + phone2 + "-"
 										+ phone3;
@@ -147,6 +155,7 @@
 
 							}
 						})
+						
 				$('input[name="profile"]').on('change', function() {
 					var previewElement = $('#profilePreview')[0];
 					var file = this.files[0];
@@ -171,6 +180,13 @@
 					if (!isNaN(input)) { // 입력 값이 숫자인 경우
 						$(this).val(addCommas(input)); // 콤마 추가
 					}
+				});
+				
+				// 모달창 닫히면 모달창 내용 초기화
+				
+				$('#registerModal').on('hidden.bs.modal', function () {
+				    // 모달 내용 초기화
+				    $("#frm02")[0].reset();
 				});
 
 			});
@@ -357,10 +373,10 @@
 			<!-- End of Main Content -->
 
 			<!-- Footer -->
-			<footer class="sticky-footer bg-white">
+		<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>
@@ -474,7 +490,7 @@
 						</div>
 						<br>
 						<div class="row justify-content-left align-items-left">
-							<label for="reg_date" class="col-sm-3 col-form-label">H.P</label>
+							<label for="reg_date" class="col-sm-3 col-form-label">H.P(*)</label>
 
 							<input type="hidden" class="form-control form-control-user"
 								name="phone" />
@@ -531,14 +547,7 @@
 							</div>
 
 						</div>
-						<br>
-						<div class="row justify-content-left align-items-left">
-							<label for="salary" class="col-sm-3 col-form-label">연봉</label>
-							<div class="col-sm-9">
-								<input type="text" id="sal"
-									class="form-control form-control-user" name="salary">
-							</div>
-						</div>
+					
 					</form>
 				</div>
 				<hr style="border-color: #46bcf2;">

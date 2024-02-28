@@ -1,150 +1,219 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.web.orbitERP.dao.A03_PRDao">
-	<select id="lectureList" resultType="lecture">
-		SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
-		 to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher
-		FROM LECTURE
-		<!--WHERE lec_num = #{lec_num}
-			AND lecno LIKE '%'||#{lecno}||'%'
-			AND lec_teacher LIKE '%'||#{lec_teacher}||'%'
-			ORDER BY start_date  -->
-	</select>
-	
-	<!-- 강의상세조회 -->
-	<select id="getLecture" resultType="lecture" parameterType="int">
-		SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
-		 to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher 
-		FROM LECTURE WHERE lecno = #{lecno}
-	</select>
-	<select id="getTch" resultType="lectureTch" parameterType="int">
-		SELECT DISTINCT t.EMPNO, t.ENAME , t.JOB, t.EMAIL ,t.SUBJECT
-		FROM ENROLLMENT e
-		JOIN EMPLOYEE t ON e.empno=t.empno
-		WHERE lecno = #{lecno}
-	</select>
-	<select id="getStuList" resultType="lectureStu" parameterType="int">
-		SELECT DISTINCT s.SNO ,s.NAME ,s.FINAL_DEGREE ,s.NAME,s.PHONE, e.GRADE 
-		FROM ENROLLMENT e
-		JOIN STUDENT s ON e.sno=s.sno
-		WHERE lecno = #{lecno}
-	</select>
-	
-	<!-- 강의테이블 등록 -->
-	<insert id="insertLecture" parameterType="lecture">
-		INSERT INTO LECTURE VALUES (
-		 lecno_seq.NEXTVAL, #{lec_code}, #{lec_name}, to_date(#{start_date},'YYYY-MM-DD'), to_date(#{end_date},'YYYY-MM-DD'),
-		  #{lec_snum}, #{lec_num}, #{tuition_fee}, #{textbook_fee}, #{lec_content}, #{lec_teacher}) 
-	</insert>
-	<!-- 수강테이블 등록 -->
-	<insert id="insertEnroll" parameterType="enrollment">
-		INSERT INTO ENROLLMENT (enno, sno, lecno, empno)
-		VALUES (enno_seq.nextval, #{sno}, #{lecno}, #{empno})
-	</insert>
-	
-	<!-- 강의테이블 수정 -->
-	<update id="updateLecture" parameterType="lecture">
-		UPDATE LECTURE SET lec_name=#{lec_name},
-		start_date=to_date(#{start_date},'YYYY-MM-DD'),
-		end_date=to_date(#{end_date},'YYYY-MM-DD'),
-		lec_snum=#{lec_snum},
-		lec_num=#{lec_num},
-		tuition_fee=#{tuition_fee},
-		textbook_fee=#{textbook_fee},
-		lec_content=#{lec_content},
-		lec_teacher=#{lec_teacher}
-		WHERE lecno=#{lecno}
-	</update>
-	<!-- 수강테이블 삭제 -->
-	<delete id="deleteEnroll" parameterType="int">
-		DELETE FROM ENROLLMENT WHERE LECNO = #{lecno}
-	</delete>
-	<!-- 강의테이블 삭제 -->
-	<delete id="deleteLecture" parameterType="int">
-		DELETE FROM LECTURE WHERE LECNO = #{lecno}
-	</delete>
-	
-	
-	<!-- 학생 데이터 조회 -->
-	<select id="getStus" resultType="lectureStu" parameterType="lectureStu">
-		SELECT sno,name,to_char(birth,'yyyy-mm-dd') birth,final_degree,phone,address
-		FROM STUDENT
-		WHERE 1=1
-		AND name LIKE
-		'%'||#{name}||'%'
-		AND FINAL_degree LIKE '%'||#{final_degree}||'%'
-	</select>
-	<!-- 강사 데이터 조회 -->
-	<select id="schTch" resultType="lectureTch" parameterType="lectureTch">
-		SELECT * FROM EMPLOYEE
-		WHERE JOB LIKE '강사'
-		AND (ENAME LIKE '%'||#{ename}||'%' AND SUBJECT LIKE '%'||#{subject}||'%')
-	</select>
-	
-	<!-- 강사 세션값 처리하는.. -->
-	<select id="sessCk" resultType="int" parameterType="String">
-		SELECT COUNT(*)  FROM ERPMEM e
-		JOIN EMPLOYEE e2 ON e.EMPNO = e2.EMPNO 
-		WHERE JOB LIKE '강사' AND e.EMPNO LIKE #{empno}
-	</select>
-	
-	
-	
-	
-	<!-- 캘린더 mapper -->
-	<resultMap type="calendar" id="calRst">
-		<result column="start1" property="start"/>
-		<result column="end1" property="end"/>
-		<result column="url" property="urlLink"/>
-	</resultMap>
-	<select id="getCalList" resultMap="calRst" >
-		SELECT id, title, writer,
-			to_char(start1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') start1, 
-			to_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') end1,
-			content, backgroundcolor, textcolor, allday, url 
-		FROM calendar
-	</select>
-	<insert id="insertCalendar" parameterType="calendar">
-		INSERT INTO calendar values(
-			cal_seq.nextval,#{title},
-			to_date(#{start},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'), 
-			to_date(#{end},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'), 
-			#{writer},#{content}, #{backgroundColor},
-			#{textColor},#{allDay},#{urlLink})
-	</insert>
-	<update id="updateCalendar" parameterType="calendar">
-		UPDATE CALENDAR SET TITLE =#{title},
-		START1 = to_date(#{start},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'),
-		end1 = to_date(#{end},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'),
-		CONTENT =#{content},
-		WRITER =#{writer},
-		BACKGROUNDCOLOR =#{backgroundColor},
-		TEXTCOLOR =#{textColor},
-		ALLDAY =#{allDay},
-		URL =#{urlLink}
-		WHERE ID =#{id}
-	</update>
-	
-	
-	
-	
-	
-	<!-- 강의 캘린더 mapper -->
-	<resultMap type="lectureCalendar" id="lecCalRst">
-		<result column="start_date" property="start"/>
-		<result column="end_date" property="end"/>
-		<result column="lec_name" property="title"/>
-	</resultMap>
-	<select id="lecCalList" resultMap="lecCalRst">
-		SELECT t.id,t.backgroundcolor,t.textcolor, 
-		l.LECNO ,l.LEC_CODE ,l.LEC_NAME ,l.START_DATE ,l.END_DATE ,
-		l.LEC_SNUM ,l.LEC_NUM ,l.LEC_TEACHER
-		FROM testCalendar t
-		JOIN LECTURE l ON t.lecno=l.LECNO
-	</select>
-	<delete id="delLecCal" parameterType="int">
-		DELETE FROM TESTCALENDAR WHERE LECNO = #{lecno}
-	</delete>
+   <select id="lectureList" resultType="lecture">
+      SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
+       to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher
+      FROM LECTURE
+      <!--WHERE lec_num = #{lec_num}
+         AND lecno LIKE '%'||#{lecno}||'%'
+         AND lec_teacher LIKE '%'||#{lec_teacher}||'%'
+         ORDER BY start_date  -->
+   </select>
+   
+   <!-- 강의상세조회 -->
+   <select id="getLecture" resultType="lecture" parameterType="int">
+      SELECT lecno, lec_code, lec_name, to_char(start_date,'yyyy-mm-dd') start_date,
+       to_char(end_date,'yyyy-mm-dd') end_date, lec_snum, lec_num, tuition_fee, textbook_fee, lec_content, lec_teacher 
+      FROM LECTURE WHERE lecno = #{lecno}
+   </select>
+   <select id="getTch" resultType="lectureTch" parameterType="int">
+      SELECT DISTINCT t.EMPNO, t.ENAME , t.JOB, t.EMAIL ,t.SUBJECT
+      FROM ENROLLMENT e
+      JOIN EMPLOYEE t ON e.empno=t.empno
+      WHERE lecno = #{lecno}
+   </select>
+   <select id="getStuList" resultType="lectureStu" parameterType="int">
+      SELECT DISTINCT s.SNO ,s.NAME ,s.FINAL_DEGREE ,s.NAME,s.PHONE, e.GRADE, e.SSCORE
+      FROM ENROLLMENT e
+      JOIN STUDENT s ON e.sno=s.sno
+      WHERE lecno = #{lecno}
+   </select>
+   
+   <!-- 강의테이블 등록 -->
+   <insert id="insertLecture" parameterType="lecture">
+      INSERT INTO LECTURE VALUES (
+       lecno_seq.NEXTVAL, #{lec_code}, #{lec_name}, to_date(#{start_date},'YYYY-MM-DD'), to_date(#{end_date},'YYYY-MM-DD'),
+        #{lec_snum}, #{lec_num}, #{tuition_fee}, #{textbook_fee}, #{lec_content}, #{lec_teacher}) 
+   </insert>
+   <!-- 수강테이블 등록 -->
+   <insert id="insertEnroll" parameterType="enrollment">
+      INSERT INTO ENROLLMENT (enno, sno, lecno, empno)
+      VALUES (enno_seq.nextval, #{sno}, #{lecno}, #{empno})
+   </insert>
+   
+   <!-- 강의테이블 수정 -->
+   <update id="updateLecture" parameterType="lecture">
+      UPDATE LECTURE SET lec_name=#{lec_name},
+      start_date=to_date(#{start_date},'YYYY-MM-DD'),
+      end_date=to_date(#{end_date},'YYYY-MM-DD'),
+      lec_snum=#{lec_snum},
+      lec_num=#{lec_num},
+      tuition_fee=#{tuition_fee},
+      textbook_fee=#{textbook_fee},
+      lec_content=#{lec_content},
+      lec_teacher=#{lec_teacher}
+      WHERE lecno=#{lecno}
+   </update>
+   <!-- 수강테이블 학생성적 등록 -->
+   <update id="setSscore" parameterType="enrollment">
+      UPDATE ENROLLMENT SET SSCORE=#{sscore} , GRADE = #{grade}
+      WHERE LECNO = #{lecno} AND SNO =#{sno}
+   </update>
+   <!-- 수강테이블 삭제 -->
+   <delete id="deleteEnroll" parameterType="int">
+      DELETE FROM ENROLLMENT WHERE LECNO = #{lecno}
+   </delete>
+   <!-- 강의테이블 삭제 -->
+   <delete id="deleteLecture" parameterType="int">
+      DELETE FROM LECTURE WHERE LECNO = #{lecno}
+   </delete>
+   
+   
+   <!-- 학생 데이터 조회 -->
+   <select id="getStus" resultType="lectureStu" parameterType="lectureStu">
+      SELECT sno,name,to_char(birth,'yyyy-mm-dd') birth,final_degree,phone,address
+      FROM STUDENT
+      WHERE 1=1
+      AND name LIKE
+      '%'||#{name}||'%'
+      AND FINAL_degree LIKE '%'||#{final_degree}||'%'
+   </select>
+   <!-- 강사 데이터 조회 -->
+   <select id="schTch" resultType="lectureTch" parameterType="lectureTch">
+      SELECT * FROM EMPLOYEE
+      WHERE JOB LIKE '강사'
+      AND (ENAME LIKE '%'||#{ename}||'%' AND SUBJECT LIKE '%'||#{subject}||'%')
+   </select>
+   
+   <!-- 강사 세션값 처리하는.. -->
+   <select id="sessCk" resultType="int" parameterType="String">
+      SELECT COUNT(*)  FROM ERPMEM e
+      JOIN EMPLOYEE e2 ON e.EMPNO = e2.EMPNO 
+      WHERE JOB LIKE '강사' AND e.EMPNO LIKE #{empno}
+   </select>
+   
+   
+   
+   
+   <!-- 캘린더 mapper -->
+   <resultMap type="calendar" id="calRst">
+      <result column="start1" property="start"/>
+      <result column="end1" property="end"/>
+      <result column="url" property="urlLink"/>
+   </resultMap>
+   <select id="getCalList" resultMap="calRst" >
+      SELECT id, title, writer,
+         to_char(start1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') start1, 
+         to_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') end1,
+         content, backgroundcolor, textcolor, allday, url 
+      FROM calendar
+      WHERE WRITER='PR0001' OR WRITER ='AM0001'
+   </select>
+   <insert id="insertCalendar" parameterType="calendar">
+      INSERT INTO calendar values(
+         cal_seq.nextval,#{title},
+         to_date(#{start},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'), 
+         to_date(#{end},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'), 
+         #{writer},#{content}, #{backgroundColor},
+         #{textColor},#{allDay},#{urlLink})
+   </insert>
+   <update id="updateCalendar" parameterType="calendar">
+      UPDATE CALENDAR SET TITLE =#{title},
+      START1 = to_date(#{start},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'),
+      end1 = to_date(#{end},'YYYY-MM-DD"T"HH24:MI:SS"+09:00"'),
+      CONTENT =#{content},
+      WRITER =#{writer},
+      BACKGROUNDCOLOR =#{backgroundColor},
+      TEXTCOLOR =#{textColor},
+      ALLDAY =#{allDay},
+      URL =#{urlLink}
+      WHERE ID =#{id}
+   </update>
+   
+   <select id="myCalList" parameterType="String" resultMap="calRst" >
+      SELECT id, title, writer,
+         to_char(start1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') start1, 
+         to_char(end1, 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') end1,
+         content, backgroundcolor, textcolor, allday, url 
+      FROM calendar
+      WHERE WRITER=#{writer}
+   </select>
+   
+   
+   
+   <!-- 강의 캘린더 mapper -->
+   <resultMap type="lectureCalendar" id="lecCalRst">
+      <result column="start_date" property="start"/>
+      <result column="end_date" property="end"/>
+      <result column="lec_name" property="title"/>
+   </resultMap>
+   <select id="lecCalList" resultMap="lecCalRst">
+      SELECT t.id,t.backgroundcolor,t.textcolor, 
+      l.LECNO ,l.LEC_CODE ,(l.LEC_CODE||'['||l.LEC_NAME||']') AS LEC_NAME ,l.START_DATE ,l.END_DATE+1 as END_DATE,
+      l.LEC_SNUM ,l.LEC_NUM ,l.LEC_TEACHER
+      FROM testCalendar t
+      JOIN LECTURE l ON t.lecno=l.LECNO
+   </select>
+   <delete id="delLecCal" parameterType="int">
+      DELETE FROM TESTCALENDAR WHERE LECNO = #{lecno}
+   </delete>
+   <insert id="insLecCal" parameterType="insertLecCal">
+      INSERT INTO TESTCALENDAR values(testcal_seq.nextval,#{lecno},#{backgroundColor},'#000000',1)
+   </insert>
+   
+   
+   <!-- 탑바용 알람조회(안본것만 조회) -->
+   <select id="alList" parameterType="String" resultType="alram">
+      SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
+      FROM ALARM a
+      JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+      WHERE RECEIVER =#{receiver} AND CHECKED ='N'
+      ORDER BY CREATE_DATE DESC
+   </select>
+   <!-- 알람페이지용 알람조회(전체 알람조회) -->
+   <select id="alListAll" parameterType="String" resultType="alram">
+      SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
+      FROM ALARM a
+      JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+      WHERE RECEIVER =#{receiver}
+      ORDER BY a.CHECKED, a.CREATE_DATE DESC
+   </select>
+   <!-- 알람페이지용 알람조회(보낸 알람조회) -->
+   <select id="alListAll2" parameterType="String" resultType="alram">
+      SELECT IDX,e.ENAME AS SENDER,b.ENAME AS RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY,CHECK_DATE
+      FROM ALARM a
+      JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+      JOIN EMPLOYEE b ON a.RECEIVER = b.EMPNO
+      WHERE SENDER =#{sender}
+      ORDER BY a.CHECKED, a.CREATE_DATE DESC
+   </select>
+   <!-- 알람 읽음처리 -->
+   <update id="checkUp" parameterType="int">
+      UPDATE ALARM SET CHECKED ='Y',CHECK_DATE =SYSDATE WHERE IDX =${idx}
+   </update>
+   <!-- 알람 상세정보 -->
+   <select id="alDtail" parameterType="int" resultType="alram">
+      SELECT IDX,e.ENAME AS SENDER,RECEIVER,ALCONTENT,ALTITLE,CREATE_DATE,COLOR,ICON,CHECKED,ALCATEGORY
+      FROM ALARM a
+      JOIN EMPLOYEE e ON a.SENDER = e.EMPNO 
+      WHERE IDX=#{idx}
+   </select>
+   <!-- 알람 보내기 -->
+   <select id="getSender" parameterType="String" resultType="employee">
+      SELECT *
+      FROM EMPLOYEE
+      WHERE EMPNO=#{sender}
+   </select>
+   <insert id="sendAlramGo" parameterType="alram">
+      INSERT INTO ALARM values(al_seq.nextval,#{sender},#{receiver},'N',
+      #{alcontent},#{altitle},sysdate,#{color},#{icon},#{alcategory},'')
+   </insert>
+   <!-- 사원조회 -->
+   <select id="empList" resultType="employee" parameterType="employee">
+      SELECT * FROM EMPLOYEE
+      WHERE ENAME LIKE '%'||#{ename}||'%' AND (#{deptno} = 0 OR deptno = #{deptno})
+   </select> 
 </mapper>

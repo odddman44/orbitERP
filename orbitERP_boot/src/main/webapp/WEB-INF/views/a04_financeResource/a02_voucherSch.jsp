@@ -15,6 +15,7 @@
 <script src="https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api" type="text/javascript"></script>
  --%>
  <!-- jQuery -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="${path}/a00_com/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	var deptAuth = parseInt("${emem.deptno}");
@@ -57,6 +58,8 @@
 			        $('#registerModalLabel').text('신규 전표 등록').parent().css
 					({'background-color': '#2ECDCD', 'color': '#ffffff'});
 			        $('#regFrmBtn').show();  // 등록 버튼 보이기
+			        $('#addRowBtn').show();  // 행 추가 버튼 숨기기
+		            $('#delRowBtn').show();  // 행 삭제 버튼 숨기기
 			        $('#uptBtn').hide();     // 수정 버튼 숨기기
 			    }
 		});
@@ -83,9 +86,9 @@
 	    function createNewRow() {
 	        var newRow = '<tr class="text-center">' +
 	            '<td><input type="number" class="form-control" name="acc_code" placeholder="클릭하여 선택.."></td>' +
-	            '<td><input type="number" class="form-control" name="debit_amount"></td>' +
+	            '<td><input type="text" class="form-control" name="debit_amount" style="text-align:right;"></td>' +
 	            '<td><input type="text" class="form-control acc-name" readonly></td>' +
-	            '<td><input type="number" class="form-control" name="credit_amount"></td>' +
+	            '<td><input type="text" class="form-control" name="credit_amount" style="text-align:right;"></td>' +
 	            '<td><input type="text" class="form-control" name="trans_name"></td>' +
 	            '<td><input type="text" class="form-control" name="j_remark"></td>' +
 	            '</tr>';
@@ -97,8 +100,13 @@
 	        $("#modalTable").append(newRow);
 	    }
 		
-	    // '등록' 버튼 클릭 이벤트
+	    // '등록' 버튼 클릭 이벤트(폼 제출1)
 	    $("#regFrmBtn").click(function() {
+	    	// 콤마 제거
+	        $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
+	            $(this).val($(this).val().replace(/,/g, ''));
+	        });
+	    	
 	    	var formData = {};
 	        var journalizings = [];
 	        console.log("전송 Data: ", formData); // 전송 데이터 확인
@@ -109,6 +117,20 @@
 	        	var acc_code = $(this).find('input[name="acc_code"]').val();
 	            var debit = $(this).find('input[name="debit_amount"]').val() || 0;
 	            var credit = $(this).find('input[name="credit_amount"]').val() || 0;
+	            
+	        	 // 계정 코드 유효성 검사
+		        if (!acc_code) {
+		            alert("계정 코드를 입력해주세요.");
+		            isValid = false;
+		            return false; // each 반복 중단
+		        }
+		    	 
+		     	// 차변과 대변 금액 유효성 검사
+		        if (parseFloat(debit) <= 0 && parseFloat(credit) <= 0) {
+		            alert("차변 혹은 대변에 적절한 금액을 입력해주세요.");
+		            isValid = false;
+		            return false; // each 반복 중단
+		        }
 	            
 	            // 합계 계산
 	            totalDebit += parseFloat(debit);
@@ -172,8 +194,13 @@
 
 	    });
 
-	    // 수정 버튼 클릭 이벤트
+	    // 수정 버튼 클릭 이벤트 (폼 제출2)
 	    $("#uptBtn").click(function() {
+	    	// 콤마 제거
+	        $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
+	            $(this).val($(this).val().replace(/,/g, ''));
+	        });
+	    	
 	    	var formData = {};
 	        var journalizings = [];
 	        var isValid = true;
@@ -244,11 +271,11 @@
 	        });
 	    });
 	    
-		 // 전체 선택/해제
+		// 전체 선택/해제
 	    $("#selectAll").click(function() {
 	        $(".selectRow").prop('checked', $(this).prop('checked'));
 	    }); 
-		// '선택삭제' 버튼 클릭 이벤트
+		// '선택삭제' 버튼 클릭 이벤트 (폼제출3)
 	    $("#delBtn").click(function() {
 	    	if (deptAuth !== 1 && deptAuth !== 20) {
 	            alert("권한이 없는 이용자입니다.");
@@ -290,6 +317,14 @@
 	        }
 	        
 	    });
+		
+		// 숫자 입력 필드에 대해 키 입력 시 콤마 처리
+	    $('#modalTable').on('input', 'input[name="debit_amount"], input[name="credit_amount"]', function() {
+	        var input = $(this).val().replace(/,/g, ''); // 먼저 콤마를 제거
+	        if (!isNaN(input) && input) { // 입력 값이 숫자인 경우
+	            $(this).val(addCommas(input)); // 콤마 추가
+	        }
+	    });
 
 	}); // $(document).ready 끝
 	
@@ -328,13 +363,16 @@
 	            	// null 값 공백 문자열로 처리
 	                var trans_name = journal.trans_name ? journal.trans_name : "";
 	                var j_remark = journal.j_remark ? journal.j_remark : "";
+	                // 천단위 콤마 추가
+	                var debitWithCommas = addCommas(journal.debit_amount);
+                	var creditWithCommas = addCommas(journal.credit_amount);
 	            	
 	                var row = '<tr class="text-center">' +
 	                    '<td><input type="hidden" name="journal_id" value="'+journal.journal_id+'"/>'+
 	                	'<input type="number" class="form-control" name="acc_code" value="' + journal.acc_code + '"></td>' +
-	                    '<td><input type="number" class="form-control" name="debit_amount" value="' + journal.debit_amount + '"></td>' +
+	                    '<td><input type="text" class="form-control" style="text-align:right;" name="debit_amount" value="' + debitWithCommas + '"></td>' +
 	                    '<td><input type="text" class="form-control acc-name" value="' + journal.acc_name + '" readonly></td>' +
-	                    '<td><input type="number" class="form-control" name="credit_amount" value="' + journal.credit_amount + '"></td>' +
+	                    '<td><input type="text" class="form-control" style="text-align:right;" name="credit_amount" value="' + creditWithCommas + '"></td>' +
 	                    '<td><input type="text" class="form-control" name="trans_name" value="' + trans_name + '"></td>' +
 	                    '<td><input type="text" class="form-control" name="j_remark" value="' + j_remark + '"></td>' +
 	                    '</tr>';
@@ -344,6 +382,8 @@
 	            $('#registerModalLabel').text('전표 수정').parent().css
 				({'background-color': '#868a83', 'color': '#ffffff'});
 	            $('#regFrmBtn').hide();  // 등록 버튼 숨기기
+	            $('#addRowBtn').hide();  // 행 추가 버튼 숨기기
+	            $('#delRowBtn').hide();  // 행 삭제 버튼 숨기기
 	         	// 권한에 따른 수정 버튼 활성화/비활성화
 	            if (deptAuth !== 1 && deptAuth !== 20) {
 	                $('#uptBtn').hide(); // 수정 버튼 숨기기
@@ -357,21 +397,76 @@
 	        }
 	    });
 	}
+	
 	// 차변과 대변 입력란에 이벤트 핸들러 추가
 	$(document).on('keyup', 'input[name="debit_amount"], input[name="credit_amount"]', function() {
 	    var $row = $(this).closest('tr');
 	    var $debitInput = $row.find('input[name="debit_amount"]');
 	    var $creditInput = $row.find('input[name="credit_amount"]');
 
+	    // 입력 값이 있을 때, 다른 필드를 readonly로 설정
 	    if ($debitInput.val()) {
-	        $creditInput.prop('readonly', true);
+	        $creditInput.prop('readonly', true).val(''); // 대변 필드를 readonly로 설정하고 값을 비웁니다.
 	    } else if ($creditInput.val()) {
-	        $debitInput.prop('readonly', true);
+	        $debitInput.prop('readonly', true).val(''); // 차변 필드를 readonly로 설정하고 값을 비웁니다.
 	    } else {
+	        // 두 필드 모두 비어있을 때, readonly 해제
 	        $debitInput.prop('readonly', false);
 	        $creditInput.prop('readonly', false);
 	    }
 	});
+	
+	// 숫자에 콤마를 추가하는 함수
+    function addCommas(nStr) {
+    	nStr = parseFloat(nStr); // 입력 값을 숫자로 변환
+        if (nStr === 0) { // 값이 0인 경우 공백 반환
+            return "";
+        }
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+ 	// 콤마 제거하기
+    function removeComma() {
+        $('input[name="debit_amount"], input[name="credit_amount"]').each(function() {
+            var valueWithCommas = $(this).val();
+            var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
+            $(this).val(valueWithoutCommas);
+        });
+    }
+ 	// 다운로드
+    function downloadVoucherDetail(voucherId) {
+	    Swal.fire({
+	        title: '다운로드 확인',
+	        text: "해당 전표를 다운로드 하시겠습니까?",
+	        icon: 'warning',
+	        showCancelButton: true,
+	        confirmButtonColor: '#3085d6',
+	        cancelButtonColor: '#d33',
+	        confirmButtonText: '다운로드',
+	        cancelButtonText: '취소'
+	    }).then((result) => {
+	    	if (result.isConfirmed) {
+	            // 다운로드 URL로 이동
+	            window.location.href = "${path}/downloadExcel?voucher_id=" + voucherId;
+	            // 다운로드 시작 알림
+	            Swal.fire({
+	                title: '다운로드 완료!',
+	                text: voucherId + '번 전표를 다운로드했습니다..!',
+	                icon: 'success',
+	                timer: 3000, // 알림이 3초 후에 자동으로 닫히도록 설정
+	                timerProgressBar: true, // 타이머 진행 상태를 보여주는 프로그레스 바
+	                showConfirmButton: false // 확인 버튼 없이 타이머로 자동 닫힘
+	            });
+	        }
+	    });
+	}
 </script>
 	<!-- DB테이블 플러그인 추가 -->
     <link rel="stylesheet" href="${path}/a00_com/css/vendor.bundle.base.css">
@@ -469,11 +564,12 @@
                                         	<td><input type="checkbox" class="selectRow" value="${vc.voucher_id}"></td>
                                             <td><fmt:formatDate pattern="yyyy-MM-dd" value="${vc.voucher_date}"/>/${vc.voucher_no}</td>
                                             <td>${vc.voucher_type}</td>
-                                            <td><fmt:formatNumber value="${vc.total_amount}" groupingUsed="true" maxFractionDigits="0" /></td>
+                                            <td style="text-align:right;"><fmt:formatNumber value="${vc.total_amount}" groupingUsed="true" maxFractionDigits="0" /></td>
                                             <td>${vc.trans_cname}</td>
                                             <td>${vc.remarks}</td>
                                             <td>${vc.dname}</td>
-                                            <td><button type="button" id="downloadBtn" class="btn btn-warning btn-icon-split">
+                                            <td><button type="button" id="downloadBtn" class="btn btn-warning btn-icon-split"
+                                            	onclick="downloadVoucherDetail('${vc.voucher_id}')">
 				                            	<span class="icon text-white-50"><i class="fas fa-download"></i></span>
 				                            	<span class="text">다운로드</span></button></td>
                                         </tr>
@@ -497,7 +593,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Orbit ERP presented by TEAM FOUR</span>
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>

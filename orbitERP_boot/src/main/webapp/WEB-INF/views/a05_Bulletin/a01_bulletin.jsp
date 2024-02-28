@@ -70,6 +70,10 @@ table {
 	width: 100px;
 }
 
+.pageSize {
+	width: 20%
+}
+
 #chatArea {
 	width: 100%;
 	height: 200px;
@@ -98,57 +102,57 @@ table {
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
 					<!-- Page Heading -->
-					<div
-						class="d-sm-flex align-items-center justify-content-between mb-4">
+					<div class="d-sm-flex align-items-center justify-content-between mb-4">
 						<div class="row">
 							<div class="col-12">
-								<h1 class="h3 mb-0 text-gray-800">게시판</h1>
+								<h1 class="h3 mb-0 text-gray-800">☆ 게시판</h1>
 							</div>
 						</div>
-						<div class="row">
-							<form id="unug" method="post">
-								<input type="hidden" name="curPage" value="${sch.curPage}" />
-								<div class="input-group">
-									<input type="text" class="form-control bg-light border-1 small"
-										name="title" placeholder="제목검색" value="" aria-label="Search"
-										aria-describedby="basic-addon2">
-
-									<div class="input-group-append">
-										<button class="btn btn-primary" type="submit">
-											<i class="fas fa-search fa-sm"></i>
-										</button>
-							</form>
-
-						</div>
-
 					</div>
-				</div>
-
-
-			</div>
+				
 			<!-- Content Row -->
 
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary">공지사항 게시판</h6>
+				<div class="d-sm-flex align-items-center justify-content-between mb-4">
+					<h5 class="m-0 font-weight-bold text-primary">공지사항 게시판</h5>
+				
+				<div class="row">
+							<form id="unug" method="post">
+								<input type="hidden" name="curPage" value="${sch.curPage}" />
+								<div class="input-group-append">
+									<input type="text" class="form-control bg-light border-1 small"
+										name="title" placeholder="제목검색" value="${sch.title}" aria-label="Search"
+										aria-describedby="basic-addon2"/>
+
+										<button class="btn btn-primary" type="submit">
+											<i class="fas fa-search fa-sm"></i>
+										</button>
+								</div>		
+							</form>
+
+						</div>
+					</div>
 				</div>
 
-				<div class="card-body">
+			<div class="card-body">
 					<!-- 데이터 총 건수와 한 페이지 공개 데이터 선택창 -->
-					<form id="kemet">
-						<div class="input-group-append">
-							<span class="input-group-text">총:${sch.count}건</span> <input
-								type="text" class="form-control" aria-label="Total count"
-								style="width: 70%;"> <span class="input-group-text">페이지
-								수</span> <select name="pageSize" class="form-control"
-								aria-label="Page size">
+				<form id="kemet">
+					<div class="input-group-append">
+						<span class="input-group-text">총:${sch.count}건</span> 
+						<input type="text" class="form-control" aria-label="Total count"  readonly/> 
+						<span class="input-group-text">페이지 수</span> 
+							<select name="pageSize" class="form-control text-align-center" aria-label="Page size" style="width: 15%;">
 								<option>3</option>
 								<option>5</option>
 								<option>10</option>
 								<option>20</option>
 								<option>50</option>
 							</select>
+							
 						</div>
+						<br>
+						
 						<script type="text/javascript">
 							// 선택된 페이지 사이즈를 다음 호출된 페이지에서 출력
 							$("[name=pageSize]").val("${sch.pageSize}")
@@ -192,16 +196,15 @@ table {
 
 							</tbody>
 						</table>
-						
-					
-						<!-- 등록 버튼과 페이지 위치 못 맞추는 문제 있음 -->
-						
-						<div style="text-align: left;">
+						</div>
+						<div style="text-align: right;">
 							<input data-target="#exampleModalCenter" type="button"
 								class="btn btn-info" value="게시글 등록" id="refBtn" />
 						</div>
+						
+						<!-- 등록 버튼과 페이지 위치 못 맞추는 문제 있음 -->
 
-						<ul class="pagination justify-content-end">
+						<ul class="pagination justify-content-center">
 							<li class="page-item"><a class="page-link"
 								href="javascript:goPage(${sch.startBlock-1})">Previous</a></li>
 							<c:forEach var="pNo" begin="${sch.startBlock }"
@@ -212,13 +215,10 @@ table {
 							<li class="page-item"><a class="page-link"
 								href="javascript:goPage(${sch.endBlock+1})">Next</a></li>
 						</ul>
-						
-						
-
 					</div>
-
 				</div>
 			</div>
+		</div>
 			<script type="text/javascript">
 				function goPage(pNo) {
 					$("[name=curPage]").val(pNo)
@@ -233,28 +233,23 @@ table {
 			<!-- Content Row -->
 			<div class="row"></div>
 
+<!-- Footer -->
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
+	<!-- End of Footer -->
+
 		</div>
 		<!-- /.container-fluid (페이지 내용 종료) -->
 
 	</div>
 	<!-- End of Main Content -->
 
-	<!-- Footer -->
-	<footer class="sticky-footer bg-white">
-		<div class="container my-auto">
-			<div class="copyright text-center my-auto">
-				<span>Copyright &copy; Your Website 2021</span>
-			</div>
-		</div>
-	</footer>
-	<!-- End of Footer -->
-
-	</div>
-	<!-- End of Content Wrapper -->
-
-	</div>
-	<!-- End of Page Wrapper -->
-
+	
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>

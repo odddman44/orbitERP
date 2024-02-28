@@ -67,6 +67,8 @@
 <script type="text/javascript">
 	var proc = "${proc}";
 	var msg = "${msg}";
+	
+	
 
 	if (msg != "") {
 		if (proc == "upt" || proc == "del") {
@@ -77,7 +79,7 @@
 	}
 
 	// 숫자에 콤마를 추가하는 함수
-	function addCommas(nStr) {
+	/*function addCommas(nStr) {
 		nStr += '';
 		var x = nStr.split('.');
 		var x1 = x[0];
@@ -88,10 +90,20 @@
 		}
 		return x1 + x2;
 	}
+	*/
 
 	$(document).ready(
+		
+			
 			function() {
 				console.log("받아온 정보:" + "${employee}");
+				
+				// 로그인된 세션 
+				var auth="${emem.auth}"
+				if(auth!=="인사관리자" && auth!=="총괄관리자"){
+					$("#delBtn").hide()
+					$("#uptBtn").hide()
+					}
 
 				// 사원 리스트로 이동
 				$("#goListBtn").click(function() {
@@ -112,12 +124,7 @@
 						});
 
 				// 콤마가 포함된 입력 필드의 값에서 콤마를 제거
-				$('#frm01').submit(function(event) {
-					var inputField = $('#sal');
-					var valueWithCommas = inputField.val();
-					var valueWithoutCommas = valueWithCommas.replace(/,/g, '');
-					inputField.val(valueWithoutCommas);
-				});
+				
 
 				// 사원 삭제
 				$("#delBtn").click(function() {
@@ -167,7 +174,7 @@
 				<!-- End of Topbar -->
 				<!-- Begin Page Content (여기서부터 페이지 내용 입력) -->
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">${employee.ename}사원상세정보</h1>
+					<h1 class="h3 mb-4 text-gray-800">${employee.ename} 사원 상세정보</h1>
 					<br> <br>
 					<div class="d-flex justify-content-left">
 						<!--  <img id="profile" src="${profile}" width="100px" height="100px" alt="사진" /> -->
@@ -224,14 +231,8 @@
 									<option>강사</option>
 								</select>
 							</div>
-							<label for="salary" class="col-sm-1 col-form-label">연봉</label>
-							<div class="col-sm-3">
-
-								<!-- 사용자에게 보여주는 salary값(empDetail) ,가 있음 -->
-								<input class="form-control form-control-user" name="salary"
-									id="sal"
-									value='<fmt:formatNumber value="${employee.salary}" pattern="#,##0"/>'>
-							</div>
+				
+							
 
 						</div>
 						<br>
@@ -334,12 +335,12 @@
 
 	<!-- Footer -->
 	<footer class="sticky-footer bg-white">
-		<div class="container my-auto">
-			<div class="copyright text-center my-auto">
-				<span>Copyright &copy; Your Website 2021</span>
-			</div>
-		</div>
-	</footer>
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Orbit ERP presented by TEAM FOUR</span>
+					</div>
+				</div>
+			</footer>
 	<!-- End of Footer -->
 
 	</div>

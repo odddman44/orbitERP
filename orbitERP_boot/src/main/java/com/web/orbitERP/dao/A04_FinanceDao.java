@@ -10,6 +10,7 @@ import com.web.orbitERP.vo.Accsub;
 import com.web.orbitERP.vo.AccsubSch;
 import com.web.orbitERP.vo.FinanceSummary;
 import com.web.orbitERP.vo.GrossProfit;
+import com.web.orbitERP.vo.IncomeStatement;
 import com.web.orbitERP.vo.Journalizing;
 import com.web.orbitERP.vo.Voucher;
 import com.web.orbitERP.vo.VoucherDetail;
@@ -74,7 +75,15 @@ public interface A04_FinanceDao {
 	/***********************
 	 *  3. 경영보고서관련  *
 	 **********************/
+    // 매출매입그래프
     List<FinanceSummary> getSalesAndPurchasesSummaryByYear(@Param("year") int year);
     
     List<GrossProfit> getGrossProfit(@Param("deptno") int deptno, @Param("startDate") String startDate, @Param("endDate") String endDate);
+    
+    // 손익계산서
+    List<IncomeStatement> getIncomeStatements(@Param("basicYear") String basicYear,
+    										@Param("compYear") String compYear);
+    
+    // 손익 선그래프
+    List<FinanceSummary> getNetIncomeGraph(@Param("year") int year);
 }

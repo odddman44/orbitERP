@@ -124,8 +124,7 @@
 		empno, deptno, ename, job, to_char(hiredate,
 		'YYYY-MM-DD') AS
 		HIREDATE,
-		EMAIL, PHONE, ADDRESS, ACCOUNT, SSNUM,
-		SALARY, subject
+		EMAIL, PHONE, ADDRESS, ACCOUNT, SSNUM,subject
 		FROM EMPLOYEE
 		WHERE EMPNO = #{empno}
 	</select>
@@ -136,7 +135,6 @@
 		ename =
 		#{ename},
 		job = #{job},
-		SALARY = #{salary},
 		ssnum = #{ssnum},
 		deptno =
 		#{deptno},
@@ -162,7 +160,7 @@
 		'YYYY-MM-DD'),
 		#{email}, #{phone}, #{address},
 		#{account}, #{ssnum},
-		#{salary}, #{subject}
+		#{subject}
 		)
 	</insert>
 
@@ -282,7 +280,8 @@
 
 	<update id="updateErpmem" parameterType="erpmem">
 		UPDATE erpmem SET
-		pwd = #{pwd}
+		pwd =
+		#{pwd}
 		WHERE empno = #{empno}
 	</update>
 
@@ -308,13 +307,188 @@
 	<update id="checkOut">
 		UPDATE ATTENDANCE SET
 		DEP_TIME = SYSDATE
-		WHERE empno = #{empno}
+		WHERE empno =
+		#{empno}
 		AND WORK_DATE = TO_DATE(#{work_date}, 'YYYY-MM-DD')
 	</update>
-	
+
 	<select id="getEmpListModel" resultType="employee">
 		select * from employee
 	</select>
+
+	<select id="totSalary" resultType="int"
+		parameterType="salarySch">
+		SELECT COUNT(*)
+		FROM salary
+		WHERE 1=1
+		<if test="deptno != null and deptno !=0">
+			AND deptno = #{deptno}
+		</if>
+		<if test="payment_dateStr != null and payment_dateStr != ''">
+			AND TO_CHAR(payment_date, 'YYYY-MM') = #{payment_dateStr}
+		</if>
+	</select>
+
+	<select id="getSalaryList" resultType="salarySch"
+		parameterType="salarySch">
+		SELECT s.*, d.dname, e.ename
+		FROM salary s
+		JOIN DEPT d ON s.DEPTNO =
+		d.DEPTNO
+		JOIN Employee e ON e.empno = s.empno
+		WHERE 1=1
+		<if test="deptno != null and deptno != 0">
+			AND s.deptno = #{deptno}
+		</if>
+		<if test="year != null and year != ''">
+			AND EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
+		</if>
+		<if test="month != null and month != ''">
+			AND EXTRACT(MONTH FROM PAYMENT_DATE) = #{month}
+		</if>
+		ORDER BY payment_date DESC
+	</select>
+
+	<select id="getEmpListByDeptno" resultType="employee"
+		parameterType="int">
+		select * from employee
+		<if test="deptno != 0 and deptno != ''">
+			where deptno = #{deptno}
+		</if>
+	</select>
+
+	<insert id="insertSalary" parameterType="salary">
+		INSERT INTO salary
+		(payment_date, empno, base_salary, allowance, deduction,
+		start_date,
+		end_date, deptno)
+		VALUES (
+		TO_DATE(#{payment_dateStr}, 'YYYY-MM-DD'),
+		#{empno},
+		#{base_salary},
+		#{allowance},
+		#{deduction},
+		TO_DATE(#{start_dateStr}, 'YYYY-MM-DD'),
+		TO_DATE(#{end_dateStr},
+		'YYYY-MM-DD'),
+		#{deptno}
+		)
+	</insert>
+
+	<select id="salaryDetail" resultType="salary">
+		SELECT * FROM salary
+		WHERE
+		empno = #{empno}
+		AND TO_CHAR(payment_date, 'YYYY-MM') =
+		#{payment_dateStr}
+	</select>
+
+	<select id="detailAttendance" resultType="attendance">
+		SELECT a.*,
+		TO_CHAR(TRUNC((DEP_TIME - ARR_TIME) * 24) - 1, 'FM00') || '시간 ' ||
+		TO_CHAR(ROUND(MOD((DEP_TIME - ARR_TIME) * 24 * 60, 60)), 'FM00') ||
+		'분' AS tot_workhours
+		FROM ATTENDANCE a
+		WHERE EMPNO = #{empno}
+		AND
+		work_date = to_date(#{work_date},'YYYY-MM-DD')
+	</select>
+
+	<update id="updateSalary" parameterType="salary">
+		UPDATE salary SET
+		PAYMENT_DATE = to_date(#{payment_dateStr}, 'YYYY-MM-DD'),
+		empno =
+		#{empno},
+		BASE_SALARY = #{base_salary},
+		ALLOWANCE = #{allowance},
+		DEDUCTION = #{deduction},
+		START_DATE = to_date(#{start_dateStr},
+		'YYYY-MM-DD'),
+		end_date = to_date(#{end_dateStr}, 'YYYY-MM-DD'),
+		deptno
+		= #{deptno}
+		WHERE empno = #{empno}
+		AND PAYMENT_DATE =
+		to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+	</update>
+
+	<delete id="deleteSalary">
+		DELETE FROM SALARY
+		WHERE payment_date =
+		to_date(#{payment_dateStr}, 'YYYY-MM-DD')
+		AND empno = #{empno}
+	</delete>
+
+	<select id="salDuplicationCheck" resultType="int">
+		SELECT count(*) FROM
+		SALARY
+		WHERE TO_CHAR(PAYMENT_DATE, 'YYYY-MM') = #{payment_dateStr}
+		AND
+		EMPNO = #{empno}
+	</select>
+
+	<select id="getPaystubList" resultType="paystub">
+		SELECT DISTINCT
+		payment_date, stub_name, deptno, count(*) AS count,
+		SUM(net_pay) AS total_net_pay
+		FROM PAYSTUB
+		WHERE 1=1
+		<if test="deptno != null and deptno != 0">
+			AND deptno = #{deptno}
+		</if>
+		<if test="year != null and year != 0">
+			AND EXTRACT(YEAR FROM PAYMENT_DATE) = #{year}
+		</if>
+		<if test="month != null and month != 0">
+			AND EXTRACT(MONTH FROM PAYMENT_DATE) = #{month}
+		</if>
+		GROUP BY payment_date, stub_name, deptno
+	</select>
+
+	<insert id="insertPayStub" parameterType="paystub">
+		INSERT INTO PAYSTUB
+		(payment_date, stub_name, empno, deptno, net_pay) VALUES
+		(
+		TO_DATE(#{payment_dateStr}, 'YYYY-MM-DD'),
+		#{stub_name},
+		#{empno},
+		#{deptno},
+		#{net_pay}
+		)
+	</insert>
+
+	<select id="getPaystubDetail" resultType="paystub">
+		SELECT
+		ps.*,
+		e.ename,
+		e.job,
+		(SELECT COUNT(*) FROM PAYSTUB WHERE to_char(payment_date, 'yyyy-MM') =
+		#{payment_dateStr} AND deptno = #{deptno}) AS count,
+		(SELECT SUM(net_pay) FROM PAYSTUB WHERE to_char(payment_date, 'yyyy-MM') =
+		#{payment_dateStr} AND deptno = #{deptno}) AS total_net_pay
+		FROM
+		PAYSTUB ps
+		INNER JOIN
+		EMPLOYEE e ON ps.empno = e.empno
+		WHERE
+		to_char(payment_date, 'yyyy-MM') = #{payment_dateStr}
+		AND ps.deptno = #{deptno}
+	</select>
+
+	<delete id="deletePaystub">
+		DELETE FROM PAYSTUB
+		WHERE payment_date =
+		to_date(#{payment_dateStr}, 'yyyy-MM-dd')
+		AND deptno = #{deptno}
+	</delete>
+
+	<update id="updatePaystub" parameterType="paystub">
+		UPDATE paystub SET
+		stub_name=#{stub_name}
+		WHERE payment_date = to_date(#{payment_dateStr},
+		'yyyy-MM-dd')
+		AND deptno = #{deptno}
+	</update>
 
 
 

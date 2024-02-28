@@ -71,6 +71,17 @@
 					<div class="row">
 						<%@ include file="/WEB-INF/views/a04_financeResource/z04_SPtable.jsp" %>
 					</div>
+					
+					<br>
+					<br>
+					<!-- Page Heading -->
+					<div class="d-sm-flex align-items-center justify-content-between mb-4">
+						<h1 class="h3 mb-0 text-gray-800">※ 연도별 손익 계산서</h1>
+					</div>
+					<!-- Content Row -->
+					<div class="row">
+						<%@ include file="/WEB-INF/views/a04_financeResource/z05_incomeStmt.jsp" %>
+					</div>
 
 				</div>
 				<!-- /.container-fluid (페이지 내용 종료) -->
@@ -82,7 +93,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Orbit ERP presented by TEAM FOUR</span>
+						<span>Copyright &copy; Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>

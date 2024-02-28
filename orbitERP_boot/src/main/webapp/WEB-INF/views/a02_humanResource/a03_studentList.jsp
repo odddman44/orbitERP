@@ -24,6 +24,11 @@
 		location.href="${path}/studentList"
 	}
 	$(document).ready(function() {
+		// 로그인된 세션 
+		var auth="${emem.auth}"
+		if(auth!=="인사관리자" && auth!=="총괄관리자"){
+			$("#regBtn").hide()
+			}
 		$("#regFrmBtn").click(function(){
 			if($("#frm02 [name=name]").val()==""){
 				alert("학생명을 입력하세요")
@@ -35,6 +40,10 @@
 			}
 			if($("#frm02 [name=final_degree]").val()==""){
 				alert("학년을 입력하세요")
+				return;
+			}
+			if($("#frm02 [name=reg_date").val()==""){
+				alert("등록일자를 입력하세요")
 				return;
 			}
 			if(confirm("학생 정보를 등록하시겠습니까?")){
@@ -203,10 +212,10 @@
 			<!-- End of Main Content -->
 
 			<!-- Footer -->
-			<footer class="sticky-footer bg-white">
+		<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2021</span>
+						<span>Orbit ERP presented by TEAM FOUR</span>
 					</div>
 				</div>
 			</footer>
@@ -262,8 +271,21 @@
 						<div class="row justify-content-left align-items-left">
 							<label for="final_degree" class="col-sm-3 col-form-label">학년</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control form-control-user"
-									name="final_degree" />
+								<select class="form-control form-control-user" name="final_degree">
+									<option>초등 1학년</option>
+									<option>초등 2학년</option>
+									<option>초등 3학년</option>
+									<option>초등 4학년</option>
+									<option>초등 5학년</option>
+									<option>초등 6학년</option>
+									<option>중등 1학년</option>
+									<option>중등 2학년</option>
+									<option>중등 3학년</option>
+									<option>고등 1학년</option>
+									<option>고등 2학년</option>
+									<option>고등 3학년</option>
+									<option>성인</option>
+								</select>
 							</div>
 						</div>
 						<br>

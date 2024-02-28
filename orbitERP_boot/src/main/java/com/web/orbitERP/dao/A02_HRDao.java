@@ -15,6 +15,9 @@ import com.web.orbitERP.vo.EmpProfile;
 import com.web.orbitERP.vo.EmpSch;
 import com.web.orbitERP.vo.Employee;
 import com.web.orbitERP.vo.Erpmem;
+import com.web.orbitERP.vo.Paystub;
+import com.web.orbitERP.vo.Salary;
+import com.web.orbitERP.vo.SalarySch;
 import com.web.orbitERP.vo.StuProfile;
 import com.web.orbitERP.vo.Student;
 import com.web.orbitERP.vo.StudentSch;
@@ -120,11 +123,38 @@ public interface A02_HRDao {
 	
 	int checkOut(@Param("work_date") String work_date, @Param("empno") String empno);
 	
+	Attendance detailAttendance(@Param("work_date") String work_date, @Param("empno") String empno);
+	
 	List<Employee> getEmpListModel();
 	
+	int totSalary(SalarySch sch);
+	
+	List<SalarySch> getSalaryList(SalarySch sch);
+	
+	List<Employee> getEmpListByDeptno(@Param("deptno") int deptno);
+	
+	int insertSalary(Salary ins);
+	
+	Salary salaryDetail(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
+	
+	int updateSalary(Salary upt);
+	
+	int deleteSalary(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
+	
+	int salDuplicationCheck(@Param("empno") String empno, @Param("payment_dateStr") String payment_dateStr);
+	
+	List<Paystub> getPaystubList(@Param("deptno") int deptno, 
+					@Param("month") int month, @Param("year") int year );
+	
+	int insertPayStub(Paystub ins);
+	
+	List<Paystub> getPaystubDetail(@Param("payment_dateStr") String payment_dateStr,
+								   @Param("deptno") int deptno);
+	
+	int deletePaystub(@Param("payment_dateStr") String payment_dateStr, @Param("deptno") int deptno);
 	
 	
-	
+	int updatePaystub(Paystub upt);
 	
 	
 	

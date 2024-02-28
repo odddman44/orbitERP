@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.orbitERP.dao.A07_BudgetDao">
+	<!-- 조회 -->
+	<select id="getBudgetList" resultType="mBudget">
+        SELECT
+            b.YEAR,
+            b.MONTH,
+            b.DEPTNO,
+            b.MONTH_AMOUNT as month_amount,
+            d.DNAME as dname
+        FROM
+            M_BUDGET b
+            JOIN DEPT d ON b.DEPTNO = d.DEPTNO
+        WHERE
+            (b.DEPTNO = #{deptno} OR #{deptno} = 0)
+            AND (b.YEAR = #{year} OR #{year} = 0)
+        ORDER BY
+            b.MONTH
+    </select>
+    <!-- 월별 예산 데이터 삽입 -->
+    <insert id="insertMonthlyBudget" parameterType="mBudget">
+        INSERT INTO M_BUDGET (YEAR, MONTH, DEPTNO, MONTH_AMOUNT)
+        VALUES (#{year}, #{month}, #{deptno}, #{month_amount})
+    </insert>
+    <!-- 예산 수정 -->
+    <update id="updateBudget" parameterType="mBudget">
+        UPDATE M_BUDGET
+        SET MONTH_AMOUNT = #{month_amount}
+        WHERE YEAR = #{year} AND MONTH = #{month} AND DEPTNO = #{deptno}
+    </update>
+    
+    <!-- 예산 삭제 -->
+    <delete id="deleteBudget">
+        DELETE FROM M_BUDGET
+        WHERE YEAR = #{year} AND DEPTNO = #{deptno}
+    </delete>
+    
+    <!--  비교용 손익데이터 -->
+    <select id="getActualExpense" resultType="actualExpense">
+	    SELECT
+	        EXTRACT(YEAR FROM v.voucher_date) AS year,
+	        EXTRACT(MONTH FROM v.voucher_date) AS month,
+	        v.deptno,
+	        SUM(j.debit_amount) AS totalDebitAmount
+	    FROM
+	        journalizing j
+	    JOIN
+	        voucher v ON j.voucher_id = v.voucher_id
+	    WHERE
+	        (v.DEPTNO = #{deptno} OR #{deptno} = 0) 
+	        AND EXTRACT(YEAR FROM v.voucher_date) = #{year}
+	    GROUP BY
+	        EXTRACT(YEAR FROM v.voucher_date),
+	        EXTRACT(MONTH FROM v.voucher_date),
+	        v.deptno
+	    ORDER BY
+	        month
+	</select>
+</mapper>	

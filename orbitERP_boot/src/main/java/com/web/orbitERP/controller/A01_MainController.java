@@ -1,7 +1,7 @@
 package com.web.orbitERP.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.web.orbitERP.service.A01_MainService;
 import com.web.orbitERP.service.A02_HRService;
+import com.web.orbitERP.service.A03_PRService;
 import com.web.orbitERP.vo.AttendanceSch;
 import com.web.orbitERP.vo.Erpmem;
 
@@ -24,6 +25,9 @@ public class A01_MainController {
 
 	@Autowired(required = false)
 	private A02_HRService hrService;
+	
+	@Autowired(required = false)
+	private A03_PRService prService;
 
 	/* 1. 로그인 창 */
 	// http://localhost:4444/login
@@ -34,13 +38,19 @@ public class A01_MainController {
 	}
 
 	@PostMapping("login")
-	public String login(Erpmem mem, HttpSession session) {
+	public String login(Erpmem mem, HttpSession session,Model d) {
 		Erpmem emem = service.login(mem);
 		if (emem != null) {
 			session.setAttribute("emem", emem);
 		}
+		d.addAttribute("alList",prService.alList(emem.getEmpno()));
 		return "a01_main\\a83_login";
 	}
+	
+	@GetMapping("multiLang")
+    public String changeLanguage(HttpSession session) {
+        return "redirect:/login"; 
+    }
 
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
@@ -55,6 +65,16 @@ public class A01_MainController {
 	public String mainIndex() {
 		return "a01_main\\a01_index";
 	}
+	//알람정보 보내기
+	@RequestMapping("topAlram")
+	public String topAlram(String receiver,Model d) {
+		d.addAttribute("alList",prService.alList(receiver));
+		return "pageJsonReport";
+	}
+//	@RequestMapping("topAlram")
+//	public ResponseEntity<?> topAlram(String receiver) {
+//		return ResponseEntity.ok(prService.alList(receiver));
+//	}
 
 	// http://localhost:4444/mypage
 	@RequestMapping("mypage")
