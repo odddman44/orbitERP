@@ -233,6 +233,7 @@ body {
                            // 새로운 일정 추가..(서버에서 controller로 넘겨온 데이터)
                            // 다시 추가 처리..
                            calendar.addEventSource(data.callist)
+                           window.location.reload();
                         },
                         error : function(err) {
                            console.log(err)
