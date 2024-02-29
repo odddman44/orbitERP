@@ -197,13 +197,20 @@
 	 	    	net_pay: net_pay
 	 	    })
 	 	    
-	 
-	 	    var size = paystubList.length; // 배열의 크기
-			console.log("배열의 크기: "+size)
-	 	    $("#size").val(size)
+	 	// 02/29 추가된 코드
+	 	  var count = $("#size").val();
+	    	count ++;
+	    	$("#size").val(count);
+	    	
+	    	var origin_totWithComma = $("#tot_net_pay").val()
+        	var origin_tot =  parseInt(origin_totWithComma.replace(/,/g, ''))
+        	console.log("추가되는 실수령액: "+net_pay)
+        	var plusNet_pay = parseInt(net_pay.replace(/,/g, ''))
+        	origin_tot+=plusNet_pay
+        	$("#tot_net_pay").val(addCommas(origin_tot))
 	   	}
 	    
-	    // 배열에 empno이랑 net_pay저장하기
+	    
 	   
 	   
 	});
@@ -217,8 +224,28 @@
 		// 배열에서 일치하는 empno를 찾아 삭제
 	    for (var i = 0; i < paystubList.length; i++) {
 	        if (paystubList[i].empno === deleteSal) {
-	        	paystubList.splice(i); // 배열에서 해당 요소 삭제
+	        	
 	            console.log("배열의 사이즈: "+paystubList.length)
+	            // 02/29 추가된 코드
+	            var count = $("#size").val();
+	        	count --;
+	        	$("#size").val(count)
+	        	
+	        	var net_pay = paystubList[i].net_pay;
+	        	console.log("삭제되는 실수령액: "+net_pay)
+	        	var origin_totWithComma = $("#tot_net_pay").val()
+	        	var origin_tot = origin_totWithComma.replace(/,/g, '')
+	        	if(isNaN(net_pay)){
+	        		minus_netpay = net_pay.replace(/,/g, '')
+	        		origin_tot -= minus_netpay
+	        		$("#tot_net_pay").val(addCommas(origin_tot))
+	        	}else{
+		        	origin_tot -= net_pay;
+		        	$("#tot_net_pay").val(addCommas(origin_tot))
+	        	}
+	        	
+	        	
+	        	paystubList.splice(i); // 배열에서 해당 요소 삭제
 	            break;
 	        }
 	    }
