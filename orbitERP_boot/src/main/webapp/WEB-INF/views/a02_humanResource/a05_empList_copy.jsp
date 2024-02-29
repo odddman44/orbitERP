@@ -57,11 +57,11 @@
 					}
 				});
 
-				$("#frm02 [name=empno]").keyup(function() {
-					if (event.keyCode == 13) {
-						ckEmpno()
-					}
-				})
+				$("#frm02 [name=empno]").on('keyup change', function(event) {
+				    if (event.keyCode == 13 || event.type === 'change') {
+				        ckEmpno();
+				    }
+				});
 
 				/*$('#frm02').submit(function(event) {
 					// 콤마가 포함된 입력 필드의 ID를 가져옵니다.
@@ -188,6 +188,8 @@
 				    // 모달 내용 초기화
 				    $("#frm02")[0].reset();
 				});
+				
+				$("frm02 [name=empno]").on('change', ckEmpno())
 
 			});
 	function goDetail(empno) {
@@ -196,6 +198,7 @@
 
 	// 사원 번호 중복 체크
 	function ckEmpno() {
+		
 		var empno = $("#frm02 [name=empno]").val()
 		$.ajax({
 			url : "${path}/checkEmpno",
@@ -208,12 +211,16 @@
 					$("#empCk").css("color", "red")
 					$("[name=ckempno]").val("N")
 					$("#empCk").text("이미 존재하는 사원번호입니다.")
-					$("[name=empno]").val("").focus()
-				} else {
+					$("[name=empno]").focus()
+				} else if(cnt <=0 && empno !==""){
 					$("#empCk").css("color", "blue")
 					$("[name=ckempno]").val("Y")
 					$("#empCk").text("사용가능한 사원번호입니다.")
 
+				}else{
+					$("#empCk").css("color", "black")
+					$("#empCk").text("사원번호를 입력 후 중복체크(Enter)를 진행해주십시오.")
+					$("[name=ckempno]").val("N")
 				}
 			}
 		})
